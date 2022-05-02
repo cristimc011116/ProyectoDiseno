@@ -41,7 +41,7 @@ public class CLI {
     public static void main(String[] args)
     {
         JOptionPane.showMessageDialog(null, "Verifique su identificación");
-        ArrayList<Persona> listaPersonas = ControladorUsuario.ordenarPersonas();
+        Persona[] listaPersonas = ControladorUsuario.ordenarPersonas();
         System.out.print("Primer apellido" + "\t  Segundo apellido" + "\t  Nombre" + "\t  Identificacion\n");
         for (Persona persona : listaPersonas) {
             System.out.println("    " + persona.getPrimerApellido() + "\t          " 

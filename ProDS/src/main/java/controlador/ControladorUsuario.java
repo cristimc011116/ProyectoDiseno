@@ -68,10 +68,22 @@ public class ControladorUsuario {
     }
     
     //Punto 3
-    public static ArrayList<Persona> ordenarPersonas(){
-        ArrayList<Persona> listaPersonas = PersonaDAO.getPersonasBD();
-        Ordenamiento.ordenar(listaPersonas);
-        return listaPersonas;
+    public static Persona[] ordenarPersonas(){
+        int cont = 0;
+        Persona[] listaPersona = new Persona[100];
+        ArrayList<Persona> listaPersonas1 = PersonaDAO.getPersonasBD();
+        for(Persona persona: listaPersonas1)
+        {
+            String primerApellido = persona.getPrimerApellido();
+            String segundoApellido = persona.getSegundoApellido();
+            String nombre = persona.getNombre();
+            int id = persona.getId();
+            Persona usuario = new Persona(primerApellido, segundoApellido, nombre, id);
+            listaPersona[cont] = usuario;
+            cont++;
+        }
+        Ordenamiento.ordenar(listaPersona);
+        return listaPersona;
     }
     
 }

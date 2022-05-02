@@ -16,14 +16,14 @@ public class Persona implements Comparable{
     private String primerApellido;
     private String segundoApellido;
     private String nombre;
-    private double id;
+    private int id;
     private LocalDate fechaNacimiento;
     private int numero;
     private String correo;
     private String rol;
     private ArrayList<Cuenta> misCuentas;
 
-    public Persona(String pCodigo, String pPrimerApellido, String pSegundoApellido, String pNombre, double pId, LocalDate pFechaNacimiento,
+    public Persona(String pCodigo, String pPrimerApellido, String pSegundoApellido, String pNombre, int pId, LocalDate pFechaNacimiento,
                    int pNumero, String pCorreo, String pRol)
     {
         this.codigo = pCodigo;
@@ -52,7 +52,7 @@ public class Persona implements Comparable{
         this.misCuentas = new ArrayList<>();
     }
     
-    public Persona(String pPrimerApellido, String pSegundoApellido, String pNombre, double pId)
+    public Persona(String pPrimerApellido, String pSegundoApellido, String pNombre, int pId)
     {
         this.codigo = null;
         this.primerApellido = pPrimerApellido;
@@ -98,11 +98,11 @@ public class Persona implements Comparable{
         this.nombre = nombre;
     }
 
-    public double getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(double id) {
+    public void setId(int id) {
         this.id = id;
     }
 
