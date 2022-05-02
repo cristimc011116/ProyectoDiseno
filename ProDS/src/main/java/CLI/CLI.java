@@ -23,8 +23,8 @@ import javax.swing.JOptionPane;
 public class CLI {
     //el main debe ser el menu, las funciones métodos
     
-    public void crearCuenta()
-    //public static void main(String[] args)
+    //public void crearCuenta()
+    public static void main(String[] args)
     {
         int id = pedirId();
         String pin = pedirPin();
@@ -44,7 +44,6 @@ public class CLI {
     //public static void main(String[] args)
     {
         ArrayList<Persona> listaPersonas = PersonaDAO.getPersonasBD();
-        
         listaPersonas.sort((Persona persona1, Persona persona2)-> persona1.getPrimerApellido().compareTo(persona2.getPrimerApellido()));
         listaPersonas.forEach((es)->System.out.println(es));
     }

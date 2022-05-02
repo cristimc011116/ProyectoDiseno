@@ -4,6 +4,9 @@
  */
 package validacion;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Cristi Martínez
@@ -58,4 +61,21 @@ public class ExpresionesRegulares {
         boolean isNumeric =  pMonto.matches("[+-]?\\d*(\\.\\d+)?");
         return isNumeric;
     }
+    
+    public static boolean validarEmail(String email){
+        String regx = "^(.+)@(.+)$";
+        //Compile regular expression to get the pattern  
+        Pattern pattern = Pattern.compile(regx);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+    
+    public static boolean validarTelefono(String s)
+    {
+        Pattern p = Pattern.compile("^\\d{8}$");
+        Matcher m = p.matcher(s);
+        return (m.matches());
+    } 
+    
+    
 }
