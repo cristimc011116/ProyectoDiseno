@@ -146,8 +146,7 @@ public class Persona implements Comparable{
     public String toString(){
         String mensaje = "";
         mensaje = "Nombre del dueño de la cuenta= " + this.nombre + " " + this.primerApellido + " " + this.segundoApellido + "\n" 
-                + "Número de teléfono 'asociado' a la cuenta= " + this.numero + "\n" + "Dirección de correo electrónico 'asociado' a la cuenta= " 
-                + this.correo + "\n";
+                + "Identificación= " + this.id + "\n" ;
         return mensaje;
     }
     
