@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import dao.CuentaDAO;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Cristi Martínez
@@ -19,8 +21,8 @@ public class CLI {
     
     //el main debe ser el menu, las funciones métodos
     
-    //public void crearCuenta()
-    public static void main(String[] args)
+    public void crearCuenta()
+    //public static void main(String[] args)
     {
         int id = pedirId();
         String pin = pedirPin();
@@ -36,7 +38,18 @@ public class CLI {
         System.out.println(texto6); 
     }
     
-    
+    public static void main(String[] args)
+    {
+        JOptionPane.showMessageDialog(null, "Verifique su identificación");
+        ArrayList<Persona> listaPersonas = ControladorUsuario.ordenarPersonas();
+        System.out.print("Primer apellido" + "\t  Segundo apellido" + "\t  Nombre" + "\t  Identificacion\n");
+        for (Persona persona : listaPersonas) {
+            System.out.println("    " + persona.getPrimerApellido() + "\t          " 
+                               + persona.getSegundoApellido() + "\t      "
+                               + persona.getNombre() + "\t      " + 
+                               persona.getId());
+        }
+    }
     
     public static int pedirId()
     {

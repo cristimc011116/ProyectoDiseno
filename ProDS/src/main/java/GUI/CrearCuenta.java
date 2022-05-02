@@ -147,45 +147,77 @@ public class CrearCuenta extends javax.swing.JFrame {
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
         // TODO add your handling code here:
-        boolean insertar = true;
+        int insertar = 0;
+        int contador = 0;
         String strId = tfId.getText();
         String pin = tfPin.getText();
         String strMonto = tfMonto.getText();
-        boolean esId = ControladorUsuario.auxIdP1(strId);
-        //Arreglar cuando pongan vacío
-        if (strId == "" || esId==false)
+        contador += validarIngreso(strId, "identificacion");
+        contador += validarIngreso(pin, "pin");
+        contador += validarIngreso(strMonto, "monto");
+        if(contador == 0)
         {
-            insertar = false;
+            insertar += validarEntrId(strId);
+            insertar += validarEntrPin(pin);
+            insertar += validarEntrMonto(strMonto);
+            if (insertar == 0)
+            {
+                int monto = Integer.parseInt(strMonto);
+                int id = Integer.parseInt(strId);
+                int numero = ControladorUsuario.insertarCuenta(pin, monto, id);
+
+                String mensaje = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: \n";
+                mensaje += ControladorUsuario.imprimirCuenta(numero);
+                mensaje += "\n---\n";
+                mensaje += ControladorUsuario.imprimirPersona(id);
+                JOptionPane.showMessageDialog(null, mensaje);
+            }
         }
+    }//GEN-LAST:event_btnContinuarActionPerformed
+
+    public int validarIngreso(String pEntrada, String opcion)
+    {
+        if(pEntrada.length() == 0)
+        {
+            JOptionPane.showMessageDialog(null, "Error en dato: " + opcion);
+            return 1;
+        }
+        return 0;
+    }
+    
+    public int validarEntrId(String strId)
+    {
+        boolean esId = ControladorUsuario.auxIdP1(strId);
+        if (esId==false)
+        {
+            JOptionPane.showMessageDialog(null, "Verifique su identificación");
+            return 1;
+        }
+        return 0;
+    }
+    
+    public int validarEntrPin(String pin)
+    {
         boolean esPin = ExpresionesRegulares.validarPin(pin);
         if (esPin == false)
         {
-            insertar = false;
+            JOptionPane.showMessageDialog(null, "Verifique su pin");
+            return 1;
         }
+        return 0;
+    }
+    
+    public int validarEntrMonto(String strMonto)
+    {
         boolean esNum = ExpresionesRegulares.esNumero(strMonto);
         if (esNum == false)
         {
-            insertar = false;
+            JOptionPane.showMessageDialog(null, "Verifique el monto digitado");
+            return 1;
         }
-        if (insertar)
-        {
-            int monto = Integer.parseInt(strMonto);
-            int id = Integer.parseInt(strId);
-            int numero = ControladorUsuario.insertarCuenta(pin, monto, id);
-
-            String mensaje = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: \n";
-            mensaje += ControladorUsuario.imprimirCuenta(numero);
-            mensaje += "\n---\n";
-            mensaje += ControladorUsuario.imprimirPersona(id);
-            JOptionPane.showMessageDialog(null, mensaje);
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "Verifique sus datos");
-        }
-        
-    }//GEN-LAST:event_btnContinuarActionPerformed
-
+        return 0;
+    }
+    
     /**
      * @param args the command line arguments
      */

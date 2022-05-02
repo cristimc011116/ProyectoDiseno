@@ -7,8 +7,10 @@ package controlador;
 import dao.CuentaDAO;
 import dao.PersonaDAO;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
+import util.Ordenamiento;
 import validacion.ExpresionesRegulares;
 
 /**
@@ -17,7 +19,7 @@ import validacion.ExpresionesRegulares;
  */
 public class ControladorUsuario {
     
-    
+    //Punto 2
     public static int insertarCuenta(String pPin, int pMonto, int pId)
     {
         int numero = Cuenta.generarNumCuenta();
@@ -64,4 +66,12 @@ public class ControladorUsuario {
         
         return esNum;
     }
+    
+    //Punto 3
+    public static ArrayList<Persona> ordenarPersonas(){
+        ArrayList<Persona> listaPersonas = PersonaDAO.getPersonasBD();
+        Ordenamiento.ordenar(listaPersonas);
+        return listaPersonas;
+    }
+    
 }

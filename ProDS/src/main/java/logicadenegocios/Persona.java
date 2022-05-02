@@ -5,12 +5,13 @@
 package logicadenegocios;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import util.Comparable;
 
 /**
  *
  * @author Cristi Martínez
  */
-public class Persona {
+public class Persona implements Comparable{
     private String codigo;
     private String primerApellido;
     private String segundoApellido;
@@ -44,6 +45,20 @@ public class Persona {
         this.segundoApellido = null;
         this.nombre = null;
         this.id = 0;
+        this.fechaNacimiento = null;
+        this.numero = 0;
+        this.correo = null;
+        this.rol = null;
+        this.misCuentas = new ArrayList<>();
+    }
+    
+    public Persona(String pPrimerApellido, String pSegundoApellido, String pNombre, double pId)
+    {
+        this.codigo = null;
+        this.primerApellido = pPrimerApellido;
+        this.segundoApellido = pSegundoApellido;
+        this.nombre = pNombre;
+        this.id = pId;
         this.fechaNacimiento = null;
         this.numero = 0;
         this.correo = null;
@@ -123,7 +138,9 @@ public class Persona {
         this.rol = rol;
     }
     
-    
+    public boolean menorQue(Comparable objeto){
+        return (getPrimerApellido().compareTo(((Persona)objeto).getPrimerApellido())<0);
+    }
     
     public String toString(){
         String mensaje = "";
@@ -136,5 +153,7 @@ public class Persona {
     public void asignarCuenta(Cuenta pCuenta){
         this.misCuentas.add(pCuenta);
     }
+    
+    
 }
 

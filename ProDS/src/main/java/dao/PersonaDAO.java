@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import logicadenegocios.ConexionBase;
 import logicadenegocios.Persona;
@@ -15,7 +16,7 @@ import logicadenegocios.Persona;
  * @author Cristi Martínez
  */
 public class PersonaDAO {
-    
+    private static ArrayList<Persona> personas;
     public static boolean estaRegistrada(int idPersona){
         int contador = 0;
         boolean estaRegistrada = false;
@@ -47,5 +48,30 @@ public class PersonaDAO {
             JOptionPane.showMessageDialog(null, "Error: " + e.toString());
         }
         return persona;
-      }
+    }
+    
+    public static ArrayList<Persona> getPersonasBD(){
+        ArrayList<Persona> listaPersona = new ArrayList<Persona>();
+        personas = new ArrayList<Persona>();
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        ResultSet resultado;
+        Persona persona = null;
+        try{
+            resultado = con.consultas("SELECT * FROM Persona");
+            while(resultado.next()){
+                
+                String primerApellido = resultado.getString("primerApellido");
+                String segundoApellido = resultado.getString("segundoApellido");
+                String nombre = resultado.getString("nombre");
+                int id = Integer.parseInt(resultado.getString("id"));
+                persona = new Persona(primerApellido, segundoApellido, nombre, id);
+                personas.add(persona);
+            }
+        }catch(SQLException ex){
+           JOptionPane.showMessageDialog(null, ex.toString());
+        }
+        con.desconectar();
+        return personas;
+    }
 }
