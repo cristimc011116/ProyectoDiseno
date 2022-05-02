@@ -12,6 +12,7 @@ import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import dao.CuentaDAO;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 /**
  *
@@ -40,15 +41,26 @@ public class CLI {
     
     public static void main(String[] args)
     {
-        JOptionPane.showMessageDialog(null, "Verifique su identificación");
-        Persona[] listaPersonas = ControladorUsuario.ordenarPersonas();
-        System.out.print("Primer apellido" + "\t  Segundo apellido" + "\t  Nombre" + "\t  Identificacion\n");
+        /*ArrayList<Persona> listaPersonas = new ArrayList<>();
+        Persona p1 = new Persona("Arias", "2apellido", "nombre", 890);
+        Persona p2 = new Persona("Martínez", "2apellido2", "nombre2", 891);
+        Persona p3 = new Persona("Cedeño", "2apellido3", "nombre3", 892);
+        listaPersonas.add(p1);
+        listaPersonas.add(p2);
+        listaPersonas.add(p3);*/
+        
+        ArrayList<Persona> listaPersonas = PersonaDAO.getPersonasBD();
+        
+        listaPersonas.sort((Persona persona1, Persona persona2)-> persona1.getPrimerApellido().compareTo(persona2.getPrimerApellido()));
+        listaPersonas.forEach((es)->System.out.println(es));
+        //Persona[] listaPersonas = ControladorUsuario.ordenarPersonas();
+        /*System.out.print("Primer apellido" + "\t  Segundo apellido" + "\t  Nombre" + "\t  Identificacion\n");
         for (Persona persona : listaPersonas) {
             System.out.println("    " + persona.getPrimerApellido() + "\t          " 
                                + persona.getSegundoApellido() + "\t      "
                                + persona.getNombre() + "\t      " + 
                                persona.getId());
-        }
+        }*/
     }
     
     public static int pedirId()

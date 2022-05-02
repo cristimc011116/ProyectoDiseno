@@ -139,6 +139,7 @@ public class Persona implements Comparable{
     }
     
     public boolean menorQue(Comparable objeto){
+        System.out.println(objeto);
         return (getPrimerApellido().compareTo(((Persona)objeto).getPrimerApellido())<0);
     }
     

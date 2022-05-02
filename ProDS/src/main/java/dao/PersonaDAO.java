@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.JOptionPane;
 import logicadenegocios.ConexionBase;
 import logicadenegocios.Persona;
@@ -51,8 +52,8 @@ public class PersonaDAO {
     }
     
     public static ArrayList<Persona> getPersonasBD(){
-        ArrayList<Persona> listaPersona = new ArrayList<Persona>();
-        personas = new ArrayList<Persona>();
+        personas = new ArrayList<>();
+        
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
         ResultSet resultado;
@@ -62,11 +63,21 @@ public class PersonaDAO {
             while(resultado.next()){
                 
                 String primerApellido = resultado.getString("primerApellido");
+                //JOptionPane.showMessageDialog(null, primerApellido);
                 String segundoApellido = resultado.getString("segundoApellido");
+                //JOptionPane.showMessageDialog(null, segundoApellido);
                 String nombre = resultado.getString("nombre");
+                //JOptionPane.showMessageDialog(null, nombre);
                 int id = Integer.parseInt(resultado.getString("id"));
+                //JOptionPane.showMessageDialog(null, id);
                 persona = new Persona(primerApellido, segundoApellido, nombre, id);
+                //System.out.println(persona);
+                //JOptionPane.showMessageDialog(null, persona);
                 personas.add(persona);
+                /*if(persona==null)
+                {
+                    System.out.println(1);
+                }*/
             }
         }catch(SQLException ex){
            JOptionPane.showMessageDialog(null, ex.toString());

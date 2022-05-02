@@ -8,6 +8,7 @@ import dao.CuentaDAO;
 import dao.PersonaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import util.Ordenamiento;
@@ -69,21 +70,28 @@ public class ControladorUsuario {
     
     //Punto 3
     public static Persona[] ordenarPersonas(){
-        int cont = 0;
-        Persona[] listaPersona = new Persona[100];
-        ArrayList<Persona> listaPersonas1 = PersonaDAO.getPersonasBD();
-        for(Persona persona: listaPersonas1)
+        //int cont = 0;
+        //Persona[] listaPersona = new Persona[100];
+        //ArrayList<Persona> listaPersonas1 = PersonaDAO.getPersonasBD();
+        Persona[] listaPersonas = new Persona[10];
+        Persona p1 = new Persona("1apellido", "2apellido", "nombre", 890);
+        Persona p2 = new Persona("1apellido2", "2apellido2", "nombre2", 891);
+        Persona p3 = new Persona("1apellido3", "2apellido3", "nombre3", 892);
+        listaPersonas[0] = p1;
+        listaPersonas[1] = p2;
+        listaPersonas[2] = p3;
+        for(Persona persona: listaPersonas)
         {
             String primerApellido = persona.getPrimerApellido();
             String segundoApellido = persona.getSegundoApellido();
             String nombre = persona.getNombre();
             int id = persona.getId();
             Persona usuario = new Persona(primerApellido, segundoApellido, nombre, id);
-            listaPersona[cont] = usuario;
-            cont++;
+            //listaPersona[cont] = usuario;
+            //cont++;
         }
-        Ordenamiento.ordenar(listaPersona);
-        return listaPersona;
+        Ordenamiento.ordenar(listaPersonas);
+        return listaPersonas;
     }
     
 }
