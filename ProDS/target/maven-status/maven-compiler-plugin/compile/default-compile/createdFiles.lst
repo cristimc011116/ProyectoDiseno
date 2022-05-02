@@ -1,4 +1,3 @@
+controlador\ControladorUsuario.class
 logicadenegocios\Persona.class
-logicadenegocios\Operacion.class
-com\mycompany\prods\NewMain.class
-logicadenegocios\Cuenta.class
+util\Comparable.class

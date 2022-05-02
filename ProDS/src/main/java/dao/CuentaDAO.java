@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import logicadenegocios.ConexionBase;
 import logicadenegocios.Cuenta;
+import logicadenegocios.Persona;
 
 /**
  *
@@ -74,4 +75,33 @@ public class CuentaDAO {
         }
         return cuenta;
       }
+    
+    
+    public static ArrayList<Cuenta> getCuentasBD(){
+        cuentas = new ArrayList<>();
+        
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        ResultSet resultado;
+        Cuenta cuenta = null;
+        try{
+            resultado = con.consultas("SELECT * FROM Cuenta");
+            while(resultado.next()){
+                int numeroCuenta = Integer.parseInt(resultado.getString("numero"));
+                //JOptionPane.showMessageDialog(null, primerApellido);
+                String estatus = resultado.getString("estatus");
+                //JOptionPane.showMessageDialog(null, segundoApellido);
+                double saldo = Double.parseDouble(resultado.getString("saldo"));
+                //JOptionPane.showMessageDialog(null, nombre);
+                cuenta = new Cuenta(numeroCuenta, estatus, saldo);
+                //System.out.println(persona);
+                //JOptionPane.showMessageDialog(null, persona);
+                cuentas.add(cuenta);
+            }
+        }catch(SQLException ex){
+           JOptionPane.showMessageDialog(null, ex.toString());
+        }
+        con.desconectar();
+        return cuentas;
+    }
 }

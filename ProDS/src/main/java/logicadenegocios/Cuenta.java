@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package logicadenegocios;
+import dao.CuentaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
@@ -31,6 +32,14 @@ public class Cuenta {
         this.saldo = pSaldo;
         this.estatus = pEstatus;
         this.dueno = null;
+        this.operaciones = new ArrayList<>();
+    }
+    
+    public Cuenta(int pNumero, String pEstatus, double pSaldo)
+    {
+        this.numero = pNumero;
+        this.saldo = pSaldo;
+        this.estatus = pEstatus;
         this.operaciones = new ArrayList<>();
     }
 
@@ -108,10 +117,7 @@ public class Cuenta {
         this.fechaCreacion = fechaCreacion;
     }
 
-    
-    
-    
-    
+        
     public static LocalDate setFechaCreacion()
     //public static void main(String[] args)
     {
@@ -156,6 +162,15 @@ public class Cuenta {
         resultado = resultado.replace(',','.');
         double numDec = Double.parseDouble(resultado);
         return numDec;
+    }
+    
+    
+       public void listarCuentas()
+    //public static void main(String[] args)
+    {
+        ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta1.getSaldo().compareTo(cuenta2.getSaldo()));
+        listaCuentas.forEach((es)->System.out.println(es));
     }
     
 }

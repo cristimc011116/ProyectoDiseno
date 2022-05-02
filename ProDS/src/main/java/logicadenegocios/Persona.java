@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package logicadenegocios;
+import dao.PersonaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import util.Comparable;
@@ -23,10 +24,10 @@ public class Persona implements Comparable{
     private String rol;
     private ArrayList<Cuenta> misCuentas;
 
-    public Persona(String pCodigo, String pPrimerApellido, String pSegundoApellido, String pNombre, int pId, LocalDate pFechaNacimiento,
+    public Persona(String pPrimerApellido, String pSegundoApellido, String pNombre, int pId, LocalDate pFechaNacimiento,
                    int pNumero, String pCorreo, String pRol)
     {
-        this.codigo = pCodigo;
+        setCodigo();
         this.primerApellido = pPrimerApellido;
         this.segundoApellido = pSegundoApellido;
         this.nombre = pNombre;
@@ -70,72 +71,75 @@ public class Persona implements Comparable{
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setCodigo() {
+        int contadorClientes = contarClientes();
+        String cod ="CIF_";
+        String pCodigo = cod + String.valueOf(contadorClientes);
+        this.codigo = pCodigo;
     }
 
     public String getPrimerApellido() {
         return primerApellido;
     }
 
-    public void setPrimerApellido(String primerApellido) {
-        this.primerApellido = primerApellido;
+    public void setPrimerApellido(String pPrimerApellido) {
+        this.primerApellido = pPrimerApellido;
     }
 
     public String getSegundoApellido() {
         return segundoApellido;
     }
 
-    public void setSegundoApellido(String segundoApellido) {
-        this.segundoApellido = segundoApellido;
+    public void setSegundoApellido(String pSegundoApellido) {
+        this.segundoApellido = pSegundoApellido;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombre(String pNombre) {
+        this.nombre = pNombre;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int pId) {
+        this.id = pId;
     }
 
     public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
+    public void setFechaNacimiento(LocalDate pFechaNacimiento) {
+        this.fechaNacimiento = pFechaNacimiento;
     }
 
     public int getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public void setNumero(int pNumero) {
+        this.numero = pNumero;
     }
 
     public String getCorreo() {
         return correo;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setCorreo(String pCorreo) {
+        this.correo = pCorreo;
     }
 
     public String getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setRol(String pRol) {
+        this.rol = pRol;
     }
     
     public boolean menorQue(Comparable objeto){
@@ -152,6 +156,12 @@ public class Persona implements Comparable{
     
     public void asignarCuenta(Cuenta pCuenta){
         this.misCuentas.add(pCuenta);
+    }
+    
+    public static int contarClientes(){
+      ArrayList<Persona> listaClientes = PersonaDAO.getPersonasBD();
+       int contadorClientes = listaClientes.size();
+       return contadorClientes;
     }
     
     
