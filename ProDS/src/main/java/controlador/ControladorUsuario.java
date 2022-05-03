@@ -4,11 +4,19 @@
  */
 package controlador;
 
+import GUI.CrearCuenta;
+import GUI.Menu;
+import GUI.tabla;
 import dao.CuentaDAO;
 import dao.PersonaDAO;
+import static dao.PersonaDAO.getPersonasBD;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import util.Ordenamiento;
@@ -18,7 +26,57 @@ import validacion.ExpresionesRegulares;
  *
  * @author Cristi Martínez
  */
-public class ControladorUsuario {
+public class ControladorUsuario implements ActionListener{
+    
+    public Menu menu;
+    public CrearCuenta vista1;
+    private ArrayList<Persona> personasSistema;
+    private tabla latabla;
+    
+    public ControladorUsuario(Menu pMenu)
+    {
+        this.menu = pMenu;
+        this.latabla = null;
+        this.personasSistema = new ArrayList<>();
+        this.menu.btnListar.addActionListener(this);
+        getPersonasBD();
+        ordenarClientes();
+    }
+    
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        switch(e.getActionCommand()){
+            case "listar":
+                listarPersonas();
+                break;
+            default:
+                break;
+        }
+    }
+    
+    public void listarPersonas(){
+        String[] titulos = {
+            "Nombre",
+            "Primer apellido",
+            "Segundo apellido",
+            "Identificación"};
+        this.latabla = new tabla();
+        this.latabla.modelo = new DefaultTableModel(null, titulos);
+        JTable table = new JTable();
+        table.setModel(this.latabla.modelo);
+        this.latabla.tabla2 = table;
+        //this.latabla.panelSecundario.setViewportView(this.latabla.tabla2);
+        for(Persona persona: personasSistema)
+        {
+           Object[] info = {persona.getNombre(), persona.getPrimerApellido(), persona.getSegundoApellido(), persona.getId()};
+           System.out.println(persona);
+           this.latabla.modelo.addRow(info);
+        }
+        this.latabla.setVisible(true);
+        this.menu.setVisible(false);
+    }
+    
+        
+        
     
     //Punto 2
     public static int insertarCuenta(String pPin, int pMonto, int pId)
@@ -30,6 +88,10 @@ public class ControladorUsuario {
         CuentaDAO.asignarCuentaCliente(cuenta, pId);
         
         return numero;
+    }
+    
+    private void ordenarClientes(){
+        personasSistema.sort(Comparator.comparing(Persona::getPrimerApellido));
     }
     
     public static String imprimirCuenta(int pNum){
