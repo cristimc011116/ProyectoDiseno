@@ -78,6 +78,8 @@ public class PersonaDAO {
                 {
                     System.out.println(1);
                 }*/
+                //personas.sort((Persona persona1, Persona persona2)-> persona1.getPrimerApellido().compareTo(persona2.getPrimerApellido()));
+                //personas.forEach((es)->System.out.println(es));
             }
         }catch(SQLException ex){
            JOptionPane.showMessageDialog(null, ex.toString());
