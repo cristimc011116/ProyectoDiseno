@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.text.DecimalFormat;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.*; 
 /**
  *
  * @author Cristi Martínez
@@ -169,7 +170,7 @@ public class Cuenta {
     //public static void main(String[] args)
     {
         ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta1.getSaldo().compareTo(cuenta2.getSaldo()));
+        Collections.sort(listaCuentas, Collections.reverseOrder());  
         listaCuentas.forEach((es)->System.out.println(es));
     }
     
