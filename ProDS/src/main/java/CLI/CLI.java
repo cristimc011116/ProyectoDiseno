@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package CLI;
+import GUI.Menu;
 import controlador.ControladorUsuario;
 import java.util.Scanner;
 import validacion.ExpresionesRegulares;
@@ -22,11 +23,22 @@ import javax.swing.JOptionPane;
  */
 public class CLI {
     //el main debe ser el menu, las funciones métodos
-    
-    //public void crearCuenta()
     public static void main(String[] args)
     {
-        int id = pedirId();
+        System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
+                + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
+                + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
+                + "\n9.Realizar retiro en dólares\n10.Realizar transferencia en colones\n11.Consultar tipo de cambio de compra en dólares"
+                + "\n12.Consultar tipo de cambio de ventar en dólares\n13.Consultar saldo actual\n14.Consultar saldo actual (dólares)"
+                + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n16.Consultar estatus de la cuenta"
+                + "\n17.Consultar ganancias del banco por comisiones\n18.Consultar ganancias del banco por comisiones en una cuenta específica"
+                + "\nDigite su opción: ");
+    }
+    
+    public void crearCuenta()
+    //public static void main(String[] args)
+    {
+        /*int id = pedirId();
         String pin = pedirPin();
         int monto = pedirMonto();
         int numero = ControladorUsuario.insertarCuenta(pin, monto, id);
@@ -37,7 +49,10 @@ public class CLI {
         System.out.println(texto5);
         System.out.println("---");
         String texto6 = ControladorUsuario.imprimirPersona(id);
-        System.out.println(texto6); 
+        System.out.println(texto6); */
+        Menu menu = new Menu();
+        ControladorUsuario controlador = new ControladorUsuario(menu);
+        controlador.menu.setVisible(true);
     }
     
     public void listarPersonas()

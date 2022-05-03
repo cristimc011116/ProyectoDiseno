@@ -173,6 +173,19 @@ public class Cuenta {
         Collections.sort(listaCuentas, Collections.reverseOrder());  
         listaCuentas.forEach((es)->System.out.println(es));
     }
+       
+       public boolean aplicaComision(int numCuenta)
+       {
+           int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
+           if (contador > 3)
+           {
+               return true;
+           }
+           else
+           {
+               return false;
+           }
+       }
     
 }
 

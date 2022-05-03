@@ -87,4 +87,11 @@ public class PersonaDAO {
         con.desconectar();
         return personas;
     }
+    
+    public static ResultSet recuperarTodosLosUsuariosBD(){
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        return con.consultas("SELECT * FROM Persona");
+    }
+
 }

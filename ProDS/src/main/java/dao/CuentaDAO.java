@@ -104,4 +104,21 @@ public class CuentaDAO {
         con.desconectar();
         return cuentas;
     }
+    
+    public static int contadorOperacionesCuenta(int numCuenta){
+        String strNumero = Integer.toString(numCuenta);
+        String numEncrip = Cuenta.encriptar(strNumero);
+        int contador = 0;
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE numero = " +"'"+ numEncrip+"'");
+        try{
+            while(buscar.next()){
+              contador++;
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+        }
+        return contador;
+      }
 }

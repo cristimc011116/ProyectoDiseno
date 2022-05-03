@@ -27,7 +27,7 @@ public class Persona implements Comparable{
     public Persona(String pPrimerApellido, String pSegundoApellido, String pNombre, int pId, LocalDate pFechaNacimiento,
                    int pNumero, String pCorreo, String pRol)
     {
-        setCodigo();
+        //setCodigo();
         this.primerApellido = pPrimerApellido;
         this.segundoApellido = pSegundoApellido;
         this.nombre = pNombre;
