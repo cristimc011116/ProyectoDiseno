@@ -11,6 +11,7 @@ import dao.PersonaDAO;
 import java.time.LocalDate;
 import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
+import webServiceBCCR.*;
 import dao.CuentaDAO;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,19 +35,22 @@ public class CLI {
                 + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n16.Consultar estatus de la cuenta"
                 + "\n17.Consultar ganancias del banco por comisiones\n18.Consultar ganancias del banco por comisiones en una cuenta específica"
                 + "\nDigite su opción: ");*/
-                listarPersonas();
-                listarCuentas();
+                System.out.println("El tipo de cambio de compra es");
+//                System.out.println(ConsultarCompraDolar());
+                System.out.println("El tipo de cambio de venta es");
+//                System.out.println(ConsultarVentaDolar());
+                
         
         
     }
-    
+ /*   
     public static void listarCuentas()
     //public static void main(String[] args)
     {
         ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
         listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta2.getSaldo().compareTo(cuenta1.getSaldo()));
         listaCuentas.forEach((es)->System.out.println(es));
-    }
+    }*/
     
     public void crearCuenta()
     //public static void main(String[] args)

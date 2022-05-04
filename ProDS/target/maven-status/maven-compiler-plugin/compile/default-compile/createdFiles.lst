@@ -19,6 +19,7 @@ GUI\pr6.class
 validacion\ExpresionesRegulares.class
 GUI\CrearCuenta$2.class
 GUI\tabla.class
+webServiceBCCR\ConexionBCCR.class
 logicadenegocios\ConexionBase.class
 logicadenegocios\Operacion.class
 GUI\pr5$2.class
@@ -30,5 +31,7 @@ GUI\tabla$1.class
 GUI\Menu.class
 dao\PersonaDAO.class
 GUI\pr8$2.class
+webServiceBCCR\ConsultarCambioMoneda.class
+webServiceBCCR\ExtraerXML.class
 GUI\CrearCuenta$1.class
 GUI\pr7.class
