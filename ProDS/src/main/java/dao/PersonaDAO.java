@@ -43,6 +43,8 @@ public class PersonaDAO {
               persona.setNombre(buscar.getString("nombre"));
               int idU = Integer.parseInt(buscar.getString("id"));
               persona.setNumero(idU);
+              LocalDate fechaNac = LocalDate.parse(buscar.getString("fechaNacimiento"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+              persona.setFechaNacimiento(fechaNac);
               int telefono = Integer.parseInt(buscar.getString("numero"));
               persona.setNumero(telefono);
               persona.setCorreo(buscar.getString("correo"));

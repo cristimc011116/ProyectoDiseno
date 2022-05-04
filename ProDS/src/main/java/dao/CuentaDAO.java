@@ -91,6 +91,7 @@ public class CuentaDAO {
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: " + e.toString());
         }
+        JOptionPane.showMessageDialog(null, mensaje);
         return mensaje;
     }
     

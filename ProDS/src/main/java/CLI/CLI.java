@@ -90,9 +90,10 @@ public class CLI {
             String op = sc.next();
             if("1".equals(op))
             {
-                System.out.println("Digite la identificacion del usuario que desea consultar");
+                System.out.println("Digite la identificación del usuario que desea consultar");
                 String usuario = sc.next();
-                consultarUsuario(usuario);
+                String mensaje = consultarUsuario(usuario);
+                System.out.println(mensaje);
             }
             else
             {
