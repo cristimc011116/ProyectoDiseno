@@ -36,17 +36,17 @@ public class Operacion {
 
 //------------------------------------------METODOS DE CLASE----------------------------------------    
     //Falta el método valiarCuenta en el paquete de validaciones.
-    public boolean cambiaPIN(int pNumCuenta, String pPinAccesoAnterior, 
+    public boolean cambiaPIN(int pCuenta, String pPinAccesoAnterior, 
         String pPinAccesoNuevo){
         
-        if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
+        if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
             validacion.ExpresionesRegulares.validarPin(pPinAccesoAnterior) &&
             validacion.ExpresionesRegulares.validarPin(pPinAccesoNuevo)){
             
             cuenta.setPin(pPinAccesoNuevo);
             
             System.out.print("Estimado usuario, se ha cambiado "
-                + "satisfactoriamente el PIN de su cuenta "+pNumCuenta);
+                + "satisfactoriamente el PIN de su cuenta "+pCuenta);
             
             return true;
             
@@ -58,7 +58,7 @@ public class Operacion {
     public boolean realizarDeposito(int pCuenta, String pPinAcceso, 
         double pCantColones){
         double dinero = cuenta.getSaldo();
-        if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
+        if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
             validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantColones))){
                 
             cuenta.setSaldo(dinero+pCantColones);
@@ -115,7 +115,7 @@ public class Operacion {
         double pCantDolares){
         double dinero = cuenta.getSaldo();
         double tipoCambioCompra = 0 /* ConsultaCompraDolar(); */ ;//Se debe igualar a la función ConsultaCompraDolar().
-        if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
+        if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
             validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
             dinero = pCantDolares*tipoCambioCompra;
             cuenta.setSaldo(dinero);

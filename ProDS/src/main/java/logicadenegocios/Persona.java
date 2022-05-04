@@ -96,6 +96,18 @@ public class Persona implements Comparable{
       return (getPrimerApellido().compareTo(((Persona)objeto).getPrimerApellido())<0);
     }
     
+    public double consultarSaldoColones(int pNumCuenta, String pPinAcceso){
+      Cuenta cuenta = new Cuenta();
+      if (validacion.ExpresionesRegulares.validarCuenta(pNumCuenta)){
+        if (validacion.ExpresionesRegulares.validarPin(pPinAcceso)){
+          return cuenta.getSaldo();//retorna el saldo de la cuenta.
+        }else{
+          return 1;//Pin incorrecto.
+        }
+      }
+      return 0; //La cuenta no existe.
+    }
+    
 //-----------------------------------------METODOS ACCESORES--------------------------------------------    
     
     public String getCodigo() {

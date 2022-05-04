@@ -4,8 +4,11 @@
  */
 package validacion;
 
+import dao.CuentaDAO;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import logicadenegocios.Cuenta;
 
 /**
  *
@@ -76,5 +79,16 @@ public class ExpresionesRegulares {
         return (m.matches());
     } 
     
-    
+    public static boolean validarCuenta(int cuenta)
+    {
+      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+      int cuentaLista;
+      for(int i=0; i < listaCuentas.size();i++){
+        cuentaLista = Integer.parseInt(listaCuentas.get(i).toString());
+        if( cuentaLista == cuenta){
+          return true;
+        }
+      }
+      return false;
+    } 
 }
