@@ -27,18 +27,22 @@ public class CLI {
     //el main debe ser el menu, las funciones métodos
     public static void main(String[] args)
     {
-        /*System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
+        Scanner sc = new Scanner (System.in);
+        System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
                 + "\n9.Realizar retiro en dólares\n10.Realizar transferencia en colones\n11.Consultar tipo de cambio de compra en dólares"
                 + "\n12.Consultar tipo de cambio de ventar en dólares\n13.Consultar saldo actual\n14.Consultar saldo actual (dólares)"
                 + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n16.Consultar estatus de la cuenta"
                 + "\n17.Consultar ganancias del banco por comisiones\n18.Consultar ganancias del banco por comisiones en una cuenta específica"
-                + "\nDigite su opción: ");*/
-                System.out.println("El tipo de cambio de compra es");
+                + "\nDigite su opción: ");
+        String opcion = sc.next();
+        crearCuenta(opcion);
+        listarPersonas(opcion);
+                /*System.out.println("El tipo de cambio de compra es");
 //                System.out.println(ConsultarCompraDolar());
                 System.out.println("El tipo de cambio de venta es");
-//                System.out.println(ConsultarVentaDolar());
+//                System.out.println(ConsultarVentaDolar());*/
                 
         
         
@@ -52,32 +56,60 @@ public class CLI {
         listaCuentas.forEach((es)->System.out.println(es));
     }*/
     
-    public void crearCuenta()
+    public static void crearCuenta(String opcion)
     //public static void main(String[] args)
     {
-        /*int id = pedirId();
-        String pin = pedirPin();
-        int monto = pedirMonto();
-        int numero = ControladorUsuario.insertarCuenta(pin, monto, id);
+        if ("2".equals(opcion))
+        {
+            int id = pedirId();
+            String pin = pedirPin();
+            int monto = pedirMonto();
+            int numero = ControladorUsuario.insertarCuenta(pin, monto, id);
+
+            String texto4 = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: ";
+            System.out.println(texto4);
+            String texto5 = ControladorUsuario.imprimirCuenta(numero);
+            System.out.println(texto5);
+            System.out.println("---");
+            String texto6 = ControladorUsuario.imprimirPersona(id);
+            System.out.println(texto6); 
+        }
         
-        String texto4 = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: ";
-        System.out.println(texto4);
-        String texto5 = ControladorUsuario.imprimirCuenta(numero);
-        System.out.println(texto5);
-        System.out.println("---");
-        String texto6 = ControladorUsuario.imprimirPersona(id);
-        System.out.println(texto6); */
-        Menu menu = new Menu();
-        ControladorUsuario controlador = new ControladorUsuario(menu);
-        controlador.menu.setVisible(true);
     }
     
-    public static void  listarPersonas()
+    public static void  listarPersonas(String opcion)
     //public static void main(String[] args)
     {
-        ArrayList<Persona> listaPersonas = PersonaDAO.getPersonasBD();
-        listaPersonas.sort((Persona persona1, Persona persona2)-> persona1.getPrimerApellido().compareTo(persona2.getPrimerApellido()));
-        listaPersonas.forEach((es)->System.out.println(es));
+        Scanner sc = new Scanner (System.in);
+        if("3".equals(opcion))
+        {
+            ArrayList<Persona> listaPersonas = PersonaDAO.getPersonasBD();
+            listaPersonas.sort((Persona persona1, Persona persona2)-> persona1.getPrimerApellido().compareTo(persona2.getPrimerApellido()));
+            listaPersonas.forEach((es)->System.out.println(es));
+            System.out.println("Digite 1 si desea consultar a un usuario en específico, o 0 si desea volver al menú principal");
+            String op = sc.next();
+            if("1".equals(op))
+            {
+                System.out.println("Digite la identificacion del usuario que desea consultar");
+                String usuario = sc.next();
+                consultarUsuario(usuario);
+            }
+            else
+            {
+                main(null);
+            }
+        }   
+    }
+    //VALIDARRRR
+    public static String consultarUsuario(String idUsuario)
+    {
+        int id = Integer.parseInt(idUsuario);
+        Persona persona = PersonaDAO.obtenerPersona(id);
+        String mensaje = persona.toStringCompleto();
+        String mensajeCuentas = CuentaDAO.obtenerCuentasPersona(id);
+        String total = "Información del usuario:\n" + mensaje + "\n\nCuentas de este usuario:\n" + mensajeCuentas;
+        return total;
+        
     }
     
     public static int pedirId()

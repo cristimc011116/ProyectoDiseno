@@ -76,6 +76,24 @@ public class CuentaDAO {
         return cuenta;
       }
     
+    public static String obtenerCuentasPersona(int idPersona)
+    {
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        Cuenta cuenta = new Cuenta();
+        String mensaje = "";
+        ResultSet buscar = con.consultas("SELECT * FROM PersonaCuenta WHERE idCliente = " + idPersona);
+        try{
+            while(buscar.next()){
+              String strNumCuenta = buscar.getString("numCuenta");
+              mensaje += strNumCuenta;
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+        }
+        return mensaje;
+    }
+    
     
     public static ArrayList<Cuenta> getCuentasBD(){
         cuentas = new ArrayList<>();

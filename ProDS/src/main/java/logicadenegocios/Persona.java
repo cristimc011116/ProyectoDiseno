@@ -25,7 +25,7 @@ public class Persona implements Comparable{
     private ArrayList<Cuenta> misCuentas;
 
 //--------------------------------------------CONSTRUCTORES-------------------------------------------    
-    public Persona(String pPrimerApellido, String pSegundoApellido, String pNombre, int pId, LocalDate pFechaNacimiento,
+    public Persona(String pCodigo, String pPrimerApellido, String pSegundoApellido, String pNombre, int pId, LocalDate pFechaNacimiento,
                    int pNumero, String pCorreo, String pRol)
     {
         /*setCodigo();
@@ -46,7 +46,7 @@ public class Persona implements Comparable{
         setNumero(pNumero);
         setCorreo(pCorreo);
         setRol(pRol);
-        setCodigo();
+        setCodigo(pCodigo);
         this.misCuentas = new ArrayList<>();
         
     }
@@ -114,10 +114,10 @@ public class Persona implements Comparable{
         return codigo;
     }
 
-    public void setCodigo() {
-        int contadorClientes = contarClientes();
+    public void setCodigo(String pCodigo) {
+        /*int contadorClientes = contarClientes();
         String cod ="CIF_";
-        String pCodigo = cod + String.valueOf(contadorClientes);
+        String pCodigo = cod + String.valueOf(contadorClientes);*/
         this.codigo = pCodigo;
     }
 
@@ -190,7 +190,16 @@ public class Persona implements Comparable{
         mensaje = "Nombre del dueño de la cuenta= " + this.nombre + " " + this.primerApellido + " " + this.segundoApellido + "\n" 
                 + "Identificación= " + this.id + "\n" ;
         return mensaje;
-    }  
+    } 
+    
+    public String toStringCompleto()
+    {
+        String mensaje = "";
+        mensaje = "Nombre= " + this.nombre + " " + this.primerApellido + " " + this.segundoApellido + "\n" 
+                + "Identificación= " + this.id + "\n" + "Código= " + this.codigo + "\n" + "Fecha de nacimiento= " + this.fechaNacimiento + "\n"
+                + "Número de teléfono= " + this.numero + "\n" + "Correo= " + this.correo + "\n" + "Rol= " + this.rol + "\n";
+        return mensaje;
+    }
     
 }
 

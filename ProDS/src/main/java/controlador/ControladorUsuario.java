@@ -61,7 +61,7 @@ public class ControladorUsuario implements ActionListener{
         ResultSet datos = PersonaDAO.recuperarTodosLosUsuariosBD();
         try{
             while (datos.next()){
-                Persona usuarioCargar = new Persona(datos.getString("primerApellido"),
+                Persona usuarioCargar = new Persona(datos.getString("codigo"), datos.getString("primerApellido"),
                         datos.getString("segundoApellido"),
                         datos.getString("nombre"),
                         Integer.parseInt(datos.getString("id")),

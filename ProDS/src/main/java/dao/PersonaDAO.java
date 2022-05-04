@@ -37,12 +37,16 @@ public class PersonaDAO {
         ResultSet buscar = con.consultas("SELECT * FROM Persona WHERE id = " + id);
         try{
             while(buscar.next()){
+              persona.setCodigo(buscar.getString("codigo"));
               persona.setPrimerApellido(buscar.getString("primerApellido"));
               persona.setSegundoApellido(buscar.getString("segundoApellido"));
               persona.setNombre(buscar.getString("nombre"));
+              int idU = Integer.parseInt(buscar.getString("id"));
+              persona.setNumero(idU);
               int telefono = Integer.parseInt(buscar.getString("numero"));
               persona.setNumero(telefono);
               persona.setCorreo(buscar.getString("correo"));
+              persona.setSegundoApellido(buscar.getString("rol"));
               return persona;
             }
         }catch(SQLException e){
