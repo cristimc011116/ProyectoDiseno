@@ -111,5 +111,57 @@ public class Operacion {
         this.montoComision = montoComision;
     }
     
+<<<<<<< HEAD
+=======
+    //Falta el método valiarCuenta en el paquete de validaciones.
+    public boolean cambiaPIN(int pNumCuenta, String pPinAccesoAnterior, 
+        String pPinAccesoNuevo){
+        
+        if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
+            validacion.ExpresionesRegulares.validarPin(pPinAccesoAnterior) &&
+            validacion.ExpresionesRegulares.validarPin(pPinAccesoNuevo)){
+            
+            cuenta.setPin(pPinAccesoNuevo);
+            
+            System.out.print("Estimado usuario, se ha cambiado "
+                + "satisfactoriamente el PIN de su cuenta "+pNumCuenta);
+            
+            return true;
+            
+        }else{
+            return false;
+        }
+    }
+    
+    public boolean realizarDeposito(int pCuenta, String pPinAcceso, 
+        double pCantColones){
+        double dinero = cuenta.getSaldo();
+        if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
+            validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantColones))){
+                
+            cuenta.setSaldo(dinero+pCantColones);
+            return true;
+            
+        }else{
+            return false;
+        }
+    }
+    public boolean realizarDepositoDolares(int pCuenta, String pPinAcceso, 
+        double pCantDolares){
+        double dinero = cuenta.getSaldo();
+        double tipoCambioCompra = 0 /* ConsultaCompraDolar(); */ ;//Se debe igualar a la función ConsultaCompraDolar().
+        if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
+            validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
+            dinero = pCantDolares*tipoCambioCompra;
+            cuenta.setSaldo(dinero);
+            return true;
+            
+        }else{
+            return false;
+        }
+    }
+    
+    
+>>>>>>> 68e4d3b42d0474ccc3de19dc735e19fe758fbeae
 }
 
