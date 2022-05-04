@@ -13,6 +13,7 @@ import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import dao.CuentaDAO;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,18 +26,26 @@ public class CLI {
     //el main debe ser el menu, las funciones métodos
     public static void main(String[] args)
     {
-        System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
+        /*System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
                 + "\n9.Realizar retiro en dólares\n10.Realizar transferencia en colones\n11.Consultar tipo de cambio de compra en dólares"
                 + "\n12.Consultar tipo de cambio de ventar en dólares\n13.Consultar saldo actual\n14.Consultar saldo actual (dólares)"
                 + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n16.Consultar estatus de la cuenta"
                 + "\n17.Consultar ganancias del banco por comisiones\n18.Consultar ganancias del banco por comisiones en una cuenta específica"
-                + "\nDigite su opción: ");
-                
-                Persona persona1 = new Persona();
+                + "\nDigite su opción: ");*/
+                listarPersonas();
+                listarCuentas();
         
         
+    }
+    
+    public static void listarCuentas()
+    //public static void main(String[] args)
+    {
+        ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta2.getSaldo().compareTo(cuenta1.getSaldo()));
+        listaCuentas.forEach((es)->System.out.println(es));
     }
     
     public void crearCuenta()
@@ -59,7 +68,7 @@ public class CLI {
         controlador.menu.setVisible(true);
     }
     
-    public void listarPersonas()
+    public static void  listarPersonas()
     //public static void main(String[] args)
     {
         ArrayList<Persona> listaPersonas = PersonaDAO.getPersonasBD();

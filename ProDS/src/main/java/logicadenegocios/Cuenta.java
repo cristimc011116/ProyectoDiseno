@@ -125,8 +125,7 @@ public class Cuenta {
         double numDec = Double.parseDouble(resultado);
         return numDec;
     }
-    
-    
+
     public void listarCuentas()
     //public static void main(String[] args)
     {
@@ -134,6 +133,15 @@ public class Cuenta {
         Collections.sort(listaCuentas, Collections.reverseOrder());  
         listaCuentas.forEach((es)->System.out.println(es));
     }
+    
+    public static boolean consultarStatusCuenta(Cuenta cuentaConsulta){
+     if(cuentaConsulta.estatus == "activa"){
+       return true;
+     } else
+       return false;
+    }
+    
+
        
    public boolean aplicaComision(int numCuenta)
    {
@@ -181,7 +189,7 @@ public class Cuenta {
     }
 
     public void setEstatus(String pEstatus) {
-        this.estatus = pEstatus;
+        this.estatus = pEstatus.toLowerCase();
     }
     
     public String toString()

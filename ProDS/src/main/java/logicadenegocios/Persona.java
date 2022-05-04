@@ -84,7 +84,7 @@ public class Persona implements Comparable{
     public void asignarCuenta(Cuenta pCuenta){
         this.misCuentas.add(pCuenta);
     }
-    
+   
     public static int contarClientes(){
       ArrayList<Persona> listaClientes = PersonaDAO.getPersonasBD();
        int contadorClientes = listaClientes.size();
@@ -179,5 +179,6 @@ public class Persona implements Comparable{
                 + "Identificación= " + this.id + "\n" ;
         return mensaje;
     }  
+    
 }
 
