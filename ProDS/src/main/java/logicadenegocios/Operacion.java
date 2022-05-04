@@ -98,6 +98,20 @@ public class Operacion {
             return false;
         }
     }
+    public boolean realizarDepositoDolares(int pCuenta, String pPinAcceso, 
+        double pCantDolares){
+        double dinero = cuenta.getSaldo();
+        double tipoCambioCompra = 0 /* ConsultaCompraDolar(); */ ;//Se debe igualar a la función ConsultaCompraDolar().
+        if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
+            validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
+            dinero = pCantDolares*tipoCambioCompra;
+            cuenta.setSaldo(dinero);
+            return true;
+            
+        }else{
+            return false;
+        }
+    }
     
     
 }
