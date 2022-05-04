@@ -34,6 +34,15 @@ public class Cuenta {
         this.estatus = pEstatus;
         this.dueno = null;
         this.operaciones = new ArrayList<>();
+        
+        setNumero(pNumero);
+        setPin(pPin);
+        setFechaCreacion();
+        setSaldo(pSaldo);
+        setEstatus(pEstatus);
+        
+        
+        
     }
     
     public Cuenta(int pNumero, String pEstatus, double pSaldo)
@@ -59,16 +68,16 @@ public class Cuenta {
         return numero;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public void setNumero(int pNumero) {
+        this.numero = pNumero;
     }
 
     public String getPin() {
         return pin;
     }
 
-    public void setPin(String pin) {
-        this.pin = pin;
+    public void setPin(String pPin) {
+        this.pin = pPin;
     }
 
     public LocalDate getFechaCreacion() {
@@ -79,16 +88,16 @@ public class Cuenta {
         return saldo;
     }
 
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
+    public void setSaldo(double pSaldo) {
+        this.saldo = pSaldo;
     }
 
     public String getEstatus() {
         return estatus;
     }
 
-    public void setEstatus(String estatus) {
-        this.estatus = estatus;
+    public void setEstatus(String pEstatus) {
+        this.estatus = pEstatus;
     }
     
     public String toString()
@@ -114,8 +123,8 @@ public class Cuenta {
         return (Integer.parseInt(numCuenta));
     }
 
-    public void setFechaCreacion2(LocalDate fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+    public void setFechaCreacion2(LocalDate pFechaCreacion) {
+        this.fechaCreacion = pFechaCreacion;
     }
 
         
