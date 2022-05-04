@@ -14,6 +14,7 @@ public class Operacion {
     private String tipo;
     private boolean comision;
     private double montoComision;
+    Cuenta cuenta = new Cuenta();
     
     public Operacion(int pId, LocalDate pFechaOperacion, String pTipo, boolean pComision, double pMontoComision)
     {
@@ -67,7 +68,7 @@ public class Operacion {
     //Falta el método valiarCuenta en el paquete de validaciones.
     public boolean cambiaPIN(int pNumCuenta, String pPinAccesoAnterior, 
         String pPinAccesoNuevo){
-        Cuenta cuenta = new Cuenta();
+        
         if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
             validacion.ExpresionesRegulares.validarPin(pPinAccesoAnterior) &&
             validacion.ExpresionesRegulares.validarPin(pPinAccesoNuevo)){
@@ -83,5 +84,21 @@ public class Operacion {
             return false;
         }
     }
+    
+    public boolean realizarDeposito(int pCuenta, String pPinAcceso, 
+        double pCantColones){
+        double dinero = cuenta.getSaldo();
+        if (/*validacion.ExpresionesRegulares.validarCuenta(pNumCuenta) && */
+            validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantColones))){
+                
+            cuenta.setSaldo(dinero+pCantColones);
+            return true;
+            
+        }else{
+            return false;
+        }
+    }
+    
+    
 }
 
