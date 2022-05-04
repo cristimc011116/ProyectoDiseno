@@ -47,15 +47,7 @@ public class CLI {
         
         
     }
- /*   
-    public static void listarCuentas()
-    //public static void main(String[] args)
-    {
-        ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta2.getSaldo().compareTo(cuenta1.getSaldo()));
-        listaCuentas.forEach((es)->System.out.println(es));
-    }*/
-    
+        
     public static void crearCuenta(String opcion)
     //public static void main(String[] args)
     {

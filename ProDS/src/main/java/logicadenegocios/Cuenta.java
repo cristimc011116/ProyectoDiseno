@@ -126,11 +126,11 @@ public class Cuenta {
         return numDec;
     }
 
-    public void listarCuentas()
-    //public static void main(String[] args)
+    //public static void listarCuentas()
+    public static void main(String[] args)
     {
         ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-        Collections.sort(listaCuentas, Collections.reverseOrder());  
+        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> Double.toString(cuenta2.getSaldo()).compareTo(Double.toString(cuenta1.getSaldo())));
         listaCuentas.forEach((es)->System.out.println(es));
     }
     
