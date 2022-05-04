@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
  */
 public class ExpresionesRegulares {
     
-    
     public static boolean validarPin(String pinCuenta)
     {
         if (pinCuenta.length() != 6)

@@ -10,6 +10,8 @@ import com.twilio.type.PhoneNumber;
  *
  * @author Cristi Martínez
  */
+
+//------------------------------------------------PASARLO A PAQUETE UTIL------------------------------
 public class Mensaje {
     public static final String ACCOUNT_SID = "AC99990d2f368c631048e2be792a0653cd";
     public static final String AUTH_TOKEN = "cccc1b8fa67be226e4c6fdbbc5b31e27";

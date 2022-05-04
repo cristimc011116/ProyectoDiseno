@@ -24,10 +24,11 @@ public class Persona implements Comparable{
     private String rol;
     private ArrayList<Cuenta> misCuentas;
 
+//--------------------------------------------CONSTRUCTORES-------------------------------------------    
     public Persona(String pPrimerApellido, String pSegundoApellido, String pNombre, int pId, LocalDate pFechaNacimiento,
                    int pNumero, String pCorreo, String pRol)
     {
-        //setCodigo();
+        /*setCodigo();
         this.primerApellido = pPrimerApellido;
         this.segundoApellido = pSegundoApellido;
         this.nombre = pNombre;
@@ -36,7 +37,18 @@ public class Persona implements Comparable{
         this.numero = pNumero;
         this.correo = pCorreo;
         this.rol = pRol;
+        this.misCuentas = new ArrayList<>();*/
+        setPrimerApellido(pPrimerApellido);
+        setSegundoApellido(pSegundoApellido);
+        setNombre(pNombre);
+        setId(pId);
+        setFechaNacimiento(pFechaNacimiento);
+        setNumero(pNumero);
+        setCorreo(pCorreo);
+        setRol(pRol);
+        setCodigo();
         this.misCuentas = new ArrayList<>();
+        
     }
 
     public Persona()
@@ -67,6 +79,25 @@ public class Persona implements Comparable{
         this.misCuentas = new ArrayList<>();
     }
 
+//---------------------------------METODOS DE CLASE-------------------------------------------------  
+    
+    public void asignarCuenta(Cuenta pCuenta){
+        this.misCuentas.add(pCuenta);
+    }
+    
+    public static int contarClientes(){
+      ArrayList<Persona> listaClientes = PersonaDAO.getPersonasBD();
+       int contadorClientes = listaClientes.size();
+       return contadorClientes;
+    }
+    
+    public boolean menorQue(Comparable objeto){
+      System.out.println(objeto);
+      return (getPrimerApellido().compareTo(((Persona)objeto).getPrimerApellido())<0);
+    }
+    
+//-----------------------------------------METODOS ACCESORES--------------------------------------------    
+    
     public String getCodigo() {
         return codigo;
     }
@@ -140,30 +171,13 @@ public class Persona implements Comparable{
 
     public void setRol(String pRol) {
         this.rol = pRol;
-    }
-    
-    public boolean menorQue(Comparable objeto){
-        System.out.println(objeto);
-        return (getPrimerApellido().compareTo(((Persona)objeto).getPrimerApellido())<0);
-    }
+    }  
     
     public String toString(){
         String mensaje = "";
         mensaje = "Nombre del dueño de la cuenta= " + this.nombre + " " + this.primerApellido + " " + this.segundoApellido + "\n" 
                 + "Identificación= " + this.id + "\n" ;
         return mensaje;
-    }
-    
-    public void asignarCuenta(Cuenta pCuenta){
-        this.misCuentas.add(pCuenta);
-    }
-    
-    public static int contarClientes(){
-      ArrayList<Persona> listaClientes = PersonaDAO.getPersonasBD();
-       int contadorClientes = listaClientes.size();
-       return contadorClientes;
-    }
-    
-    
+    }  
 }
 
