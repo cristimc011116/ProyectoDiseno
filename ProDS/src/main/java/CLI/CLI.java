@@ -33,6 +33,10 @@ public class CLI {
                 + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n16.Consultar estatus de la cuenta"
                 + "\n17.Consultar ganancias del banco por comisiones\n18.Consultar ganancias del banco por comisiones en una cuenta específica"
                 + "\nDigite su opción: ");
+                
+                Persona persona1 = new Persona();
+        
+        
     }
     
     public void crearCuenta()

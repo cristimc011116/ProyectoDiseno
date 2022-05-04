@@ -111,8 +111,7 @@ public class Operacion {
         this.montoComision = montoComision;
     }
     
-<<<<<<< HEAD
-=======
+
     //Falta el método valiarCuenta en el paquete de validaciones.
     public boolean cambiaPIN(int pNumCuenta, String pPinAccesoAnterior, 
         String pPinAccesoNuevo){
@@ -160,8 +159,5 @@ public class Operacion {
             return false;
         }
     }
-    
-    
->>>>>>> 68e4d3b42d0474ccc3de19dc735e19fe758fbeae
 }
 
