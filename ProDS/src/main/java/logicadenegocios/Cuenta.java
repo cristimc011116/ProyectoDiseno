@@ -17,17 +17,17 @@ import java.util.*;
  * @author Cristi Martínez
  */
 public class Cuenta {
-    private int numero;
+    private String numero;
     private String pin;
     private LocalDate fechaCreacion;
-    private double saldo;
+    private String saldo;
     private String estatus;
     private Persona dueno;
     private ArrayList<Operacion> operaciones;
   
     
 //---------------------------------------------CONSTRUCTORES-------------------------------------    
-    public Cuenta(int pNumero, String pPin, LocalDate pFechaCreacion, double pSaldo, String pEstatus)
+    public Cuenta(String pNumero, String pPin, LocalDate pFechaCreacion, String pSaldo, String pEstatus)
     {
         /*this.numero = pNumero;
         this.pin = pPin;
@@ -45,7 +45,7 @@ public class Cuenta {
         this.operaciones = new ArrayList<>();   
     }
     
-    public Cuenta(int pNumero, String pEstatus, double pSaldo)
+    public Cuenta(String pNumero, String pEstatus, String pSaldo)
     {
         /*this.numero = pNumero;
         this.saldo = pSaldo;
@@ -66,14 +66,14 @@ public class Cuenta {
         this.estatus = null;
         this.dueno = null;
         this.operaciones = new ArrayList<>();*/
-        setNumero(0);
-        setSaldo(0);
+        setNumero("");
+        setSaldo("");
         this.operaciones = new ArrayList<>();
     }
     
     //--------------------------------------METODOS DE CLASE--------------------------------------
     
-    public static int generarNumCuenta()
+    public static String generarNumCuenta()
     {
         int min = 0;
         int max = 9;
@@ -85,7 +85,7 @@ public class Cuenta {
            String strValor = Integer.toString(valor);
            numCuenta += valor;
         }
-        return (Integer.parseInt(numCuenta));
+        return numCuenta;
     }
         
         //Nueva clase para encriptar y desencriptar
@@ -126,11 +126,11 @@ public class Cuenta {
         return numDec;
     }
 
-    //public static void listarCuentas()
-    public static void main(String[] args)
+    public static void listarCuentas()
+     //public static void main(String[] args)
     {
         ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> Double.toString(cuenta2.getSaldo()).compareTo(Double.toString(cuenta1.getSaldo())));
+        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> desencriptar(cuenta2.getSaldo()).compareTo(desencriptar(cuenta1.getSaldo())));
         listaCuentas.forEach((es)->System.out.println(es));
     }
     
@@ -156,11 +156,11 @@ public class Cuenta {
        }
    }    
 //-------------------------------------METODOS ACCESORES------------------------------------------
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(int pNumero) {
+    public void setNumero(String pNumero) {
         this.numero = pNumero;
     }
 
@@ -176,11 +176,11 @@ public class Cuenta {
         return fechaCreacion;
     }
 
-    public double getSaldo() {
+    public String getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(double pSaldo) {
+    public void setSaldo(String pSaldo) {
         this.saldo = pSaldo;
     }
 
@@ -195,8 +195,10 @@ public class Cuenta {
     public String toString()
     {
         String mensaje = "";
-        mensaje = "Número de cuenta= " + this.numero + "\n" + "Estatus de la cuenta= " 
-            + this.estatus + "\n" + "Saldo actual= " + this.saldo + "\n";
+        String num = desencriptar(this.numero);
+        String saldo = desencriptar(this.saldo);
+        mensaje = "Número de cuenta= " + num + "\n" + "Estatus de la cuenta= " 
+            + this.estatus + "\n" + "Saldo actual= " + saldo + "\n";
         return mensaje;
     }
     

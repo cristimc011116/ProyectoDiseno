@@ -162,9 +162,8 @@ public class CrearCuenta extends javax.swing.JFrame {
             insertar += validarEntrMonto(strMonto);
             if (insertar == 0)
             {
-                int monto = Integer.parseInt(strMonto);
                 int id = Integer.parseInt(strId);
-                int numero = ControladorUsuario.insertarCuenta(pin, monto, id);
+                String numero = ControladorUsuario.insertarCuenta(pin, strMonto, id);
 
                 String mensaje = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: \n";
                 mensaje += ControladorUsuario.imprimirCuenta(numero);

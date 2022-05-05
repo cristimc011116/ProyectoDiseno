@@ -105,9 +105,9 @@ public class ControladorUsuario implements ActionListener{
         
     
     //Punto 2
-    public static int insertarCuenta(String pPin, int pMonto, int pId)
+    public static String insertarCuenta(String pPin, String pMonto, int pId)
     {
-        int numero = Cuenta.generarNumCuenta();
+        String numero = Cuenta.generarNumCuenta();
         LocalDate fecha = Cuenta.setFechaCreacion();
         Cuenta cuenta = new Cuenta(numero, pPin, fecha, pMonto, "activo");
         CuentaDAO.insertarCuenta(cuenta,fecha);
@@ -120,7 +120,7 @@ public class ControladorUsuario implements ActionListener{
         personasSistema.sort(Comparator.comparing(Persona::getPrimerApellido));
     }
     
-    public static String imprimirCuenta(int pNum){
+    public static String imprimirCuenta(String pNum){
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNum);
         String mensaje = "Número de cuenta: " + pNum + "\nEstatus de la cuenta: " + cuenta.getEstatus() + "\nSaldo actual: " + cuenta.getSaldo();
         return mensaje;

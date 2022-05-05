@@ -55,8 +55,8 @@ public class CLI {
         {
             int id = pedirId();
             String pin = pedirPin();
-            int monto = pedirMonto();
-            int numero = ControladorUsuario.insertarCuenta(pin, monto, id);
+            String monto = pedirMonto();
+            String numero = ControladorUsuario.insertarCuenta(pin, monto, id);
 
             String texto4 = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: ";
             System.out.println(texto4);
@@ -142,7 +142,7 @@ public class CLI {
         return pin;
     }
     
-    public static int pedirMonto()
+    public static String pedirMonto()
     {
         Scanner sc = new Scanner (System.in);
         String texto3 = "Digite el monto de depósito inicial: ";
@@ -158,8 +158,7 @@ public class CLI {
             esNum = ExpresionesRegulares.esNumero(strmonto);
         }
         
-        int monto = Integer.parseInt(strmonto);
-        return monto;
+        return strmonto;
     }
     
 }

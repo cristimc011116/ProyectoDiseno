@@ -55,7 +55,7 @@ public class Operacion {
         }
     }
     
-    public boolean realizarDeposito(int pCuenta, String pPinAcceso, 
+    /*public boolean realizarDeposito(int pCuenta, String pPinAcceso, 
         double pCantColones){
         double dinero = cuenta.getSaldo();
         if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
@@ -67,7 +67,7 @@ public class Operacion {
         }else{
             return false;
         }
-    }    
+    }    */
     
     
 //-------------------------------------METODOS ACCESORES--------------------------------------------------
@@ -111,11 +111,11 @@ public class Operacion {
         this.montoComision = montoComision;
     }
 
-    public boolean realizarDepositoDolares(int pCuenta, String pPinAcceso, 
+    /*public boolean realizarDepositoDolares(int pCuenta, String pPinAcceso, 
         double pCantDolares){
         double dinero = cuenta.getSaldo();
-        double tipoCambioCompra = 0 /* ConsultaCompraDolar(); */ ;//Se debe igualar a la función ConsultaCompraDolar().
-        if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
+        double tipoCambioCompra = 0;*/ /* ConsultaCompraDolar(); */ //Se debe igualar a la función ConsultaCompraDolar().
+       /*if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
             validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
             dinero = pCantDolares*tipoCambioCompra;
             cuenta.setSaldo(dinero);
@@ -124,6 +124,6 @@ public class Operacion {
         }else{
             return false;
         }
-    }
+    }*/
 }
 

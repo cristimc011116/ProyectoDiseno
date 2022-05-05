@@ -22,14 +22,12 @@ public class CuentaDAO {
     private static ArrayList<Cuenta> cuentas;
     public static void insertarCuenta(Cuenta pCuenta, LocalDate pFecha)
     {
-        int numero = pCuenta.getNumero();
-        String strNumero = Integer.toString(numero);
-        String numEncrip = Cuenta.encriptar(strNumero);
+        String numero = pCuenta.getNumero();
+        String numEncrip = Cuenta.encriptar(numero);
         String pin = pCuenta.getPin();
         String pinEncrip = Cuenta.encriptar(pin);
-        double saldo = pCuenta.getSaldo();
-        String strSaldo = Double.toString(saldo);
-        String saldoEncrip = Cuenta.encriptar(strSaldo);
+        String saldo = pCuenta.getSaldo();
+        String saldoEncrip = Cuenta.encriptar(saldo);
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
         con.excSentenciaSQL("INSERT INTO Cuenta VALUES('" + numEncrip + "', '" + pinEncrip + "', '" + pFecha +
@@ -39,17 +37,15 @@ public class CuentaDAO {
     
     public static void asignarCuentaCliente(Cuenta pCuenta, int id)
     {
-        int numero = pCuenta.getNumero();
-        String strNumero = Integer.toString(numero);
-        String numEncrip = Cuenta.encriptar(strNumero);
+        String numero = pCuenta.getNumero();
+        String numEncrip = Cuenta.encriptar(numero);
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
         con.excSentenciaSQL("INSERT INTO PersonaCuenta VALUES(" + id + ", " + numEncrip + ")");
         con.desconectar();
     }
     
-    public static Cuenta obtenerCuenta(int numCuenta){
-        String strNumero = Integer.toString(numCuenta);
+    public static Cuenta obtenerCuenta(String strNumero){
         String numEncrip = Cuenta.encriptar(strNumero);
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
@@ -58,15 +54,13 @@ public class CuentaDAO {
         try{
             while(buscar.next()){
               String strNumDes = Cuenta.desencriptar(numEncrip);
-              int numDes = Integer.parseInt(strNumDes);
-              cuenta.setNumero(numDes);
+              cuenta.setNumero(strNumDes);
               //String strFecha = buscar.getString("fechaCreacion");
               //LocalDate fecha = LocalDate.parse(strFecha, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
               //cuenta.setFechaCreacion2(fecha);
               String noSaldo = buscar.getString("saldo");
               String strSaldoDes = Cuenta.desencriptar(noSaldo);
-              double saldoDes = Double.parseDouble(strSaldoDes);
-              cuenta.setSaldo(saldoDes);
+              cuenta.setSaldo(strSaldoDes);
               cuenta.setEstatus(buscar.getString("estatus"));
               return cuenta;
             }
@@ -106,11 +100,11 @@ public class CuentaDAO {
         try{
             resultado = con.consultas("SELECT * FROM Cuenta");
             while(resultado.next()){
-                int numeroCuenta = Integer.parseInt(resultado.getString("numero"));
+                String numeroCuenta = resultado.getString("numero");
                 //JOptionPane.showMessageDialog(null, primerApellido);
                 String estatus = resultado.getString("estatus");
                 //JOptionPane.showMessageDialog(null, segundoApellido);
-                double saldo = Double.parseDouble(resultado.getString("saldo"));
+                String saldo = resultado.getString("saldo");
                 //JOptionPane.showMessageDialog(null, nombre);
                 cuenta = new Cuenta(numeroCuenta, estatus, saldo);
                 //System.out.println(persona);
