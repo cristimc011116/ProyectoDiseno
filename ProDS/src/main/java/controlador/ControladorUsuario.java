@@ -75,8 +75,6 @@ public class ControladorUsuario implements ActionListener{
     
     public void crearCuenta()
     {
-        
-        this.vista1 = new CrearCuenta();
         int insertar = 0;
         int contador = 0;
         String strId = this.vista1.tfId.getText();
@@ -99,7 +97,7 @@ public class ControladorUsuario implements ActionListener{
                 mensaje += ControladorUsuario.imprimirCuenta(numero);
                 mensaje += "\n---\n";
                 mensaje += ControladorUsuario.imprimirPersona(id);
-                JOptionPane.showMessageDialog(null, mensaje);
+                JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         

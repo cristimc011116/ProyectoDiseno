@@ -41,7 +41,7 @@ public class CuentaDAO {
         String numEncrip = Cuenta.encriptar(numero);
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
-        con.excSentenciaSQL("INSERT INTO PersonaCuenta VALUES(" + id + ", " + numEncrip + ")");
+        con.excSentenciaSQL("INSERT INTO PersonaCuenta VALUES(" + id + ", '" + numEncrip + "')");
         con.desconectar();
     }
     
