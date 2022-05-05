@@ -35,10 +35,19 @@ public class CLI {
                 + "\n12.Consultar tipo de cambio de ventar en dólares\n13.Consultar saldo actual\n14.Consultar saldo actual (dólares)"
                 + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n16.Consultar estatus de la cuenta"
                 + "\n17.Consultar ganancias del banco por comisiones\n18.Consultar ganancias del banco por comisiones en una cuenta específica"
+                + "\n19.Salir"
                 + "\nDigite su opción: ");
         String opcion = sc.next();
-        crearCuenta(opcion);
-        listarPersonas(opcion);
+        boolean esCorrecta = validarOpcion(opcion, 1,19);
+        if(esCorrecta){
+            crearCuenta(opcion);
+            listarPersonas(opcion);
+        }
+        else
+        {
+            main(null);
+        }
+        
                 /*System.out.println("El tipo de cambio de compra es");
 //                System.out.println(ConsultarCompraDolar());
                 System.out.println("El tipo de cambio de venta es");
@@ -46,6 +55,19 @@ public class CLI {
                 
         
         
+    }
+    
+    public static boolean validarOpcion(String opcion, int numMenor, int numMayor)
+    {
+        if(ExpresionesRegulares.esNumero(opcion))
+        {
+            int op = Integer.parseInt(opcion);
+            return (numMenor <= op && op <= numMayor);
+        }
+        else
+        {
+            return false;
+        }
     }
         
     public static void crearCuenta(String opcion)
@@ -65,7 +87,9 @@ public class CLI {
             System.out.println("---");
             String texto6 = ControladorUsuario.imprimirPersona(id);
             System.out.println(texto6); 
+            volverMenu();
         }
+        
         
     }
     
@@ -78,31 +102,55 @@ public class CLI {
             ArrayList<Persona> listaPersonas = PersonaDAO.getPersonasBD();
             listaPersonas.sort((Persona persona1, Persona persona2)-> persona1.getPrimerApellido().compareTo(persona2.getPrimerApellido()));
             listaPersonas.forEach((es)->System.out.println(es));
-            System.out.println("Digite 1 si desea consultar a un usuario en específico, o 0 si desea volver al menú principal");
-            String op = sc.next();
+            seleccionarPersona();
+        }   
+    }
+    
+    public static void seleccionarPersona()
+    {
+        Scanner sc = new Scanner (System.in);
+        System.out.println("Digite 1 si desea consultar a un usuario en específico, o 0 si desea volver al menú principal");
+        String op = sc.next();
+        boolean esCorrecto = validarOpcion(op, 0, 1);
+        if(esCorrecto)
+        {
             if("1".equals(op))
             {
-                System.out.println("Digite la identificación del usuario que desea consultar");
-                String usuario = sc.next();
-                String mensaje = consultarUsuario(usuario);
-                System.out.println(mensaje);
+                pedirInfoUsuario();
+                volverMenu();
             }
             else
             {
                 main(null);
             }
-        }   
-    }
-    //VALIDARRRR
-    public static String consultarUsuario(String idUsuario)
-    {
-        int id = Integer.parseInt(idUsuario);
-        Persona persona = PersonaDAO.obtenerPersona(id);
-        String mensaje = persona.toStringCompleto();
-        String mensajeCuentas = CuentaDAO.obtenerCuentasPersona(id);
-        String total = "Información del usuario:\n" + mensaje + "\n\nCuentas de este usuario:\n" + mensajeCuentas;
-        return total;
+        }
+        else
+        {
+            seleccionarPersona();
+        }
         
+    }
+    
+    public static void volverMenu(){
+        Scanner sc = new Scanner (System.in);
+        System.out.println("Desea volver al menú: 1.Sí 2.No");
+        String op = sc.next();
+        if("1".equals(op)){
+            main(null);
+        }
+        else
+        {
+            //Salir del programa
+        }
+    }
+    
+    public static void pedirInfoUsuario()
+    {
+        Scanner sc = new Scanner (System.in);
+        System.out.println("Digite la identificación del usuario que desea consultar");
+        String usuario = sc.next();
+        String mensaje = ControladorUsuario.consultarUsuario(usuario);
+        System.out.println(mensaje);
     }
     
     public static int pedirId()

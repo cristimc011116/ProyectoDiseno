@@ -74,18 +74,17 @@ public class CuentaDAO {
     {
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
-        Cuenta cuenta = new Cuenta();
         String mensaje = "";
         ResultSet buscar = con.consultas("SELECT * FROM PersonaCuenta WHERE idCliente = " + idPersona);
         try{
             while(buscar.next()){
               String strNumCuenta = buscar.getString("numCuenta");
-              mensaje += strNumCuenta;
+              String numCuenta = Cuenta.desencriptar(strNumCuenta);
+              mensaje += "\n" + numCuenta + "\n";
             }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: " + e.toString());
         }
-        JOptionPane.showMessageDialog(null, mensaje);
         return mensaje;
     }
     

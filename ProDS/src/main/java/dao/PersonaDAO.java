@@ -41,14 +41,14 @@ public class PersonaDAO {
               persona.setPrimerApellido(buscar.getString("primerApellido"));
               persona.setSegundoApellido(buscar.getString("segundoApellido"));
               persona.setNombre(buscar.getString("nombre"));
-              int idU = Integer.parseInt(buscar.getString("id"));
-              persona.setNumero(idU);
+              //int idU = Integer.parseInt(buscar.getString("id"));
+              persona.setId(id);
               LocalDate fechaNac = LocalDate.parse(buscar.getString("fechaNacimiento"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
               persona.setFechaNacimiento(fechaNac);
               int telefono = Integer.parseInt(buscar.getString("numero"));
               persona.setNumero(telefono);
               persona.setCorreo(buscar.getString("correo"));
-              persona.setSegundoApellido(buscar.getString("rol"));
+              persona.setRol(buscar.getString("rol"));
               return persona;
             }
         }catch(SQLException e){

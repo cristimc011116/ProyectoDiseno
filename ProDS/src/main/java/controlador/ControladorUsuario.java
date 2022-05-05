@@ -4,9 +4,10 @@
  */
 package controlador;
 
+import static CLI.CLI.pedirInfoUsuario;
 import GUI.CrearCuenta;
 import GUI.Menu;
-import GUI.tabla;
+import GUI.ListarPersonas;
 import dao.CuentaDAO;
 import dao.PersonaDAO;
 import static dao.PersonaDAO.getPersonasBD;
@@ -33,27 +34,117 @@ public class ControladorUsuario implements ActionListener{
     
     public Menu menu;
     public CrearCuenta vista1;
+    public ListarPersonas vista2;
     private ArrayList<Persona> personasSistema;
-    private tabla latabla;
+    private ListarPersonas latabla;
     
     public ControladorUsuario(Menu pMenu)
     {
         this.menu = pMenu;
         this.latabla = null;
+        this.vista1 = null;
         this.personasSistema = new ArrayList<>();
         this.menu.btnListar.addActionListener(this);
+        this.menu.btnCrearCuenta.addActionListener(this);
+        
         cargarDatosPersonas();
         ordenarClientes();
     }
     
     public void actionPerformed(java.awt.event.ActionEvent e) {
         switch(e.getActionCommand()){
-            case "listar":
+            case "Listar personas":
                 listarPersonas();
                 break;
+            case "Crear cuenta":
+                abrirVista1();
+            case "Continuar":
+                crearCuenta();
             default:
                 break;
         }
+    }
+    
+    public void abrirVista1()
+    {
+        this.vista1 = new CrearCuenta();
+        this.vista1.btnContinuar.addActionListener(this);
+        this.vista1.setVisible(true);
+        this.menu.setVisible(false);
+    }
+    
+    public void crearCuenta()
+    {
+        
+        this.vista1 = new CrearCuenta();
+        int insertar = 0;
+        int contador = 0;
+        String strId = this.vista1.tfId.getText();
+        String pin = this.vista1.tfPin.getText();
+        String strMonto = this.vista1.tfMonto.getText();
+        contador += validarIngreso(strId, "identificacion");
+        contador += validarIngreso(pin, "pin");
+        contador += validarIngreso(strMonto, "monto");
+        if(contador == 0)
+        {
+            insertar += validarEntrId(strId);
+            insertar += validarEntrPin(pin);
+            insertar += validarEntrMonto(strMonto);
+            if (insertar == 0)
+            {
+                int id = Integer.parseInt(strId);
+                String numero = ControladorUsuario.insertarCuenta(pin, strMonto, id);
+
+                String mensaje = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: \n";
+                mensaje += ControladorUsuario.imprimirCuenta(numero);
+                mensaje += "\n---\n";
+                mensaje += ControladorUsuario.imprimirPersona(id);
+                JOptionPane.showMessageDialog(null, mensaje);
+            }
+        }
+        
+    }
+    public int validarIngreso(String pEntrada, String opcion)
+    {
+        if(pEntrada.length() == 0)
+        {
+            JOptionPane.showMessageDialog(null, "Error en dato: " + opcion);
+            return 1;
+        }
+        return 0;
+    }
+    
+    public int validarEntrId(String strId)
+    {
+        boolean esId = ControladorUsuario.auxIdP1(strId);
+        if (esId==false)
+        {
+            JOptionPane.showMessageDialog(null, "Verifique su identificación");
+            return 1;
+        }
+        return 0;
+    }
+    
+    public int validarEntrPin(String pin)
+    {
+        boolean esPin = ExpresionesRegulares.validarPin(pin);
+        if (esPin == false)
+        {
+            JOptionPane.showMessageDialog(null, "Verifique su pin");
+            return 1;
+        }
+        return 0;
+    }
+    
+    public int validarEntrMonto(String strMonto)
+    {
+        boolean esNum = ExpresionesRegulares.esNumero(strMonto);
+        if (esNum == false)
+        {
+            JOptionPane.showMessageDialog(null, "Verifique el monto digitado");
+            return 1;
+        }
+        return 0;
     }
     
     
@@ -77,20 +168,14 @@ public class ControladorUsuario implements ActionListener{
     }
     
     public void listarPersonas(){
-        this.latabla = new tabla();
+        this.latabla = new ListarPersonas();
         String[] titulos = {
             "Nombre",
             "Primer apellido",
             "Segundo apellido",
             "Identificación"};
-        //this.latabla = new tabla();
         this.latabla.modelo = new DefaultTableModel(null, titulos);
-        //JTable table = new JTable();
-        //table.setModel(this.latabla.modelo);
-        //this.latabla.tabla2 = table;
         this.latabla.tabla2.setModel(this.latabla.modelo);
-        
-        //this.latabla.panelSecundario.setViewportView(this.latabla.tabla2);
         for(Persona persona: personasSistema)
         {
            Object[] info = {persona.getNombre(), persona.getPrimerApellido(), persona.getSegundoApellido(), persona.getId()};
@@ -102,7 +187,30 @@ public class ControladorUsuario implements ActionListener{
     }
     
         
-        
+    public static String consultarUsuario(String idUsuario)
+    {
+        boolean esCorrecto = ControladorUsuario.auxIdP1(idUsuario);
+        String total = "";
+        if(esCorrecto)
+        {
+            total = recuperarUsuario(idUsuario);
+        }
+        else
+        {
+            pedirInfoUsuario();
+        }
+        return total;
+    }
+    
+    public static String recuperarUsuario(String idUsuario)
+    {
+        int id = Integer.parseInt(idUsuario);
+        Persona persona = PersonaDAO.obtenerPersona(id);
+        String mensaje = persona.toStringCompleto();
+        String mensajeCuentas = CuentaDAO.obtenerCuentasPersona(id);
+        String total = "Información del usuario:\n" + mensaje + "\n\nCuentas de este usuario:\n" + mensajeCuentas;
+        return total;
+    }
     
     //Punto 2
     public static String insertarCuenta(String pPin, String pMonto, int pId)
