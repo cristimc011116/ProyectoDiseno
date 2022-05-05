@@ -36,39 +36,60 @@ public class Operacion {
 
 //------------------------------------------METODOS DE CLASE----------------------------------------    
     //Falta el método valiarCuenta en el paquete de validaciones.
-    public boolean cambiaPIN(int pCuenta, String pPinAccesoAnterior, 
-        String pPinAccesoNuevo){
+    public boolean cambiaPIN(String pCuenta, String pPinAccesoAnterior, 
+      String pPinAccesoNuevo){
+      String pCuentaDesencriptada = Cuenta.desencriptar(pCuenta); 
+      String pPinAccesoDesencriptada = Cuenta.desencriptar(pPinAccesoAnterior); 
+      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt
+        (pCuentaDesencriptada)) && 
+        validacion.ExpresionesRegulares.validarPin(pPinAccesoDesencriptada) &&
+        validacion.ExpresionesRegulares.validarPin(pPinAccesoNuevo)){
+
+        cuenta.setPin(pPinAccesoNuevo);
+
+        System.out.print("Estimado usuario, se ha cambiado "
+          + "satisfactoriamente el PIN de su cuenta "+pCuenta);
+
+        return true;
+
+      }else{
+          return false;
+      }
+    }
+    
+    public boolean realizarDeposito(String pCuenta, String pCantColones){
+      String pCuentaDesencriptada = Cuenta.desencriptar(pCuenta);
+
+      String dinero = cuenta.getSaldo();
+      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
+        validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantColones))){
+
+        cuenta.setSaldo(dinero+pCantColones);
+        return true;
+
+      }else{
+        return false;
+      }
+    }    
+    
+    
+    public boolean realizarDepositoDolares(String pCuenta, String pPinAcceso, 
+        double pCantDolares){
+        String dinero = cuenta.getSaldo();
+        String pCuentaDesencriptada = Cuenta.desencriptar(pCuenta);
+        String pPinAccesoDesencriptada = Cuenta.desencriptar(pPinAcceso);
         
-        if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
-            validacion.ExpresionesRegulares.validarPin(pPinAccesoAnterior) &&
-            validacion.ExpresionesRegulares.validarPin(pPinAccesoNuevo)){
-            
-            cuenta.setPin(pPinAccesoNuevo);
-            
-            System.out.print("Estimado usuario, se ha cambiado "
-                + "satisfactoriamente el PIN de su cuenta "+pCuenta);
-            
+        double tipoCambioCompra = 0;/* ConsultaCompraDolar(); */ //Se debe igualar a la función ConsultaCompraDolar().
+        if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
+            validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
+            dinero = String.valueOf(pCantDolares*tipoCambioCompra);
+            cuenta.setSaldo(dinero);
             return true;
             
         }else{
             return false;
         }
     }
-    
-    /*public boolean realizarDeposito(int pCuenta, String pPinAcceso, 
-        double pCantColones){
-        double dinero = cuenta.getSaldo();
-        if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
-            validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantColones))){
-                
-            cuenta.setSaldo(dinero+pCantColones);
-            return true;
-            
-        }else{
-            return false;
-        }
-    }    */
-    
     
 //-------------------------------------METODOS ACCESORES--------------------------------------------------
     public int getId() {
@@ -111,19 +132,5 @@ public class Operacion {
         this.montoComision = montoComision;
     }
 
-    /*public boolean realizarDepositoDolares(int pCuenta, String pPinAcceso, 
-        double pCantDolares){
-        double dinero = cuenta.getSaldo();
-        double tipoCambioCompra = 0;*/ /* ConsultaCompraDolar(); */ //Se debe igualar a la función ConsultaCompraDolar().
-       /*if (validacion.ExpresionesRegulares.validarCuenta(pCuenta) && 
-            validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
-            dinero = pCantDolares*tipoCambioCompra;
-            cuenta.setSaldo(dinero);
-            return true;
-            
-        }else{
-            return false;
-        }
-    }*/
 }
 
