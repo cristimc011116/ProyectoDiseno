@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package CLI;
+import webService.*;
 import GUI.Menu;
 import controlador.ControladorUsuario;
 import java.util.Scanner;
@@ -11,7 +12,6 @@ import dao.PersonaDAO;
 import java.time.LocalDate;
 import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
-import webServiceBCCR.*;
 import dao.CuentaDAO;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class CLI {
     //el main debe ser el menu, las funciones métodos
     public static void main(String[] args)
     {
-        Scanner sc = new Scanner (System.in);
+        /*Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
@@ -39,10 +39,16 @@ public class CLI {
         String opcion = sc.next();
         crearCuenta(opcion);
         listarPersonas(opcion);
-                /*System.out.println("El tipo de cambio de compra es");
+                System.out.println("El tipo de cambio de compra es");
 //                System.out.println(ConsultarCompraDolar());
                 System.out.println("El tipo de cambio de venta es");
 //                System.out.println(ConsultarVentaDolar());*/
+        
+                ConsultaMoneda consulta = new ConsultaMoneda();
+                System.out.println("El tipo de cambio de compra es");
+                System.out.println(consulta.consultaCambioCompra());
+                System.out.println("El tipo de cambio de venta es");
+                System.out.println(consulta.consultaCambioVenta());
                 
         
         
