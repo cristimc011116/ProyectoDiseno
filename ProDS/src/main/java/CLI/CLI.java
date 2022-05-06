@@ -16,9 +16,11 @@ import dao.CuentaDAO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import logicadenegocios.Mensaje;
 /**
  *
  * @author Cristi Martínez
@@ -27,6 +29,7 @@ public class CLI {
     //el main debe ser el menu, las funciones métodos
     public static void main(String[] args)
     {
+        //retirarColones();
         Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
@@ -191,14 +194,14 @@ public class CLI {
     public static String pedirPin()
     {
         Scanner sc = new Scanner (System.in);
-        String texto2 = "Digite el pin que será asignado a la cuenta: ";
+        String texto2 = "Digite el pin de la cuenta: ";
         System.out.println(texto2);
         String pin = sc.next();
         boolean esPin = ExpresionesRegulares.validarPin(pin);
         
         while (esPin == false)
         {
-            String texto3 = "Digite el pin que será asignado a la cuenta: ";
+            String texto3 = "Digite el pin de la cuenta: ";
             System.out.println(texto3);
             pin = sc.next();
             esPin = ExpresionesRegulares.validarPin(pin);
@@ -209,14 +212,14 @@ public class CLI {
     public static String pedirMonto()
     {
         Scanner sc = new Scanner (System.in);
-        String texto3 = "Digite el monto de depósito inicial: ";
+        String texto3 = "Digite el monto: ";
         System.out.println(texto3);
         String strmonto = sc.next();
         boolean esNum = ExpresionesRegulares.esNumero(strmonto);
         
         while (esNum == false)
         {
-            String texto4 = "Digite el monto de depósito inicial: ";
+            String texto4 = "Digite el monto: ";
             System.out.println(texto4);
             strmonto = sc.next();
             esNum = ExpresionesRegulares.esNumero(strmonto);
@@ -225,4 +228,177 @@ public class CLI {
         return strmonto;
     }
     
+    public static String pedirNumCuenta()
+    {
+        Scanner sc = new Scanner (System.in);
+        String texto = "Digite el número de cuenta: ";
+        System.out.println(texto);
+        String strNumCuenta = sc.next();
+        boolean esCorrecto = ControladorUsuario.auxNumCuentaP1(strNumCuenta);
+        
+        while (esCorrecto == false)
+        {
+            String texto1 = "Digite el número de cuenta: ";
+            System.out.println(texto1);
+            strNumCuenta = sc.next();
+            esCorrecto = ControladorUsuario.auxNumCuentaP1(strNumCuenta);
+        }
+        return strNumCuenta;
+    }
+    
+    public static void inactivarCuenta(String pNumCuenta)
+    {
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        cuenta.setEstatus("inactiva");
+        CuentaDAO.inactivarCuentaBase(pNumCuenta);
+    }
+    
+    public static String esPinCuenta(String pNumCuenta)
+    {
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        Scanner sc = new Scanner (System.in);
+        String texto2 = "Digite el pin de la cuenta: ";
+        System.out.println(texto2);
+        String pin = sc.next();
+        int cont = 0;
+        while (!cuenta.getPin().equals(pin))
+        {
+            String texto3 = "Digite el pin de la cuenta: ";
+            System.out.println(texto3);
+            pin = sc.next();
+            cont++;
+            if(cont >= 2)
+            {
+                inactivarCuenta(pNumCuenta);
+                return ("Se ha desactivado la cuenta");
+            }
+        }
+        return pin;
+    }
+    
+    public static String pedirPalabra(String pPalabra, String pNumCuenta)
+    {
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        Scanner sc = new Scanner (System.in);
+        String texto2 = "Digite la palabra clave: ";
+        System.out.println(texto2);
+        String palabra = sc.next();
+        int cont = 0;
+        while (!pPalabra.equals(palabra))
+        {
+            String texto3 = "Digite la palabra clave: ";
+            System.out.println(texto3);
+            palabra = sc.next();
+            cont++;
+            if(cont >= 2)
+            {
+                inactivarCuenta(pNumCuenta);
+                return ("Se ha desactivado la cuenta");
+            }
+        }
+        return palabra;
+    }
+    
+    public static String crearPalabra()
+    {
+        char[] abc = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+        char[] num = {'0','1','2','3','4','5','6','7','8','9'};
+        Random rand = new Random();
+        int a = rand.nextInt(26);
+        int n = rand.nextInt(10);
+        int c = rand.nextInt(2);
+        int contador = 0;
+        String palabra = "";
+        while(contador < 6)
+        {
+            if(c==1)
+            {
+                palabra += abc[a];
+            }
+            else
+            {
+                palabra += num[n];
+            }
+            contador++;
+        }
+        return palabra;
+    }
+    
+    public static String enviarMensaje(String numCuenta)
+    {
+        int id = CuentaDAO.obtenerPersonaCuenta(numCuenta);
+        Persona persona = PersonaDAO.obtenerPersona(id);
+        int numero = persona.getNumero();
+        String mensaje = crearPalabra();
+        Mensaje.enviarMensaje(numero, mensaje);
+        return mensaje;
+    }
+    
+    public static double montoValido(double pMonto, String pNumCuenta)
+    {
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String montoEncrip = cuenta.getSaldo();
+        String strMonto = Cuenta.desencriptar(montoEncrip);
+        double monto = Double.parseDouble(strMonto);
+        while (monto<pMonto)
+        {
+            String strSaldo = pedirMonto();
+            pMonto = Double.parseDouble(strSaldo);
+        }
+        return pMonto;
+    }
+    
+    public static String retirarColones()
+    {
+        String pNumCuenta = pedirNumCuenta();
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String mensaje = "";
+        String mensaje2 = "";
+        String resultado = "";
+        if(!"inactiva".equals(cuenta.getEstatus()))
+        {
+            String pin = esPinCuenta(pNumCuenta);
+            if("Se ha desactivado la cuenta".equals(pin))
+            {
+                return pin;
+            }
+            else
+            {
+                mensaje = enviarMensaje(pNumCuenta);
+                JOptionPane.showMessageDialog(null, "Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
+                        + " y procesa a digitar la palabra enviada");
+                mensaje2 = pedirPalabra(mensaje, pNumCuenta);
+                if("Se ha desactivado la cuenta".equals(mensaje2))
+                {
+                    return mensaje2;
+                }
+                else
+                {
+                    String strMonto = pedirMonto();
+                    double monto = Double.parseDouble(strMonto);
+                    double montoCorrecto = montoValido(monto, pNumCuenta);
+                    double comision = montoCorrecto * 0.02;
+                    int numCuenta = Integer.parseInt(pNumCuenta);
+                    String strNuevoMonto = "";
+                    boolean aplicaCom = Cuenta.aplicaComision(numCuenta);
+                    if(aplicaCom)
+                    {
+                        double nuevoMonto = montoCorrecto + comision;
+                        strNuevoMonto = Double.toString(nuevoMonto);
+                        String strSaldoViejo = cuenta.getSaldo();
+                        double saldoViejo = Double.parseDouble(strSaldoViejo);
+                        double nuevoSaldo = saldoViejo - nuevoMonto;
+                        String strNuevoSaldo = Double.toString(nuevoSaldo);
+                        cuenta.setSaldo(strNuevoSaldo);
+                        CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
+                    }
+                    resultado += "Estimado usuario, el monto de este retiro es: " + montoCorrecto;
+                    resultado += "\n[El monto cobrado por concepto de comisión fue de " + strNuevoMonto + " colones, que fueron rebajados "
+                            + "automáticamente de su saldo actual]";
+                }
+            }
+            
+        }
+    return resultado; 
+    }
 }

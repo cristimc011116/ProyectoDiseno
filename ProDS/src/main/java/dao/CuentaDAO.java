@@ -45,6 +45,25 @@ public class CuentaDAO {
         con.desconectar();
     }
     
+    public static void inactivarCuentaBase(String pNumCuenta)
+    {
+        String numEncrip = Cuenta.encriptar(pNumCuenta);
+        String estado = "inactiva";
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        con.excSentenciaSQL("UPDATE Cuenta SET estatus = '" + estado + "' WHERE id = " + numEncrip);
+        con.desconectar();
+    }
+    
+    public static void actualizarSaldo(String pNumCuenta, String nuevoSaldo)
+    {
+        String numEncrip = Cuenta.encriptar(pNumCuenta);
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        con.excSentenciaSQL("UPDATE Cuenta SET saldo = '" + nuevoSaldo + "' WHERE id = " + numEncrip);
+        con.desconectar();
+    }
+    
     public static Cuenta obtenerCuenta(String strNumero){
         String numEncrip = Cuenta.encriptar(strNumero);
         ConexionBase con = new ConexionBase();
@@ -88,6 +107,24 @@ public class CuentaDAO {
         return mensaje;
     }
     
+    public static int obtenerPersonaCuenta(String numCuenta)
+    {
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        String mensaje = "";
+        int id = 0;
+        ResultSet buscar = con.consultas("SELECT * FROM PersonaCuenta WHERE numCuenta = " + "'" + numCuenta + "'");
+        try{
+            while(buscar.next()){
+              String strId = buscar.getString("idCliente");
+              id = Integer.parseInt(strId);
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+        }
+        return id;
+    }
+    
     
     public static ArrayList<Cuenta> getCuentasBD(){
         cuentas = new ArrayList<>();
@@ -123,7 +160,7 @@ public class CuentaDAO {
         int contador = 0;
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
-        ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE numero = " +"'"+ numEncrip+"'");
+        ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE numero = " +"'"+ numEncrip+"'" + " AND tipo= 'deposito' OR tipo= 'retiro'");
         try{
             while(buscar.next()){
               contador++;

@@ -262,6 +262,28 @@ public class ControladorUsuario implements ActionListener{
         return esNum;
     }
     
+    public static boolean auxNumCuentaP1(String strNumCuenta){
+        boolean esCorrecto = false;
+        boolean esNum = ExpresionesRegulares.esNumero(strNumCuenta);
+        if(esNum == true)
+        {
+            //int numCuenta = Integer.parseInt(strNumCuenta);
+            esCorrecto = auxNumCuentaP2(strNumCuenta);
+        }
+        return esCorrecto;
+    }
+    
+    public static boolean auxNumCuentaP2(String pNumCuenta){
+        boolean esNum = false;
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String numCuenta = cuenta.getNumero();
+        if(null != numCuenta){
+            esNum = true;
+        }
+        
+        return esNum;
+    }
+    
     //Punto 3
     public static Persona[] ordenarPersonas(){
         //int cont = 0;
