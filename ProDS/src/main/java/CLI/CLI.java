@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import dao.CuentaDAO;
+import dao.OperacionDAO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +30,9 @@ public class CLI {
     //el main debe ser el menu, las funciones métodos
     public static void main(String[] args)
     {
-        //retirarColones();
-        Scanner sc = new Scanner (System.in);
+        String resultado = retirarColones();
+        System.out.println(resultado);
+        /*Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
@@ -49,7 +51,7 @@ public class CLI {
         else
         {
             main(null);
-        }
+        }*/
               //  System.out.println("El tipo de cambio de compra es");
 //                System.out.println(ConsultarCompraDolar());
                 //System.out.println("El tipo de cambio de venta es");
@@ -261,13 +263,15 @@ public class CLI {
         System.out.println(texto2);
         String pin = sc.next();
         int cont = 0;
-        while (!cuenta.getPin().equals(pin))
+        System.out.println(Cuenta.desencriptar(cuenta.getPin()));
+        String pinDesencriptado = Cuenta.desencriptar(cuenta.getPin());
+        while (!pin.equals(pinDesencriptado))
         {
             String texto3 = "Digite el pin de la cuenta: ";
             System.out.println(texto3);
             pin = sc.next();
             cont++;
-            if(cont >= 2)
+            if(cont >= 1)
             {
                 inactivarCuenta(pNumCuenta);
                 return ("Se ha desactivado la cuenta");
@@ -311,6 +315,9 @@ public class CLI {
         String palabra = "";
         while(contador < 6)
         {
+            a = rand.nextInt(26);
+            n = rand.nextInt(10);
+            c = rand.nextInt(2);
             if(c==1)
             {
                 palabra += abc[a];
@@ -330,7 +337,7 @@ public class CLI {
         Persona persona = PersonaDAO.obtenerPersona(id);
         int numero = persona.getNumero();
         String mensaje = crearPalabra();
-        Mensaje.enviarMensaje(numero, mensaje);
+        Mensaje.enviarMensaje(83211510, mensaje);
         return mensaje;
     }
     
@@ -338,8 +345,10 @@ public class CLI {
     {
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
         String montoEncrip = cuenta.getSaldo();
-        String strMonto = Cuenta.desencriptar(montoEncrip);
-        double monto = Double.parseDouble(strMonto);
+        //String strMonto = Cuenta.desencriptar(montoEncrip);
+        //String strMonto1 = strMonto.replace("+-","");
+        JOptionPane.showMessageDialog(null, montoEncrip);
+        double monto = Double.parseDouble(montoEncrip);
         while (monto<pMonto)
         {
             String strSaldo = pedirMonto();
@@ -365,7 +374,7 @@ public class CLI {
             else
             {
                 mensaje = enviarMensaje(pNumCuenta);
-                JOptionPane.showMessageDialog(null, "Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
+                System.out.println("Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
                         + " y procesa a digitar la palabra enviada");
                 mensaje2 = pedirPalabra(mensaje, pNumCuenta);
                 if("Se ha desactivado la cuenta".equals(mensaje2))
@@ -377,27 +386,33 @@ public class CLI {
                     String strMonto = pedirMonto();
                     double monto = Double.parseDouble(strMonto);
                     double montoCorrecto = montoValido(monto, pNumCuenta);
-                    double comision = montoCorrecto * 0.02;
-                    int numCuenta = Integer.parseInt(pNumCuenta);
                     String strNuevoMonto = "";
-                    boolean aplicaCom = Cuenta.aplicaComision(numCuenta);
+                    double comision = 0.00;
+                    double nuevoMonto = montoCorrecto;
+                    boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
                     if(aplicaCom)
                     {
-                        double nuevoMonto = montoCorrecto + comision;
-                        strNuevoMonto = Double.toString(nuevoMonto);
-                        String strSaldoViejo = cuenta.getSaldo();
-                        double saldoViejo = Double.parseDouble(strSaldoViejo);
-                        double nuevoSaldo = saldoViejo - nuevoMonto;
-                        String strNuevoSaldo = Double.toString(nuevoSaldo);
-                        cuenta.setSaldo(strNuevoSaldo);
-                        CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
+                        comision = montoCorrecto * 0.02;
+                        nuevoMonto += comision;
                     }
+                    strNuevoMonto = Double.toString(nuevoMonto);
+                    String strSaldoViejo = cuenta.getSaldo();
+                    double saldoViejo = Double.parseDouble(strSaldoViejo);
+                    double nuevoSaldo = saldoViejo - nuevoMonto;
+                    String strNuevoSaldo = Double.toString(nuevoSaldo);
+                    cuenta.setSaldo(strNuevoSaldo);
+                    CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
+                    ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, pNumCuenta);
                     resultado += "Estimado usuario, el monto de este retiro es: " + montoCorrecto;
-                    resultado += "\n[El monto cobrado por concepto de comisión fue de " + strNuevoMonto + " colones, que fueron rebajados "
+                    resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
                             + "automáticamente de su saldo actual]";
                 }
             }
             
+        }
+        else
+        {
+            System.out.println("Su cuenta se encuentra desactivada");
         }
     return resultado; 
     }

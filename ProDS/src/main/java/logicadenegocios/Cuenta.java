@@ -143,7 +143,7 @@ public class Cuenta {
     
 
        
-   public static boolean aplicaComision(int numCuenta)
+   public static boolean aplicaComision(String numCuenta)
    {
        int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
        if (contador > 3)

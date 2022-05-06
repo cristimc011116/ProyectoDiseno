@@ -9,6 +9,7 @@ import GUI.CrearCuenta;
 import GUI.Menu;
 import GUI.ListarPersonas;
 import dao.CuentaDAO;
+import dao.OperacionDAO;
 import dao.PersonaDAO;
 import static dao.PersonaDAO.getPersonasBD;
 import java.awt.event.ActionListener;
@@ -22,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import logicadenegocios.Cuenta;
+import logicadenegocios.Operacion;
 import logicadenegocios.Persona;
 import util.Ordenamiento;
 import validacion.ExpresionesRegulares;
@@ -220,6 +222,15 @@ public class ControladorUsuario implements ActionListener{
         CuentaDAO.asignarCuentaCliente(cuenta, pId);
         
         return numero;
+    }
+    
+    public static void insertarOperacion(String pTipo, boolean pEsComision, double pMontoComision, String pNumCuenta)
+    {
+        int id = OperacionDAO.cantOperacionesBD();
+        LocalDate fecha = Cuenta.setFechaCreacion();
+        Operacion operacion = new Operacion(id, fecha, pTipo, pEsComision, pMontoComision);
+        OperacionDAO.insertarOperacion(operacion,fecha);
+        OperacionDAO.asignarOperacionCuenta(operacion, pNumCuenta);
     }
     
     private void ordenarClientes(){

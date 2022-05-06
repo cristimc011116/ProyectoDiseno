@@ -51,16 +51,18 @@ public class CuentaDAO {
         String estado = "inactiva";
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
-        con.excSentenciaSQL("UPDATE Cuenta SET estatus = '" + estado + "' WHERE id = " + numEncrip);
+        con.excSentenciaSQL("UPDATE Cuenta SET estatus = '" + estado + "' WHERE numero = '" + numEncrip + "'");
         con.desconectar();
     }
     
     public static void actualizarSaldo(String pNumCuenta, String nuevoSaldo)
     {
         String numEncrip = Cuenta.encriptar(pNumCuenta);
+        String saldoEncrip = Cuenta.encriptar(nuevoSaldo);
+        System.out.println(saldoEncrip);
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
-        con.excSentenciaSQL("UPDATE Cuenta SET saldo = '" + nuevoSaldo + "' WHERE id = " + numEncrip);
+        con.excSentenciaSQL("UPDATE Cuenta SET saldo = '" + saldoEncrip + "' WHERE numero = '" + numEncrip + "'");
         con.desconectar();
     }
     
@@ -81,6 +83,7 @@ public class CuentaDAO {
               String strSaldoDes = Cuenta.desencriptar(noSaldo);
               cuenta.setSaldo(strSaldoDes);
               cuenta.setEstatus(buscar.getString("estatus"));
+              cuenta.setPin(buscar.getString("pin"));
               return cuenta;
             }
         }catch(SQLException e){
@@ -153,21 +156,33 @@ public class CuentaDAO {
         con.desconectar();
         return cuentas;
     }
-    
-    public static int contadorOperacionesCuenta(int numCuenta){
-        String strNumero = Integer.toString(numCuenta);
-        String numEncrip = Cuenta.encriptar(strNumero);
+    public static int contadorOperacionesCuenta(String numCuenta){
+        cuentas = new ArrayList<>();
+        String numEncrip = Cuenta.encriptar(numCuenta);
         int contador = 0;
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
-        ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE numero = " +"'"+ numEncrip+"'" + " AND tipo= 'deposito' OR tipo= 'retiro'");
+        ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE cuenta = " +"'"+ numEncrip+"'");
         try{
             while(buscar.next()){
-              contador++;
+                String idOperacion = buscar.getString("idOperacion");
+                ResultSet buscar2 = con.consultas("SELECT * FROM Operacion WHERE id = " + idOperacion + " AND tipo = 'deposito' OR tipo = 'retiro'");
+                try{
+                    while(buscar2.next()){
+                        contador++;
+                    }
+                }catch(SQLException e){
+                    JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+                }
             }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: " + e.toString());
         }
+        JOptionPane.showMessageDialog(null, contador);
         return contador;
       }
 }
+    
+
+
+
