@@ -288,7 +288,8 @@ public class ControladorUsuario implements ActionListener{
         boolean esNum = false;
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
         String numCuenta = cuenta.getNumero();
-        if(null != numCuenta){
+        JOptionPane.showMessageDialog(null, numCuenta);
+        if(!"".equals(numCuenta)){
             esNum = true;
         }
         

@@ -59,7 +59,6 @@ public class CuentaDAO {
     {
         String numEncrip = Cuenta.encriptar(pNumCuenta);
         String saldoEncrip = Cuenta.encriptar(nuevoSaldo);
-        System.out.println(saldoEncrip);
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
         con.excSentenciaSQL("UPDATE Cuenta SET saldo = '" + saldoEncrip + "' WHERE numero = '" + numEncrip + "'");

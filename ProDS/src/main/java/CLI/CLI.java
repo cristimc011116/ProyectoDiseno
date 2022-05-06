@@ -30,7 +30,7 @@ public class CLI {
     //el main debe ser el menu, las funciones métodos
     public static void main(String[] args)
     {
-        String resultado = retirarColones();
+        String resultado = retirarColones("dolares");
         System.out.println(resultado);
         /*Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
@@ -263,19 +263,19 @@ public class CLI {
         System.out.println(texto2);
         String pin = sc.next();
         int cont = 0;
-        System.out.println(Cuenta.desencriptar(cuenta.getPin()));
         String pinDesencriptado = Cuenta.desencriptar(cuenta.getPin());
         while (!pin.equals(pinDesencriptado))
         {
-            String texto3 = "Digite el pin de la cuenta: ";
-            System.out.println(texto3);
-            pin = sc.next();
             cont++;
-            if(cont >= 1)
+            if(cont >= 2)
             {
                 inactivarCuenta(pNumCuenta);
                 return ("Se ha desactivado la cuenta");
             }
+            String texto3 = "Digite el pin de la cuenta: ";
+            System.out.println(texto3);
+            pin = sc.next();
+            
         }
         return pin;
     }
@@ -290,15 +290,16 @@ public class CLI {
         int cont = 0;
         while (!pPalabra.equals(palabra))
         {
-            String texto3 = "Digite la palabra clave: ";
-            System.out.println(texto3);
-            palabra = sc.next();
             cont++;
             if(cont >= 2)
             {
                 inactivarCuenta(pNumCuenta);
                 return ("Se ha desactivado la cuenta");
             }
+            String texto3 = "Digite la palabra clave: ";
+            System.out.println(texto3);
+            palabra = sc.next();
+            
         }
         return palabra;
     }
@@ -341,23 +342,63 @@ public class CLI {
         return mensaje;
     }
     
-    public static double montoValido(double pMonto, String pNumCuenta)
+    public static double montoValido(double pMonto, String pNumCuenta, String moneda)
     {
+        ConsultaMoneda consulta = new ConsultaMoneda();
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
         String montoEncrip = cuenta.getSaldo();
         //String strMonto = Cuenta.desencriptar(montoEncrip);
         //String strMonto1 = strMonto.replace("+-","");
-        JOptionPane.showMessageDialog(null, montoEncrip);
         double monto = Double.parseDouble(montoEncrip);
-        while (monto<pMonto)
+        double venta = consulta.consultaCambioVenta();
+        double pMontoDolares = pMonto * venta;
+        if("dolares".equals(moneda))
         {
-            String strSaldo = pedirMonto();
-            pMonto = Double.parseDouble(strSaldo);
+            pMonto = pMontoDolares;
         }
+        while (monto<pMonto)
+            {
+                String strSaldo = pedirMonto();
+                pMonto = Double.parseDouble(strSaldo);
+            }
         return pMonto;
     }
     
-    public static String retirarColones()
+    public static double nuevoMonto(double comision, boolean aplicaCom, double montoCorrecto)
+    {
+        double nuevoMonto = montoCorrecto;
+        if(aplicaCom)
+        {
+            comision = montoCorrecto * 0.02;
+            nuevoMonto += comision;
+        }
+        return nuevoMonto;
+    }
+    
+    public static String imprimirResultado(String moneda, double comision, double monto)
+    {
+        String resultado = "";
+        if("colones".equals(moneda))
+        {
+            resultado += "Estimado usuario, el monto de este retiro es: " + monto;
+            resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
+                + "automáticamente de su saldo actual]";
+        }
+        else
+        {
+            ConsultaMoneda consulta = new ConsultaMoneda();
+            double ventaDolar = consulta.consultaCambioVenta();
+            double montoDolares = monto/ventaDolar;
+            resultado += "Estimado usuario, el monto de este retiro es: " + montoDolares + " dólares";
+            resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + ventaDolar +"]";
+            resultado += "\n[El monto equivalente de su retiro es: " + monto + "colones]";
+            resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
+                + "automáticamente de su saldo actual]";
+        }
+        return resultado;
+    }
+    
+    public static String retirarColones(String moneda)
     {
         String pNumCuenta = pedirNumCuenta();
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
@@ -385,17 +426,12 @@ public class CLI {
                 {
                     String strMonto = pedirMonto();
                     double monto = Double.parseDouble(strMonto);
-                    double montoCorrecto = montoValido(monto, pNumCuenta);
-                    String strNuevoMonto = "";
-                    double comision = 0.00;
-                    double nuevoMonto = montoCorrecto;
+                    double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
+                    double comision;
+                    double nuevoMonto;
                     boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
-                    if(aplicaCom)
-                    {
-                        comision = montoCorrecto * 0.02;
-                        nuevoMonto += comision;
-                    }
-                    strNuevoMonto = Double.toString(nuevoMonto);
+                    comision = montoCorrecto * 0.02;
+                    nuevoMonto = nuevoMonto(comision, aplicaCom, montoCorrecto);
                     String strSaldoViejo = cuenta.getSaldo();
                     double saldoViejo = Double.parseDouble(strSaldoViejo);
                     double nuevoSaldo = saldoViejo - nuevoMonto;
@@ -403,9 +439,7 @@ public class CLI {
                     cuenta.setSaldo(strNuevoSaldo);
                     CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
                     ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, pNumCuenta);
-                    resultado += "Estimado usuario, el monto de este retiro es: " + montoCorrecto;
-                    resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
-                            + "automáticamente de su saldo actual]";
+                    imprimirResultado(moneda, comision, montoCorrecto);
                 }
             }
             
