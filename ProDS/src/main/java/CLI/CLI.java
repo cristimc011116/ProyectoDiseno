@@ -30,7 +30,7 @@ public class CLI {
     //el main debe ser el menu, las funciones métodos
     public static void main(String[] args)
     {
-        String resultado = retirarColones("dolares");
+        String resultado = retirarColones("colones");
         System.out.println(resultado);
         /*Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
@@ -354,13 +354,25 @@ public class CLI {
         double pMontoDolares = pMonto * venta;
         if("dolares".equals(moneda))
         {
+            pMontoDolares = pMonto * venta;
             pMonto = pMontoDolares;
+            while (monto<pMonto)
+            {
+                String strSaldo = pedirMonto();
+                pMonto = Double.parseDouble(strSaldo);
+                pMontoDolares = pMonto * venta;
+                pMonto = pMontoDolares;
+            }
         }
-        while (monto<pMonto)
+        else
+        {
+            while (monto<pMonto)
             {
                 String strSaldo = pedirMonto();
                 pMonto = Double.parseDouble(strSaldo);
             }
+        }
+        
         return pMonto;
     }
     
@@ -439,7 +451,7 @@ public class CLI {
                     cuenta.setSaldo(strNuevoSaldo);
                     CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
                     ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, pNumCuenta);
-                    imprimirResultado(moneda, comision, montoCorrecto);
+                    resultado = imprimirResultado(moneda, comision, montoCorrecto);
                 }
             }
             
