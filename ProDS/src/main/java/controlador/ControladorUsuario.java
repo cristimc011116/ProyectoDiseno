@@ -4,10 +4,20 @@
  */
 package controlador;
 
+import static CLI.CLI.enviarMensaje;
+import static CLI.CLI.esPinCuenta;
+import static CLI.CLI.imprimirResultado;
+import static CLI.CLI.inactivarCuenta;
+import static CLI.CLI.montoValido;
+import static CLI.CLI.nuevoMonto;
 import static CLI.CLI.pedirInfoUsuario;
+import static CLI.CLI.pedirMonto;
+import static CLI.CLI.pedirNumCuenta;
+import static CLI.CLI.pedirPalabra;
 import GUI.CrearCuenta;
 import GUI.Menu;
 import GUI.ListarPersonas;
+import GUI.RealizarRetiro;
 import dao.CuentaDAO;
 import dao.OperacionDAO;
 import dao.PersonaDAO;
@@ -19,6 +29,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Scanner;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -37,6 +48,7 @@ public class ControladorUsuario implements ActionListener{
     public Menu menu;
     public CrearCuenta vista1;
     public ListarPersonas vista2;
+    public RealizarRetiro vista3;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
     
@@ -73,6 +85,103 @@ public class ControladorUsuario implements ActionListener{
         this.vista1.btnContinuar.addActionListener(this);
         this.vista1.setVisible(true);
         this.menu.setVisible(false);
+    }
+    
+    public void abrirVista3()
+    {
+        this.vista3 = new RealizarRetiro();
+        this.vista3.btnRegresar.addActionListener(this);
+        this.vista3.btnLimpiar.addActionListener(this);
+        this.vista3.btnEnviarPalabra.addActionListener(this);
+        this.vista3.btnRetirar.addActionListener(this);
+        this.vista3.setVisible(true);
+        this.menu.setVisible(false);
+    }
+    
+    public String retirar(String moneda)
+    {
+        int insertar = 0;
+        int contador = 0;
+        String cuenta = this.vista3.txtCuenta.getText();
+        String pin = this.vista3.txtPin.getText();
+        //String palabra = this.vista3.txtPalabra.getText();
+        //String strMonto = this.vista3.txtMonto.getText();
+        contador += validarIngreso(cuenta, "cuenta");
+        contador += validarIngreso(pin, "pin");
+        //contador += validarIngreso(palabra, "palabra clave");
+        //contador += validarIngreso(strMonto, "monto");
+        if(contador == 0)
+        {
+            insertar += validarEntrCuenta(cuenta);
+            insertar += validarEntrPin(pin);
+            //insertar += validarEntrMonto(strMonto);
+            if (insertar == 0)
+            {
+                int id = Integer.parseInt(strId);
+                String numero = ControladorUsuario.insertarCuenta(pin, strMonto, id);
+
+                String mensaje = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: \n";
+                mensaje += ControladorUsuario.imprimirCuenta(numero);
+                mensaje += "\n---\n";
+                mensaje += ControladorUsuario.imprimirPersona(id);
+                JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        
+        
+        
+        
+        
+        
+        String pNumCuenta = pedirNumCuenta();
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String mensaje = "";
+        String mensaje2 = "";
+        String resultado = "";
+        if(!"inactiva".equals(cuenta.getEstatus()))
+        {
+            String pin = esPinCuenta(pNumCuenta);
+            if("Se ha desactivado la cuenta".equals(pin))
+            {
+                return pin;
+            }
+            else
+            {
+                mensaje = enviarMensaje(pNumCuenta);
+                System.out.println("Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
+                        + " y procesa a digitar la palabra enviada");
+                mensaje2 = pedirPalabra(mensaje, pNumCuenta);
+                if("Se ha desactivado la cuenta".equals(mensaje2))
+                {
+                    return mensaje2;
+                }
+                else
+                {
+                    String strMonto = pedirMonto();
+                    double monto = Double.parseDouble(strMonto);
+                    double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
+                    double comision;
+                    double nuevoMonto;
+                    boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
+                    comision = montoCorrecto * 0.02;
+                    nuevoMonto = nuevoMonto(comision, aplicaCom, montoCorrecto);
+                    String strSaldoViejo = cuenta.getSaldo();
+                    double saldoViejo = Double.parseDouble(strSaldoViejo);
+                    double nuevoSaldo = saldoViejo - nuevoMonto;
+                    String strNuevoSaldo = Double.toString(nuevoSaldo);
+                    cuenta.setSaldo(strNuevoSaldo);
+                    CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
+                    ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, pNumCuenta);
+                    resultado = imprimirResultado(moneda, comision, montoCorrecto);
+                }
+            }
+            
+        }
+        else
+        {
+            System.out.println("Su cuenta se encuentra desactivada");
+        }
+    return resultado; 
     }
     
     public void crearCuenta()
@@ -112,6 +221,37 @@ public class ControladorUsuario implements ActionListener{
             return 1;
         }
         return 0;
+    }
+    
+    public static String esPinCuenta(String pNumCuenta, String pin)
+    {
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        int cont = 0;
+        String pinDesencriptado = Cuenta.desencriptar(cuenta.getPin());
+        while (!pin.equals(pinDesencriptado))
+        {
+            cont++;
+            if(cont >= 2)
+            {
+                inactivarCuenta(pNumCuenta);
+                return ("Se ha desactivado la cuenta");
+            }
+            String texto3 = "Digite el pin de la cuenta: ";
+            System.out.println(texto3);
+            pin = sc.next();
+            
+        }
+        return pin;
+    }
+    
+    
+    public int validarEntrCuenta(String numCuenta)
+    {
+        if(auxNumCuentaP1(numCuenta))
+        {
+            return 0;
+        }
+        return 1;
     }
     
     public int validarEntrId(String strId)
@@ -288,7 +428,6 @@ public class ControladorUsuario implements ActionListener{
         boolean esNum = false;
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
         String numCuenta = cuenta.getNumero();
-        JOptionPane.showMessageDialog(null, numCuenta);
         if(!"".equals(numCuenta)){
             esNum = true;
         }
