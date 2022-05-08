@@ -70,6 +70,11 @@ public class ConsultarEstadoCuentaP2 extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tablaEstado);
 
         btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Saldo de la cuenta:");
 
@@ -149,6 +154,13 @@ public class ConsultarEstadoCuentaP2 extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        // TODO add your handling code here:
+        ConsultarEstadoCuenta estado = new ConsultarEstadoCuenta();
+        this.setVisible(false);
+        estado.setVisible(true);
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     /**
      * @param args the command line arguments

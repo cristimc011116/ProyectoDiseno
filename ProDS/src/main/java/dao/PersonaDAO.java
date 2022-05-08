@@ -8,9 +8,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import javax.swing.JOptionPane;
-import logicadenegocios.ConexionBase;
+import util.ConexionBase;
 import logicadenegocios.Persona;
 /**
  *
@@ -41,7 +40,6 @@ public class PersonaDAO {
               persona.setPrimerApellido(buscar.getString("primerApellido"));
               persona.setSegundoApellido(buscar.getString("segundoApellido"));
               persona.setNombre(buscar.getString("nombre"));
-              //int idU = Integer.parseInt(buscar.getString("id"));
               persona.setId(id);
               LocalDate fechaNac = LocalDate.parse(buscar.getString("fechaNacimiento"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
               persona.setFechaNacimiento(fechaNac);
@@ -69,23 +67,11 @@ public class PersonaDAO {
             while(resultado.next()){
                 
                 String primerApellido = resultado.getString("primerApellido");
-                //JOptionPane.showMessageDialog(null, primerApellido);
                 String segundoApellido = resultado.getString("segundoApellido");
-                //JOptionPane.showMessageDialog(null, segundoApellido);
                 String nombre = resultado.getString("nombre");
-                //JOptionPane.showMessageDialog(null, nombre);
                 int id = Integer.parseInt(resultado.getString("id"));
-                //JOptionPane.showMessageDialog(null, id);
                 persona = new Persona(primerApellido, segundoApellido, nombre, id);
-                //System.out.println(persona);
-                //JOptionPane.showMessageDialog(null, persona);
                 personas.add(persona);
-                /*if(persona==null)
-                {
-                    System.out.println(1);
-                }*/
-                //personas.sort((Persona persona1, Persona persona2)-> persona1.getPrimerApellido().compareTo(persona2.getPrimerApellido()));
-                //personas.forEach((es)->System.out.println(es));
             }
         }catch(SQLException ex){
            JOptionPane.showMessageDialog(null, ex.toString());

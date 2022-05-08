@@ -40,7 +40,6 @@ public class CrearCuenta extends javax.swing.JFrame {
         btnRegresar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         btnContinuar = new javax.swing.JButton();
-        btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,6 +59,11 @@ public class CrearCuenta extends javax.swing.JFrame {
         });
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         btnContinuar.setText("Continuar");
         btnContinuar.addActionListener(new java.awt.event.ActionListener() {
@@ -67,8 +71,6 @@ public class CrearCuenta extends javax.swing.JFrame {
                 btnContinuarActionPerformed(evt);
             }
         });
-
-        btnSalir.setText("Salir");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,12 +97,10 @@ public class CrearCuenta extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btnSalir)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnRegresar)
-                                    .addGap(41, 41, 41)
-                                    .addComponent(btnLimpiar))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnRegresar)
+                                .addGap(41, 41, 41)
+                                .addComponent(btnLimpiar)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -133,9 +133,7 @@ public class CrearCuenta extends javax.swing.JFrame {
                     .addComponent(btnRegresar)
                     .addComponent(btnLimpiar)
                     .addComponent(btnContinuar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSalir)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
@@ -143,12 +141,22 @@ public class CrearCuenta extends javax.swing.JFrame {
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         // TODO add your handling code here:
+        Menu menu = new Menu();
+        this.setVisible(false);
+        menu.setVisible(true);
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
         // TODO add your handling code here:
         
     }//GEN-LAST:event_btnContinuarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        this.tfId.setText("");
+        this.tfMonto.setText("");
+        this.tfPin.setText("");
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     
     
@@ -191,7 +199,6 @@ public class CrearCuenta extends javax.swing.JFrame {
     public javax.swing.JButton btnContinuar;
     public javax.swing.JButton btnLimpiar;
     public javax.swing.JButton btnRegresar;
-    public javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

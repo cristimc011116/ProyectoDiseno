@@ -10,9 +10,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import logicadenegocios.ConexionBase;
-import logicadenegocios.Cuenta;
+import util.ConexionBase;
 import logicadenegocios.Operacion;
+import util.Encriptacion;
 
 /**
  *
@@ -45,7 +45,7 @@ public class OperacionDAO {
     public static void asignarOperacionCuenta(Operacion pOperacion, String pNumCuenta)
     {
         int id = pOperacion.getId();
-        String numEncrip = Cuenta.encriptar(pNumCuenta);
+        String numEncrip = Encriptacion.encriptar(pNumCuenta);
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
         con.excSentenciaSQL("INSERT INTO CuentaOperacion VALUES('" + numEncrip + "', " + id + ")");
@@ -71,7 +71,7 @@ public class OperacionDAO {
     
     public static ArrayList<Operacion> getOperacionesCuenta(String numCuenta){
         operaciones = new ArrayList<>();
-        String numEncrip = Cuenta.encriptar(numCuenta);
+        String numEncrip = Encriptacion.encriptar(numCuenta);
         int contador = 0;
         Operacion operacion = null;
         ConexionBase con = new ConexionBase();
@@ -104,7 +104,6 @@ public class OperacionDAO {
         }
         return operaciones;
       }
-    
     
     public static boolean esComision(int comision)
     {

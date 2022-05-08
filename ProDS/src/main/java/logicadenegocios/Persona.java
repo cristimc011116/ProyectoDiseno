@@ -6,13 +6,12 @@ package logicadenegocios;
 import dao.PersonaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import util.Comparable;
 
 /**
  *
  * @author Cristi Martínez
  */
-public class Persona implements Comparable{
+public class Persona{
     private String codigo;
     private String primerApellido;
     private String segundoApellido;
@@ -28,16 +27,6 @@ public class Persona implements Comparable{
     public Persona(String pCodigo, String pPrimerApellido, String pSegundoApellido, String pNombre, int pId, LocalDate pFechaNacimiento,
                    int pNumero, String pCorreo, String pRol)
     {
-        /*setCodigo();
-        this.primerApellido = pPrimerApellido;
-        this.segundoApellido = pSegundoApellido;
-        this.nombre = pNombre;
-        this.id = pId;
-        this.fechaNacimiento = pFechaNacimiento;
-        this.numero = pNumero;
-        this.correo = pCorreo;
-        this.rol = pRol;
-        this.misCuentas = new ArrayList<>();*/
         setPrimerApellido(pPrimerApellido);
         setSegundoApellido(pSegundoApellido);
         setNombre(pNombre);
@@ -115,9 +104,6 @@ public class Persona implements Comparable{
     }
 
     public void setCodigo(String pCodigo) {
-        /*int contadorClientes = contarClientes();
-        String cod ="CIF_";
-        String pCodigo = cod + String.valueOf(contadorClientes);*/
         this.codigo = pCodigo;
     }
 

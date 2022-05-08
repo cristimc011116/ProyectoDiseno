@@ -4,6 +4,7 @@
  */
 package logicadenegocios;
 import java.time.LocalDate;
+import util.Encriptacion;
 /**
  *
  * @author Cristi Martínez
@@ -19,11 +20,6 @@ public class Operacion {
 //-----------------------------------------------CONSTRUCTOR-----------------------------------------    
     public Operacion(int pId, LocalDate pFechaOperacion, String pTipo, boolean pComision, double pMontoComision)
     {
-       /* this.id = pId;
-        this.fechaOperacion = pFechaOperacion;
-        this.tipo = pTipo;
-        this.comision = pComision;
-        this.montoComision = pMontoComision;*/
         setId(pId);
         setFechaOperacion(pFechaOperacion);
         setTipo(pTipo);
@@ -38,8 +34,8 @@ public class Operacion {
     //Falta el método valiarCuenta en el paquete de validaciones.
     public boolean cambiaPIN(String pCuenta, String pPinAccesoAnterior, 
       String pPinAccesoNuevo){
-      String pCuentaDesencriptada = Cuenta.desencriptar(pCuenta); 
-      String pPinAccesoDesencriptada = Cuenta.desencriptar(pPinAccesoAnterior); 
+      String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta); 
+      String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAccesoAnterior); 
       if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt
         (pCuentaDesencriptada)) && 
         validacion.ExpresionesRegulares.validarPin(pPinAccesoDesencriptada) &&
@@ -58,7 +54,7 @@ public class Operacion {
     }
     
     public boolean realizarDeposito(String pCuenta, String pCantColones){
-      String pCuentaDesencriptada = Cuenta.desencriptar(pCuenta);
+      String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
 
       String dinero = cuenta.getSaldo();
       if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
@@ -76,8 +72,8 @@ public class Operacion {
     public boolean realizarDepositoDolares(String pCuenta, String pPinAcceso, 
         double pCantDolares){
         String dinero = cuenta.getSaldo();
-        String pCuentaDesencriptada = Cuenta.desencriptar(pCuenta);
-        String pPinAccesoDesencriptada = Cuenta.desencriptar(pPinAcceso);
+        String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
+        String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAcceso);
         
         double tipoCambioCompra = 0;/* ConsultaCompraDolar(); */ //Se debe igualar a la función ConsultaCompraDolar().
         if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
