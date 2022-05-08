@@ -78,9 +78,9 @@ public class Cuenta {
 
     public static void listarCuentas()
     {
-        ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> Encriptacion.desencriptar(cuenta2.getSaldo()).compareTo(Encriptacion.desencriptar(cuenta1.getSaldo())));
-        listaCuentas.forEach((es)->System.out.println(es));
+        /*ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> Encriptacion.desencriptar(Double.parseDouble(Encriptacion.desencriptar(cuenta2.getSaldo()))).compareTo(Double.parseDouble(Encriptacion.desencriptar(cuenta1.getSaldo()))));
+        listaCuentas.forEach((es)->System.out.println(es));*/
     }
     
     public static boolean consultarStatusCuenta(Cuenta cuentaConsulta){

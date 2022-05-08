@@ -40,22 +40,12 @@ public class CLI {
             listarPersonas(opcion);
             seleccionarMonedaRetiro(opcion);
             salirPrograma(opcion);
+            consultarStatus(opcion);
         }
         else
         {
             main(null);
         }
-              //  System.out.println("El tipo de cambio de compra es");
-//                System.out.println(ConsultarCompraDolar());
-                //System.out.println("El tipo de cambio de venta es");
-//                System.out.println(ConsultarVentaDolar());*/
-        
-              /*  ConsultaMoneda consulta = new ConsultaMoneda();
-                System.out.println("El tipo de cambio de compra es");
-                System.out.println(consulta.consultaCambioCompra());
-                System.out.println("El tipo de cambio de venta es");
-                System.out.println(consulta.consultaCambioVenta());*/
-                
         
         
     }
@@ -65,9 +55,9 @@ public class CLI {
     {
         String pNumCuenta = pedirNumCuenta();
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
-        String mensaje = "";
-        String mensaje2 = "";
-        String resultado = "";
+        String mensaje;
+        String mensaje2;
+        String resultado="";
         if(!"inactiva".equals(cuenta.getEstatus()))
         {
             String pin = esPinCuenta(pNumCuenta);
@@ -425,12 +415,14 @@ public class CLI {
         
     }
     
-    public static String consultarStatus(String pNumCuenta)
+    public static void consultarStatus(String opcion)
     {
-        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
-        String estatus = CuentaDAO.obtenerEstatusCuenta(pNumCuenta);
-        String total = "“La cuenta número" + pNumCuenta+  "tiene estatus de" +estatus+ "";
-        return total;
-        
+        if("17".equals(opcion)){
+            String pNumCuenta = pedirNumCuenta();
+            Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+            String estatus = cuenta.getEstatus();
+            String total = "La cuenta número " + pNumCuenta+  " tiene estatus de " +estatus;
+            System.out.println(total);
+        }
     }
 }
