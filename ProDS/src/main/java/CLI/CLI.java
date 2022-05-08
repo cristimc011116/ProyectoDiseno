@@ -424,4 +424,13 @@ public class CLI {
         return total;
         
     }
+    
+    public static String consultarStatus(String pNumCuenta)
+    {
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String estatus = CuentaDAO.obtenerEstatusCuenta(pNumCuenta);
+        String total = "“La cuenta número" + pNumCuenta+  "tiene estatus de" +estatus+ "";
+        return total;
+        
+    }
 }

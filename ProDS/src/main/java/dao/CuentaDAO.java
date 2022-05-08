@@ -128,6 +128,24 @@ public class CuentaDAO {
         return id;
     }
     
+    public static String obtenerEstatusCuenta(String numCuenta) {
+        String numEncrip = Encriptacion.encriptar(numCuenta);
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        String estatus = "";
+        ResultSet buscar = con.consultas("SELECT * FROM Cuenta WHERE numero = " + "'" + numEncrip + "'");
+        try{
+            while(buscar.next()){
+              estatus = buscar.getString("estatus");
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+        }
+        return estatus;
+    }
+
+    
+    
     public static ArrayList<Cuenta> getCuentasBD(){
         cuentas = new ArrayList<>();
         
