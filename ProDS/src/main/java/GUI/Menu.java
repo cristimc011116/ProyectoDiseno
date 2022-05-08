@@ -29,6 +29,8 @@ public class Menu extends javax.swing.JFrame {
         btnListar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         btnCrearCuenta = new javax.swing.JButton();
+        btnRealizarRetiro = new javax.swing.JButton();
+        btnEstadoCuenta = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -43,6 +45,10 @@ public class Menu extends javax.swing.JFrame {
 
         btnCrearCuenta.setText("Crear cuenta");
 
+        btnRealizarRetiro.setText("Realizar retiro");
+
+        btnEstadoCuenta.setText("Consultar estado de cuenta");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -56,7 +62,9 @@ public class Menu extends javax.swing.JFrame {
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnListar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnCrearCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(btnCrearCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRealizarRetiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEstadoCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(128, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -68,7 +76,11 @@ public class Menu extends javax.swing.JFrame {
                 .addComponent(btnCrearCuenta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnListar)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnRealizarRetiro)
+                .addGap(18, 18, 18)
+                .addComponent(btnEstadoCuenta)
+                .addContainerGap(104, Short.MAX_VALUE))
         );
 
         pack();
@@ -115,7 +127,9 @@ public class Menu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnCrearCuenta;
+    public javax.swing.JButton btnEstadoCuenta;
     public javax.swing.JButton btnListar;
+    public javax.swing.JButton btnRealizarRetiro;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

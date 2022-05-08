@@ -34,6 +34,8 @@
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="btnListar" max="32767" attributes="0"/>
                           <Component id="btnCrearCuenta" max="32767" attributes="0"/>
+                          <Component id="btnRealizarRetiro" max="32767" attributes="0"/>
+                          <Component id="btnEstadoCuenta" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -50,7 +52,11 @@
               <Component id="btnCrearCuenta" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="btnListar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="186" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnRealizarRetiro" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnEstadoCuenta" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="104" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -75,6 +81,22 @@
     <Component class="javax.swing.JButton" name="btnCrearCuenta">
       <Properties>
         <Property name="text" type="java.lang.String" value="Crear cuenta"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnRealizarRetiro">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Realizar retiro"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnEstadoCuenta">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Consultar estado de cuenta"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>

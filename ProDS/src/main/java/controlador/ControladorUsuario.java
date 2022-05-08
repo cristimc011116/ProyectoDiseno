@@ -14,9 +14,12 @@ import static CLI.CLI.pedirInfoUsuario;
 import static CLI.CLI.pedirMonto;
 import static CLI.CLI.pedirNumCuenta;
 import static CLI.CLI.pedirPalabra;
+import GUI.ConsultarEstadoCuenta;
+import GUI.ConsultarEstadoCuentaP2;
 import GUI.CrearCuenta;
 import GUI.Menu;
 import GUI.ListarPersonas;
+import GUI.Palabra;
 import GUI.RealizarRetiro;
 import dao.CuentaDAO;
 import dao.OperacionDAO;
@@ -38,6 +41,7 @@ import logicadenegocios.Operacion;
 import logicadenegocios.Persona;
 import util.Ordenamiento;
 import validacion.ExpresionesRegulares;
+import webService.ConsultaMoneda;
 
 /**
  *
@@ -49,6 +53,9 @@ public class ControladorUsuario implements ActionListener{
     public CrearCuenta vista1;
     public ListarPersonas vista2;
     public RealizarRetiro vista3;
+    public ConsultarEstadoCuenta vista4;
+    public ConsultarEstadoCuentaP2 vista5;
+    public Palabra palabra;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
     
@@ -60,7 +67,8 @@ public class ControladorUsuario implements ActionListener{
         this.personasSistema = new ArrayList<>();
         this.menu.btnListar.addActionListener(this);
         this.menu.btnCrearCuenta.addActionListener(this);
-        
+        this.menu.btnRealizarRetiro.addActionListener(this);
+        this.menu.btnEstadoCuenta.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -72,8 +80,25 @@ public class ControladorUsuario implements ActionListener{
                 break;
             case "Crear cuenta":
                 abrirVista1();
+                break;
+            case "Realizar retiro":
+                abrirVista3();
+                break;
+            case "Consultar estado de cuenta":
+                abrirVista4();
+                break;
             case "Continuar":
                 crearCuenta();
+                break;
+            case "Enviar palabra clave":
+                enviarPalabra();
+                break;
+            case "Retirar":
+                retirar();
+                break;
+            case "Consultar":
+                consultarEstadoCuentaP1();
+                break;
             default:
                 break;
         }
@@ -94,14 +119,29 @@ public class ControladorUsuario implements ActionListener{
         this.vista3.btnLimpiar.addActionListener(this);
         this.vista3.btnEnviarPalabra.addActionListener(this);
         this.vista3.btnRetirar.addActionListener(this);
+        this.vista3.txtPalabra.setEnabled(false);
+        this.vista3.txtMonto.setEnabled(false);
+        this.vista3.btnRetirar.setEnabled(false);
         this.vista3.setVisible(true);
         this.menu.setVisible(false);
     }
     
-    public String retirar(String moneda)
+    public void abrirVista4()
     {
+        this.vista4 = new ConsultarEstadoCuenta();
+        this.vista4.btnConsultar.addActionListener(this);
+        this.vista4.btnLimpiar.addActionListener(this);
+        this.vista4.btnRegresar.addActionListener(this);
+        this.vista4.setVisible(true);
+        this.menu.setVisible(false);
+    }
+    
+    public void enviarPalabra()
+    {
+        this.palabra = new Palabra();
         int insertar = 0;
         int contador = 0;
+        String mensaje = "";
         String cuenta = this.vista3.txtCuenta.getText();
         String pin = this.vista3.txtPin.getText();
         //String palabra = this.vista3.txtPalabra.getText();
@@ -112,76 +152,98 @@ public class ControladorUsuario implements ActionListener{
         //contador += validarIngreso(strMonto, "monto");
         if(contador == 0)
         {
-            insertar += validarEntrCuenta(cuenta);
-            insertar += validarEntrPin(pin);
+            insertar += validarCuentaPin(cuenta, pin);
             //insertar += validarEntrMonto(strMonto);
             if (insertar == 0)
             {
-                int id = Integer.parseInt(strId);
-                String numero = ControladorUsuario.insertarCuenta(pin, strMonto, id);
-
-                String mensaje = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: \n";
-                mensaje += ControladorUsuario.imprimirCuenta(numero);
-                mensaje += "\n---\n";
-                mensaje += ControladorUsuario.imprimirPersona(id);
-                JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-        
-        
-        
-        
-        
-        
-        String pNumCuenta = pedirNumCuenta();
-        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
-        String mensaje = "";
-        String mensaje2 = "";
-        String resultado = "";
-        if(!"inactiva".equals(cuenta.getEstatus()))
-        {
-            String pin = esPinCuenta(pNumCuenta);
-            if("Se ha desactivado la cuenta".equals(pin))
-            {
-                return pin;
+                this.vista3.txtPalabra.setEnabled(true);
+                this.vista3.txtMonto.setEnabled(true);
+                this.vista3.btnRetirar.setEnabled(true);
+                mensaje = enviarMensaje(cuenta);
+                this.palabra.lbPalabra.setText(mensaje);
+                JOptionPane.showMessageDialog(null, "Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
+                        + " y procesa a digitar la palabra enviada");
+                this.vista3.btnEnviarPalabra.setEnabled(false);
             }
             else
             {
-                mensaje = enviarMensaje(pNumCuenta);
-                System.out.println("Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
-                        + " y procesa a digitar la palabra enviada");
-                mensaje2 = pedirPalabra(mensaje, pNumCuenta);
-                if("Se ha desactivado la cuenta".equals(mensaje2))
-                {
-                    return mensaje2;
-                }
-                else
-                {
-                    String strMonto = pedirMonto();
-                    double monto = Double.parseDouble(strMonto);
-                    double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
-                    double comision;
-                    double nuevoMonto;
-                    boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
-                    comision = montoCorrecto * 0.02;
-                    nuevoMonto = nuevoMonto(comision, aplicaCom, montoCorrecto);
-                    String strSaldoViejo = cuenta.getSaldo();
-                    double saldoViejo = Double.parseDouble(strSaldoViejo);
-                    double nuevoSaldo = saldoViejo - nuevoMonto;
-                    String strNuevoSaldo = Double.toString(nuevoSaldo);
-                    cuenta.setSaldo(strNuevoSaldo);
-                    CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-                    ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, pNumCuenta);
-                    resultado = imprimirResultado(moneda, comision, montoCorrecto);
-                }
+                JOptionPane.showMessageDialog(null, "La cuenta o el pin esta incorrecto");
             }
-            
         }
         else
         {
-            System.out.println("Su cuenta se encuentra desactivada");
+            JOptionPane.showMessageDialog(null, "Complete todos sus datos");
         }
-    return resultado; 
+        
+    }    
+        
+        
+        
+        
+    public void retirar()   
+    {
+        String cuenta = this.vista3.txtCuenta.getText();
+        Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+        int insertar = 0;
+        int contador = 0;
+        String mensaje;
+        String resultado = "";
+        if(!"inactiva".equals(cuentaBase.getEstatus())){
+            String pin = this.vista3.txtPin.getText();
+            String palabra = this.vista3.txtPalabra.getText();
+            String strMonto = this.vista3.txtMonto.getText();
+            String moneda = this.vista3.cbMoneda.getSelectedItem().toString();
+            String palabraClave = this.palabra.lbPalabra.getText();
+            contador += validarIngreso(cuenta, "cuenta");
+            contador += validarIngreso(pin, "pin");
+            contador += validarIngreso(palabra, "palabra clave");
+            contador += validarIngreso(strMonto, "monto");
+            double monto = Double.parseDouble(strMonto);
+            contador += validarMonto(monto, cuenta, moneda);
+            if(contador == 0)
+            {
+                insertar += validarCuentaPin(cuenta, pin);
+                insertar += validarEntrMonto(strMonto);
+                insertar += validarPalabra(palabraClave, cuenta);
+                if (insertar == 0)
+                {
+                    double comision;
+                    double nuevoMonto;
+                    boolean aplicaCom = Cuenta.aplicaComision(cuenta);
+                    monto = montoCorrecto(monto, moneda);
+                    comision = monto * 0.02;
+                    nuevoMonto = nuevoMonto(comision, aplicaCom, monto);
+                    String strSaldoViejo = cuentaBase.getSaldo();
+                    double saldoViejo = Double.parseDouble(strSaldoViejo);
+                    double nuevoSaldo = saldoViejo - nuevoMonto;
+                    String strNuevoSaldo = Double.toString(nuevoSaldo);
+                    cuentaBase.setSaldo(strNuevoSaldo);
+                    CuentaDAO.actualizarSaldo(cuenta, strNuevoSaldo);
+                    ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, cuenta);
+                    resultado = imprimirResultado(moneda, comision, monto);
+                    JOptionPane.showMessageDialog(null, resultado);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Verifique sus datos");
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
+        }
+        this.vista3.txtCuenta.setText("");
+        this.vista3.txtPin.setText("");
+        this.vista3.txtPalabra.setText("");
+        this.vista3.txtMonto.setText("");
+        this.vista3.txtPalabra.setEnabled(false);
+        this.vista3.txtMonto.setEnabled(false);
+        this.vista3.btnRetirar.setEnabled(false);
     }
     
     public void crearCuenta()
@@ -210,6 +272,14 @@ public class ControladorUsuario implements ActionListener{
                 mensaje += ControladorUsuario.imprimirPersona(id);
                 JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
             }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Verifique sus datos");
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Complete todos sus datos");
         }
         
     }
@@ -223,25 +293,154 @@ public class ControladorUsuario implements ActionListener{
         return 0;
     }
     
-    public static String esPinCuenta(String pNumCuenta, String pin)
+    public boolean pedirPalabra(String pPalabra, String pNumCuenta)
     {
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
-        int cont = 0;
-        String pinDesencriptado = Cuenta.desencriptar(cuenta.getPin());
-        while (!pin.equals(pinDesencriptado))
+        String cont;
+        int contador;
+        String palabra = this.vista3.txtPalabra.getText();
+        if (!pPalabra.equals(palabra))
         {
-            cont++;
-            if(cont >= 2)
+            cont = this.vista3.txtIntPalabra.getText();
+            contador = Integer.parseInt(cont);
+            contador++;
+            cont = Integer.toString(contador);
+            this.vista3.txtIntPalabra.setText(cont);
+            if(contador >= 2)
             {
                 inactivarCuenta(pNumCuenta);
-                return ("Se ha desactivado la cuenta");
+                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta");
             }
-            String texto3 = "Digite el pin de la cuenta: ";
-            System.out.println(texto3);
-            pin = sc.next();
-            
+            return false;
         }
-        return pin;
+        return true;
+    }
+    
+    public int validarPalabra(String pPalabra, String pNumCuenta)
+    {
+        if(pedirPalabra(pPalabra, pNumCuenta))
+        {
+            return 0;
+        }
+        return 1;
+    }
+    
+    public int validarMonto(double pMonto, String pNumCuenta, String moneda)
+    {
+        if(montoValido(pMonto, pNumCuenta, moneda))
+        {
+            return 0;
+        }
+        return 1;
+        
+    }
+    
+    public boolean esPinCuenta(String pNumCuenta, String pin)
+    {
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String cont;
+        int contador;
+        String pinDesencriptado = Cuenta.desencriptar(cuenta.getPin());
+        if (!pin.equals(pinDesencriptado))
+        {
+            cont = this.vista3.txtIntPin.getText();
+            contador = Integer.parseInt(cont);
+            contador++;
+            cont = Integer.toString(contador);
+            this.vista3.txtIntPin.setText(cont);
+            if(contador >= 2)
+            {
+                inactivarCuenta(pNumCuenta);
+                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta");
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean esPinCuenta2(String pNumCuenta, String pin)
+    {
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String cont;
+        int contador;
+        String pinDesencriptado = Cuenta.desencriptar(cuenta.getPin());
+        if (!pin.equals(pinDesencriptado))
+        {
+            cont = this.vista4.lbintentos.getText();
+            contador = Integer.parseInt(cont);
+            contador++;
+            cont = Integer.toString(contador);
+            this.vista4.lbintentos.setText(cont);
+            if(contador >= 2)
+            {
+                inactivarCuenta(pNumCuenta);
+                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta");
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    public static boolean montoValido(double pMonto, String pNumCuenta, String moneda)
+    {
+        ConsultaMoneda consulta = new ConsultaMoneda();
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String montoEncrip = cuenta.getSaldo();
+        //String strMonto = Cuenta.desencriptar(montoEncrip);
+        //String strMonto1 = strMonto.replace("+-","");
+        double monto = Double.parseDouble(montoEncrip);
+        double venta = consulta.consultaCambioVenta();
+        double pMontoDolares = pMonto * venta;
+        if("dolares".equals(moneda))
+        {
+            pMontoDolares = pMonto * venta;
+            pMonto = pMontoDolares;
+            if (monto<pMonto)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (monto<pMonto)
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    
+    public static double montoCorrecto(double pMonto, String moneda)
+    {
+        ConsultaMoneda consulta = new ConsultaMoneda();
+        double venta = consulta.consultaCambioVenta();
+        double monto = pMonto;
+        if("dolares".equals(moneda))
+        {
+            monto = pMonto * venta;
+        }
+        return monto;
+    }
+    
+    public int validarPin(String pNumCuenta, String pPin)
+    {
+        if(esPinCuenta(pNumCuenta, pPin))
+        {
+            return 0;
+        }
+        return 1;
+    }
+    
+    
+    public int validarPin2(String pNumCuenta, String pPin)
+    {
+        if(esPinCuenta2(pNumCuenta, pPin))
+        {
+            return 0;
+        }
+        return 1;
     }
     
     
@@ -319,11 +518,134 @@ public class ControladorUsuario implements ActionListener{
         for(Persona persona: personasSistema)
         {
            Object[] info = {persona.getNombre(), persona.getPrimerApellido(), persona.getSegundoApellido(), persona.getId()};
-           System.out.println(persona);
            this.latabla.modelo.addRow(info);
         }
         this.latabla.setVisible(true);
         this.menu.setVisible(false);
+    }
+    
+    public int validarCuentaPin(String numCuenta, String pin)
+    {
+        int insertar = 0;
+        insertar += validarEntrCuenta(numCuenta);
+        if(insertar==0)
+        {
+           insertar += validarPin(numCuenta, pin);
+           if(insertar==0)
+           {
+               return 0;
+           }
+        }
+        return 1;
+        
+    }
+    
+    
+    public int validarCuentaPin2(String numCuenta, String pin)
+    {
+        int insertar = 0;
+        insertar += validarEntrCuenta(numCuenta);
+        if(insertar==0)
+        {
+           insertar += validarPin2(numCuenta, pin);
+           if(insertar==0)
+           {
+               return 0;
+           }
+        }
+        return 1;
+        
+    }
+    
+    public void consultarEstadoCuentaP1(){
+        int insertar = 0;
+        int contador = 0;
+        String mensaje;
+        String cuenta = this.vista4.txtCuenta.getText();
+        String pin = this.vista4.txtPin.getText();
+        contador += validarIngreso(cuenta, "cuenta");
+        contador += validarIngreso(pin, "pin");
+        if(contador == 0)
+        {
+            insertar += validarCuentaPin2(cuenta, pin);
+            if (insertar==0)
+            {
+                Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+                if("inactiva".equals(cuentaBase.getEstatus())){
+                    consultarEstadoCuentaP2();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "La cuenta está inactiva");
+                }
+                
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "La cuenta o pin está incorrecto");
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+        }
+    }
+    
+    
+    public void consultarEstadoCuentaP2(){
+        ConsultaMoneda consulta = new ConsultaMoneda();
+        this.vista5 = new ConsultarEstadoCuentaP2();
+        String cuenta = this.vista4.txtCuenta.getText();
+        Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+        if(cuentaBase.getEstatus()=="inactiva"){
+            this.vista5.lbCuenta.setText(cuenta);
+            int idDueno = CuentaDAO.obtenerPersonaCuenta(cuenta);
+            String strIdDueno = Integer.toString(idDueno);
+            this.vista5.lbIdDueno.setText(strIdDueno);
+            Persona persona = PersonaDAO.obtenerPersona(idDueno);
+            String nombreDueno = persona.getNombre() + persona.getPrimerApellido() + persona.getSegundoApellido();
+            this.vista5.lbNombreDueno.setText(nombreDueno);
+            String moneda = this.vista4.cbMoneda.getSelectedItem().toString();
+            String numCuenta = this.vista4.txtCuenta.getText();
+            ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(numCuenta);
+            String[] titulos = {
+                "Fecha",
+                "Tipo",
+                "Monto",
+                "Comisión"};
+            this.vista5.modelo = new DefaultTableModel(null, titulos);
+            this.vista5.tablaEstado.setModel(this.vista5.modelo);
+            for(Operacion operacion: operaciones)
+            {
+               if(moneda=="colones")
+               {
+                    this.vista5.lbSaldo.setText(cuentaBase.getSaldo());
+                    double monto = (operacion.getMontoComision()/0.02);
+                    Object[] info = {operacion.getFechaOperacion(), operacion.getTipo(), monto, operacion.getMontoComision()};
+                    this.vista5.modelo.addRow(info);
+               }
+               else
+               {
+                    double venta = consulta.consultaCambioVenta();
+                    String strSaldoColones = cuentaBase.getSaldo();
+                    double saldoColones = Double.parseDouble(strSaldoColones);
+                    double saldoDolares = saldoColones/venta;
+                    String strSaldoDolares = Double.toString(saldoDolares);
+                    this.vista5.lbSaldo.setText(strSaldoDolares);
+                    double monto = (operacion.getMontoComision()/0.02);
+                    double comisionDolares = (operacion.getMontoComision()/venta);
+                    double montoDolares = monto/venta;
+                    Object[] info = {operacion.getFechaOperacion(), operacion.getTipo(), montoDolares, comisionDolares};
+                    this.vista5.modelo.addRow(info);
+               }
+            }
+            this.vista5.setVisible(true);
+            this.vista4.setVisible(false);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "La cuenta está inactiva");
+        }
     }
     
         

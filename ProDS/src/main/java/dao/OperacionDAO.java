@@ -7,6 +7,7 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import logicadenegocios.ConexionBase;
@@ -18,6 +19,7 @@ import logicadenegocios.Operacion;
  * @author Cristi Martínez
  */
 public class OperacionDAO {
+    private static ArrayList<Operacion> operaciones;
     public static void insertarOperacion(Operacion pOperacion, LocalDate pFecha)
     {
         int id = pOperacion.getId();
@@ -65,5 +67,47 @@ public class OperacionDAO {
         }
         con.desconectar();
         return contador;
+    }
+    
+    public static ArrayList<Operacion> getOperacionesCuenta(String numCuenta){
+        operaciones = new ArrayList<>();
+        String numEncrip = Cuenta.encriptar(numCuenta);
+        int contador = 0;
+        Operacion operacion = null;
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE cuenta = " +"'"+ numEncrip+"'");
+        try{
+            while(buscar.next()){
+                String idOperacion = buscar.getString("idOperacion");
+                ResultSet buscar2 = con.consultas("SELECT * FROM Operacion WHERE id = " + idOperacion);
+                try{
+                    while(buscar2.next()){
+                        String strId = buscar2.getString("id");
+                        int id = Integer.parseInt(strId);
+                        LocalDate fecha = LocalDate.parse(buscar2.getString("fechaOperacion"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        String tipo = buscar2.getString("tipo");
+                        String strComision = buscar2.getString("comision");
+                        int intComision = Integer.parseInt(strComision);
+                        boolean comision = esComision(intComision);
+                        String strMontoComision = buscar2.getString("montoComision");
+                        double montoComision = Double.parseDouble(strMontoComision);
+                        operacion = new Operacion(id, fecha, tipo, comision, montoComision);
+                        operaciones.add(operacion);
+                    }
+                }catch(SQLException e){
+                    JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+                }
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+        }
+        return operaciones;
+      }
+    
+    
+    public static boolean esComision(int comision)
+    {
+        return comision==1;
     }
 }

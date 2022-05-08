@@ -111,11 +111,12 @@ public class CuentaDAO {
     
     public static int obtenerPersonaCuenta(String numCuenta)
     {
+        String numEncrip = Cuenta.encriptar(numCuenta);
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
         String mensaje = "";
         int id = 0;
-        ResultSet buscar = con.consultas("SELECT * FROM PersonaCuenta WHERE numCuenta = " + "'" + numCuenta + "'");
+        ResultSet buscar = con.consultas("SELECT * FROM PersonaCuenta WHERE numCuenta = " + "'" + numEncrip + "'");
         try{
             while(buscar.next()){
               String strId = buscar.getString("idCliente");
@@ -177,7 +178,6 @@ public class CuentaDAO {
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: " + e.toString());
         }
-        JOptionPane.showMessageDialog(null, contador);
         return contador;
       }
 }

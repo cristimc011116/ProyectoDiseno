@@ -30,7 +30,7 @@ public class CLI {
     //el main debe ser el menu, las funciones métodos
     public static void main(String[] args)
     {
-        String resultado = retirar("colones");
+        String resultado = retirar("dolares");
         System.out.println(resultado);
         /*Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
