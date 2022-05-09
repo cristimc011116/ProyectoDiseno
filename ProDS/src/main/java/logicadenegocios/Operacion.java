@@ -44,8 +44,6 @@ public class Operacion {
         validacion.ExpresionesRegulares.validarPin(pPinAccesoDesencriptada) &&
         validacion.ExpresionesRegulares.validarPin(pPinAccesoNuevo)){
         resultado = setearPIN( pPinAccesoNuevo, pCuenta);
-        System.out.print("Estimado usuario, se ha cambiado "
-          + "satisfactoriamente el PIN de su cuenta "+pCuenta);
       }
       return resultado;
     }
@@ -71,6 +69,21 @@ public class Operacion {
       }
       return resultado;
     }
+      
+    public boolean realizarDepositoDolares(String pCuenta, String pPinAcceso, 
+        double pCantDolares){
+      String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
+      String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAcceso);
+      String dinero;
+      boolean resultado = false;
+      double tipoCambioCompra = 0;/*ConsultaCompraDolar();*/ //Se debe igualar a la función ConsultaCompraDolar().
+      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
+          validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
+          dinero = String.valueOf(pCantDolares*tipoCambioCompra);
+          resultado = depositar(pCuentaDesencriptada,dinero);
+      }
+      return resultado;
+    }
     
     public boolean depositar(String pCuenta, String pCantColones){
       ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
@@ -83,24 +96,6 @@ public class Operacion {
         }
       }
       return false;
-    }
-      
-    public boolean realizarDepositoDolares(String pCuenta, String pPinAcceso, 
-        double pCantDolares){
-        String dinero = cuenta.getSaldo();
-        String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
-        String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAcceso);
-        
-        double tipoCambioCompra = 0;/* ConsultaCompraDolar(); */ //Se debe igualar a la función ConsultaCompraDolar().
-        if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
-            validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
-            dinero = String.valueOf(pCantDolares*tipoCambioCompra);
-            cuenta.setSaldo(dinero);
-            return true;
-            
-        }else{
-            return false;
-        }
     }
     
     public double consultarGananciaCuentaBanco(String pCuenta){
