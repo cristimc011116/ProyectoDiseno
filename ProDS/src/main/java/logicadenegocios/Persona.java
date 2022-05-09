@@ -102,6 +102,23 @@ public class Persona{
       return "0"; //La cuenta no existe.
     }
     
+    public String consultarSaldoDolares(String pNumCuenta, String pPinAcceso){
+      Cuenta cuenta = new Cuenta();
+      String saldoEnDolares;
+      String pCuentaDesencriptada = Encriptacion.desencriptar(pNumCuenta); 
+      String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAcceso);
+      
+      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada))){
+        if (validacion.ExpresionesRegulares.validarPin(pPinAccesoDesencriptada)){
+          saldoEnDolares = cuenta.getSaldo();//retorna el saldo de la cuenta.
+          
+        }else{
+          return "1";//Pin incorrecto.
+        }
+      }
+      return "0"; //La cuenta no existe.
+    }
+    
 //-----------------------------------------METODOS ACCESORES--------------------------------------------    
     
     public String getCodigo() {
