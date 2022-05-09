@@ -34,44 +34,57 @@ public class Operacion {
     
 
 //------------------------------------------METODOS DE CLASE----------------------------------------    
-    //Falta el método valiarCuenta en el paquete de validaciones.
     public boolean cambiaPIN(String pCuenta, String pPinAccesoAnterior, 
       String pPinAccesoNuevo){
+      boolean resultado = false;
       String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta); 
       String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAccesoAnterior); 
       if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt
         (pCuentaDesencriptada)) && 
         validacion.ExpresionesRegulares.validarPin(pPinAccesoDesencriptada) &&
         validacion.ExpresionesRegulares.validarPin(pPinAccesoNuevo)){
-
-        cuenta.setPin(pPinAccesoNuevo);
-
+        resultado = setearPIN( pPinAccesoNuevo, pCuenta);
         System.out.print("Estimado usuario, se ha cambiado "
           + "satisfactoriamente el PIN de su cuenta "+pCuenta);
-
-        return true;
-
-      }else{
-          return false;
       }
+      return resultado;
+    }
+    
+    public boolean setearPIN(String pPinAccesoNuevo, String pCuenta){
+      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+      for(int i=0;i<listaCuentas.size();i++){
+        cuenta=listaCuentas.get(i);
+        if(cuenta.getNumero()== pCuenta){
+          cuenta.setPin(pPinAccesoNuevo);
+          return true;
+        }
+      }
+      return false;
     }
     
     public boolean realizarDeposito(String pCuenta, String pCantColones){
       String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
-
-      String dinero = cuenta.getSaldo();
+      boolean resultado = false;
       if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
         validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantColones))){
-
-        cuenta.setSaldo(dinero+pCantColones);
-        return true;
-
-      }else{
-        return false;
+        resultado = depositar( pCuenta, pCantColones);
       }
-    }    
+      return resultado;
+    }
     
-    
+    public boolean depositar(String pCuenta, String pCantColones){
+      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+      for(int i=0;i<listaCuentas.size();i++){
+        cuenta=listaCuentas.get(i);
+        String dinero = cuenta.getSaldo();
+        if(cuenta.getNumero()== pCuenta){
+          cuenta.setSaldo(dinero+pCantColones);
+          return true;
+        }
+      }
+      return false;
+    }
+      
     public boolean realizarDepositoDolares(String pCuenta, String pPinAcceso, 
         double pCantDolares){
         String dinero = cuenta.getSaldo();
@@ -91,7 +104,8 @@ public class Operacion {
     }
     
     public double consultarGananciaCuentaBanco(String pCuenta){
-      ArrayList<Operacion> listaOperaciones = OperacionDAO.getOperacionesCuenta(pCuenta);
+      String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
+      ArrayList<Operacion> listaOperaciones = OperacionDAO.getOperacionesCuenta(pCuentaDesencriptada);
       double gananciaBancoPorCuenta=0;
       for(int i=0 ; i < listaOperaciones.size();i++){
         Operacion operacion = listaOperaciones.get(i);
@@ -107,7 +121,7 @@ public class Operacion {
         ArrayList<Operacion> listaOperaciones = OperacionDAO.getOperacionesCuenta(listaCuentasTotales.get(i).getNumero());
         for(int e=0 ; e < listaOperaciones.size();e++){
           Operacion operacion = listaOperaciones.get(e);
-          gananciaBancoTotal = gananciaBancoTotal + operacion.getMontoComision();
+          gananciaBancoTotal=gananciaBancoTotal+operacion.getMontoComision();
         }
       }
       return gananciaBancoTotal;
