@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package logicadenegocios;
+import dao.CuentaDAO;
 import dao.OperacionDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -91,15 +92,26 @@ public class Operacion {
     
     public double consultarGananciaCuentaBanco(String pCuenta){
       ArrayList<Operacion> listaOperaciones = OperacionDAO.getOperacionesCuenta(pCuenta);
-      double gananciaBanco=0;
-      
+      double gananciaBancoPorCuenta=0;
       for(int i=0 ; i < listaOperaciones.size();i++){
         Operacion operacion = listaOperaciones.get(i);
-        gananciaBanco = gananciaBanco + operacion.getMontoComision();
+        gananciaBancoPorCuenta = gananciaBancoPorCuenta + operacion.getMontoComision();
       }
-      return gananciaBanco;
+      return gananciaBancoPorCuenta;
     }
     
+    public double consultarGananciaBancoTotal(){
+      ArrayList<Cuenta> listaCuentasTotales = CuentaDAO.getCuentasBD();
+      double gananciaBancoTotal=0;
+      for(int i=0; i < listaCuentasTotales.size() ; i++){
+        ArrayList<Operacion> listaOperaciones = OperacionDAO.getOperacionesCuenta(listaCuentasTotales.get(i).getNumero());
+        for(int e=0 ; e < listaOperaciones.size();e++){
+          Operacion operacion = listaOperaciones.get(e);
+          gananciaBancoTotal = gananciaBancoTotal + operacion.getMontoComision();
+        }
+      }
+      return gananciaBancoTotal;
+    } 
     
 //-------------------------------------METODOS ACCESORES--------------------------------------------------
     public int getId() {
