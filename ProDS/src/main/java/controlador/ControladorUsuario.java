@@ -149,7 +149,6 @@ public class ControladorUsuario implements ActionListener{
                 this.palabra.lbPalabra.setText(mensaje);
                 JOptionPane.showMessageDialog(null, "Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
                         + " y procesa a digitar la palabra enviada");
-                this.vista3.btnEnviarPalabra.setEnabled(false);
             }
             else
             {
@@ -320,6 +319,8 @@ public class ControladorUsuario implements ActionListener{
         String cuenta = this.vista4.txtCuenta.getText();
         Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
         this.vista5.lbCuenta.setText(cuenta);
+        String pin = cuentaBase.getPin();
+        this.vista5.lbPin.setText(pin);
         int idDueno = CuentaDAO.obtenerPersonaCuenta(cuenta);
         String strIdDueno = Integer.toString(idDueno);
         this.vista5.lbIdDueno.setText(strIdDueno);
@@ -338,7 +339,7 @@ public class ControladorUsuario implements ActionListener{
         this.vista5.tablaEstado.setModel(this.vista5.modelo);
         for(Operacion operacion: operaciones)
         {
-           if(moneda=="colones")
+           if("colones".equals(moneda))
            {
                 this.vista5.lbSaldo.setText(cuentaBase.getSaldo());
                 double monto = (operacion.getMontoComision()/0.02);
@@ -410,7 +411,7 @@ public class ControladorUsuario implements ActionListener{
             {
                 this.vista3.txtIntPin.setText("2");
                 inactivarCuenta(pNumCuenta);
-                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta");
+                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta por el ingreso del pin incorrecto");
             }
             else
             {
@@ -438,7 +439,7 @@ public class ControladorUsuario implements ActionListener{
             {
                 this.vista4.lbintentos.setText("2");
                 inactivarCuenta(pNumCuenta);
-                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta");
+                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta por el ingreso del pin incorrecto");
             }
             else
             {
@@ -644,7 +645,14 @@ public class ControladorUsuario implements ActionListener{
             if(contador >= 2)
             {
                 inactivarCuenta(pNumCuenta);
-                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta");
+                JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta por el ingreso incorrecto de la palabra clave");
+            }
+            else
+            {
+                //JOptionPane.showMessageDialog(null, "Para otro intento, presione en el botón 'Enviar palabra'");
+                //this.palabra.lbPalabra.setText("");
+                
+                enviarPalabra();
             }
             return false;
         }

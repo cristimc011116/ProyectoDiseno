@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import controlador.ControladorUsuario;
+
 /**
  *
  * @author Cristi Martínez
@@ -62,8 +64,18 @@ public class RealizarRetiro extends javax.swing.JFrame {
         btnRetirar.setText("Retirar");
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Realizar retiro");
 
@@ -198,6 +210,22 @@ public class RealizarRetiro extends javax.swing.JFrame {
     private void btnEnviarPalabraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarPalabraActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnEnviarPalabraActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        // TODO add your handling code here:
+        Menu menu = new Menu();
+        ControladorUsuario controlador = new ControladorUsuario(menu);
+        controlador.menu.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        this.txtCuenta.setText("");
+        this.txtMonto.setText("");
+        this.txtPalabra.setText("");
+        this.txtPin.setText("");
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     /**
      * @param args the command line arguments

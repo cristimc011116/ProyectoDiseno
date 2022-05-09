@@ -12,7 +12,11 @@ import dao.PersonaDAO;
 import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import dao.CuentaDAO;
+import dao.OperacionDAO;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import logicadenegocios.Operacion;
 import util.Encriptacion;
 /**
  *
@@ -41,6 +45,7 @@ public class CLI {
             seleccionarMonedaRetiro(opcion);
             salirPrograma(opcion);
             consultarStatus(opcion);
+            seleccionarMonedaEstado(opcion);
         }
         else
         {
@@ -63,7 +68,7 @@ public class CLI {
             String pin = esPinCuenta(pNumCuenta);
             if("Se ha desactivado la cuenta".equals(pin))
             {
-                System.out.println("La cuenta ha sido desactivada");
+                System.out.println("La cuenta ha sido desactivada por el ingreso del pin incorrecto");
                 volverMenu();
                 return pin;
             }
@@ -75,7 +80,7 @@ public class CLI {
                 mensaje2 = pedirPalabra(mensaje, pNumCuenta);
                 if("Se ha desactivado la cuenta".equals(mensaje2))
                 {
-                    System.out.println("La cuenta ha sido desactivada");
+                    System.out.println("La cuenta ha sido desactivada por el ingreso de la palabra clave incorrecta");
                     volverMenu();
                     return mensaje2;
                 }
@@ -110,6 +115,84 @@ public class CLI {
         }
     return resultado; 
     }
+    
+    
+    public static String consultarEstado(String moneda)
+    {
+        ConsultaMoneda consulta = new ConsultaMoneda();
+        String pNumCuenta = pedirNumCuenta();
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String mensaje;
+        String mensaje2;
+        String resultado="";
+        String strSaldo = "";
+        int contador = 0;
+        String oper = "";
+        String strPin = "";
+        if(!"inactiva".equals(cuenta.getEstatus()))
+        {
+            String pin = esPinCuenta(pNumCuenta);
+            if("Se ha desactivado la cuenta".equals(pin))
+            {
+                System.out.println("La cuenta ha sido desactivada por el ingreso del pin incorrecto");
+                volverMenu();
+                return pin;
+            }
+            else
+            {
+                Cuenta cuentaBase = CuentaDAO.obtenerCuenta(pNumCuenta);
+                int idDueno = CuentaDAO.obtenerPersonaCuenta(pNumCuenta);
+                Persona persona = PersonaDAO.obtenerPersona(idDueno);
+                String nombreDueno = persona.getNombre() + " " + persona.getPrimerApellido() + " " + persona.getSegundoApellido();
+                ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(pNumCuenta);
+                for(Operacion operacion: operaciones)
+                {
+                   if("colones".equals(moneda))
+                   {
+                        strSaldo = cuentaBase.getSaldo();
+                        strPin = cuentaBase.getPin();
+                        double saldo = Double.parseDouble(strSaldo);
+                        double monto = (operacion.getMontoComision()/0.02);
+                        LocalDate fecha = operacion.getFechaOperacion();
+                        String tipo = operacion.getTipo();
+                        double montoComision = operacion.getMontoComision();
+                        contador++;
+                        oper += "Operacion #" + contador + "\nFecha: " + fecha + "\nTipo: " + tipo + "\nMonto: " + monto + "\nComisión: " + montoComision + "\n\n";
+                   }
+                   else
+                   {
+                        double venta = consulta.consultaCambioVenta();
+                        String strSaldoColones = cuentaBase.getSaldo();
+                        double saldoColones = Double.parseDouble(strSaldoColones);
+                        double saldoDolares = saldoColones/venta;
+                        strSaldo = Double.toString(saldoDolares);
+                        strPin = cuentaBase.getPin();
+                        double monto = (operacion.getMontoComision()/0.02);
+                        double comisionDolares = (operacion.getMontoComision()/venta);
+                        double montoDolares = monto/venta;
+                        LocalDate fecha = operacion.getFechaOperacion();
+                        String tipo = operacion.getTipo();
+                        contador++;
+                        oper += "Operacion #" + contador + "\nFecha: " + fecha + "\nTipo: " + tipo + "\nMonto: " + montoDolares + "\nComisión: " + comisionDolares + "\n\n";
+                   }
+                }
+                
+                resultado += "Información de la cuenta\n\n" + "Número de cuenta: " + pNumCuenta + "\nPin encriptado de la cuenta: " + strPin
+                        + "\nNombre del dueño: " + nombreDueno + "\nIdentificación del dueño: " + idDueno + "\nSaldo de la cuenta: " 
+                        + strSaldo + "\n\n\nOperaciones de la cuenta: " + "\n\n" + oper;
+                System.out.println(resultado);
+                volverMenu();
+            }
+        }
+        else
+        {
+            System.out.println("Su cuenta se encuentra desactivada");
+            volverMenu();
+        }
+    return resultado; 
+    }
+    
+    
     
     public static void crearCuenta(String opcion)
     //public static void main(String[] args)
@@ -180,6 +263,18 @@ public class CLI {
         if("9".equals(opcion))
         {
             retirar("dolares");
+        }
+    }
+    
+    public static void seleccionarMonedaEstado(String opcion)
+    {
+        if("15".equals(opcion))
+        {
+            consultarEstado("colones");
+        }
+        if("16".equals(opcion))
+        {
+            consultarEstado("dolares");
         }
     }
     
@@ -363,6 +458,12 @@ public class CLI {
             {
                 ControladorUsuario.inactivarCuenta(pNumCuenta);
                 return ("Se ha desactivado la cuenta");
+            }
+            else
+            {
+                pPalabra = ControladorUsuario.enviarMensaje(pNumCuenta);
+                System.out.println("Estimado usuario se ha enviado una nueva palabra por mensaje de texto, por favor revise sus mensajes"
+                        + " y procesa a digitar correctamente la palabra enviada");
             }
             String texto3 = "Digite la palabra clave: ";
             System.out.println(texto3);

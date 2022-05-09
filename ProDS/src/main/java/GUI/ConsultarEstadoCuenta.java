@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import controlador.ControladorUsuario;
+
 /**
  *
  * @author Cristi Martínez
@@ -158,8 +160,9 @@ public class ConsultarEstadoCuenta extends javax.swing.JFrame {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         // TODO add your handling code here:
         Menu menu = new Menu();
+        ControladorUsuario controlador = new ControladorUsuario(menu);
+        controlador.menu.setVisible(true);
         this.setVisible(false);
-        menu.setVisible(true);
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     /**
