@@ -6,6 +6,7 @@ package logicadenegocios;
 import dao.PersonaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import util.Encriptacion;
 
 /**
  *
@@ -85,17 +86,21 @@ public class Persona{
       return (getPrimerApellido().compareTo(((Persona)objeto).getPrimerApellido())<0);
     }
     
-    /*public double consultarSaldoColones(int pNumCuenta, String pPinAcceso){
+    public String consultarSaldoColones(String pNumCuenta, String pPinAcceso){
       Cuenta cuenta = new Cuenta();
-      if (validacion.ExpresionesRegulares.validarCuenta(pNumCuenta)){
-        if (validacion.ExpresionesRegulares.validarPin(pPinAcceso)){
+      
+      String pCuentaDesencriptada = Encriptacion.desencriptar(pNumCuenta); 
+      String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAcceso);
+      
+      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada))){
+        if (validacion.ExpresionesRegulares.validarPin(pPinAccesoDesencriptada)){
           return cuenta.getSaldo();//retorna el saldo de la cuenta.
         }else{
-          return 1;//Pin incorrecto.
+          return "1";//Pin incorrecto.
         }
       }
-      return 0; //La cuenta no existe.
-    }*/
+      return "0"; //La cuenta no existe.
+    }
     
 //-----------------------------------------METODOS ACCESORES--------------------------------------------    
     
