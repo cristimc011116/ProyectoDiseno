@@ -76,15 +76,17 @@ public class Cuenta {
         return numDec;
     }
 
-    public static void listarCuentas()
+    public static ArrayList listarCuentas()
     {
-        /*ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> Encriptacion.desencriptar(Double.parseDouble(Encriptacion.desencriptar(cuenta2.getSaldo()))).compareTo(Double.parseDouble(Encriptacion.desencriptar(cuenta1.getSaldo()))));
-        listaCuentas.forEach((es)->System.out.println(es));*/
+        ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD(); 
+        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta1.convertirSaldo(cuenta2).compareTo(cuenta1.convertirSaldo(cuenta1)));
+        return listaCuentas;
     }
     
-    public static boolean consultarStatusCuenta(Cuenta cuentaConsulta){
-        return "activa".equals(cuentaConsulta.estatus);
+    public static Double convertirSaldo(Cuenta pCuenta){
+        String saldoS = Encriptacion.desencriptar(pCuenta.getSaldo());
+        Double saldoDouble = Double.parseDouble(saldoS);
+        return saldoDouble;   
     }
     
    public static boolean aplicaComision(String numCuenta)

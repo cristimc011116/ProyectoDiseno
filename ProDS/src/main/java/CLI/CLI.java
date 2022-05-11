@@ -33,7 +33,7 @@ public class CLI {
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
                 + "\n9.Realizar retiro en dólares\n10.Realizar transferencia en colones\n11.Consultar tipo de cambio de compra en dólares"
                 + "\n12.Consultar tipo de cambio de ventar en dólares\n13.Consultar saldo actual\n14.Consultar saldo actual (dólares)"
-                + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n17.Consultar estatus de la cuenta"
+                + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n17.Consultar estatus de la cuenta\n18.Consultar informacion de una cuenta"
                 + "\n18.Consultar ganancias del banco por comisiones\n19.Consultar ganancias del banco por comisiones en una cuenta específica"
                 + "\n20.Salir"
                 + "\nDigite su opción: ");
@@ -46,6 +46,10 @@ public class CLI {
             salirPrograma(opcion);
             consultarStatus(opcion);
             seleccionarMonedaEstado(opcion);
+            consultarUnaCuenta(opcion);
+            listarCuentas(opcion);
+            
+            
         }
         else
         {
@@ -229,6 +233,26 @@ public class CLI {
         }   
     }
     
+    public static void  listarCuentas(String opcion)
+    //public static void main(String[] args)
+    {
+        Scanner sc = new Scanner (System.in);
+        if("4".equals(opcion))
+        {
+            listadoCuentas();
+
+        }   
+    }
+    
+    //NO PASA POR CONTROLADOS HAY QUE CAMBIARLO PERO ESTA EN CUENTAS
+    public static void listadoCuentas()
+    {
+        ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD(); 
+        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta1.convertirSaldo(cuenta2).compareTo(cuenta1.convertirSaldo(cuenta1)));
+        listaCuentas.forEach((es)->System.out.println(es));
+    }
+    
+    
     public static void seleccionarPersona()
     {
         Scanner sc = new Scanner (System.in);
@@ -369,6 +393,15 @@ public class CLI {
         System.out.println(mensaje);
     }
     
+        public static void pedirInfoCuenta()
+    {
+        Scanner sc = new Scanner (System.in);
+        System.out.println("Digite el numero de cuenta que desea consultar");
+        String cuenta = sc.next();
+        String mensaje = consultarCuenta(cuenta);
+        System.out.println(mensaje);
+    }
+    
     public static int pedirId()
     {
         Scanner sc = new Scanner (System.in);
@@ -473,6 +506,7 @@ public class CLI {
         return palabra;
     }
     
+    
     //OTROS--------------------------------------------------------------------------------------------------------------------------------------------
     public static void volverMenu(){
         Scanner sc = new Scanner (System.in);
@@ -505,6 +539,21 @@ public class CLI {
         return total;
     }
     
+        public static String consultarCuenta(String pNumeroCuenta)
+    {
+        boolean esCorrecto = ControladorUsuario.auxNumCuentaP1(pNumeroCuenta);
+        String total = "";
+        if(esCorrecto)
+        {
+            total = ControladorUsuario.recuperarCuenta(pNumeroCuenta);
+        }
+        else
+        {
+            pedirNumCuenta();
+        }
+        return total;
+    }
+    
     public static String consultarUsuario(String idUsuario)
     {
         int id = Integer.parseInt(idUsuario);
@@ -523,6 +572,16 @@ public class CLI {
             Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
             String estatus = cuenta.getEstatus();
             String total = "La cuenta número " + pNumCuenta+  " tiene estatus de " +estatus;
+            System.out.println(total);
+        }
+    }
+        public static void consultarUnaCuenta(String opcion)
+    {
+        if("18".equals(opcion)){
+            String pNumCuenta = pedirNumCuenta();
+            String cuenta = consultarCuenta(pNumCuenta);
+            String total = "La cuenta número " + pNumCuenta+  " contiene la siguiente informacion  "
+                    +cuenta;
             System.out.println(total);
         }
     }

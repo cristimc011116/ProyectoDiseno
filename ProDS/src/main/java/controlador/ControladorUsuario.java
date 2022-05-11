@@ -865,6 +865,14 @@ public class ControladorUsuario implements ActionListener{
       return total;
     }
     
+        public static String recuperarCuenta(String pNumeroCuenta)
+    {
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumeroCuenta);
+      String mensaje = cuenta.toString();
+      String total = "Información de la cuenta solicitada:\n" + mensaje;
+      return total;
+    }
+    
     public static String insertarCuenta(String pPin, String pMonto, int pId)
     {
       String numero = Cuenta.generarNumCuenta();
