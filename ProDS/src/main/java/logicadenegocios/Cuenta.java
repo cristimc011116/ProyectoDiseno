@@ -150,6 +150,14 @@ public class Cuenta {
         return mensaje;
     }
     
+    public String toString1()
+    {
+        String mensaje = "";
+        mensaje = "Número de cuenta= " + this.numero + "\n" + "Estatus de la cuenta= " 
+            + this.estatus + "\n" + "Saldo actual= " + this.saldo + "\n";
+        return mensaje;
+    }
+    
     public void setFechaCreacion2(LocalDate pFechaCreacion) {
         this.fechaCreacion = pFechaCreacion;
     }
