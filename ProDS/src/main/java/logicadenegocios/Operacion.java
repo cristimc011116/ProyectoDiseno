@@ -31,9 +31,26 @@ public class Operacion {
         
     }
 
+  public Operacion() {
+  
+  }
     
 
 //------------------------------------------METODOS DE CLASE----------------------------------------    
+    public boolean cambiarPIN(String pCuenta, String pPinNuevo)
+    {
+      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+      for(int i=0;i<listaCuentas.size();i++){
+        cuenta=listaCuentas.get(i);
+        String pCuentaDesencriptada = Encriptacion.desencriptar(cuenta.getNumero());
+        if(pCuentaDesencriptada.equals(pCuenta)){
+          pPinNuevo = Encriptacion.encriptar(pPinNuevo);
+          cuenta.setPin(pPinNuevo);
+          return true;
+        }
+      }
+      return false;
+    }
     
     public boolean realizarDeposito(String pCuenta, String pCantColones){
       String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);

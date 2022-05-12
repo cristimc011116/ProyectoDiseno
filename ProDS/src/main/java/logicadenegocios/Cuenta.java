@@ -51,6 +51,8 @@ public class Cuenta {
     
     //--------------------------------------METODOS DE CLASE--------------------------------------
     
+    
+    
     public static String generarNumCuenta()
     {
         int min = 0;

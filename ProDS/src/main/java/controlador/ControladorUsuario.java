@@ -27,8 +27,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logicadenegocios.Cuenta;
 //import util.Mensaje;
-import logicadenegocios.Operacion;
 import logicadenegocios.Persona;
+import logicadenegocios.Operacion;
 import util.Encriptacion;
 import validacion.ExpresionesRegulares;
 import webService.ConsultaMoneda;
@@ -41,6 +41,7 @@ public class ControladorUsuario implements ActionListener{
     
     public Menu menu;
     Cuenta cuenta= new Cuenta();
+    Operacion operacion = new Operacion();
     public CrearCuenta vista1;
     public ListarPersonas vista2;
     public RealizarRetiro vista3;
@@ -180,22 +181,17 @@ public class ControladorUsuario implements ActionListener{
     
     public void cambiarPIN_p2(String numCuenta, String pinNuevo)
     {
-     
-      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-      for(int i=0;i<listaCuentas.size();i++){
-        cuenta=listaCuentas.get(i);
-        String pCuentaDesencriptada = Encriptacion.desencriptar(cuenta.getNumero());
-        if(pCuentaDesencriptada.equals(numCuenta)){
-          pinNuevo = Encriptacion.encriptar(pinNuevo);
-          cuenta.setPin(pinNuevo);
-        }
-      }
-
+      
+      operacion.cambiarPIN(numCuenta, pinNuevo);
+      
       //cargar los datos a la BD
 
       this.vista6.txtNumeroCuenta.setText("");
       this.vista6.txtPinActual.setText("");
       this.vista6.txtPinNuevo.setText("");
+      
+      JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta:"+numCuenta);
+      
     }
     
     public void enviarPalabra()
