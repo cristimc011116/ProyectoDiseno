@@ -95,6 +95,9 @@ public class ControladorUsuario implements ActionListener{
             case "Cambiar PIN":
                 abrirVista6();
                 break;
+            case "Continuar Pin":
+                cambiarPIN();
+                break;
             default:
                 break;
         }
