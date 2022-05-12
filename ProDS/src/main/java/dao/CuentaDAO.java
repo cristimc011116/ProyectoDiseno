@@ -144,7 +144,16 @@ public class CuentaDAO {
         return estatus;
     }
 
-    
+    public static void cambiarPinCuenta(String pCuenta, String pPinNuevo)
+    {
+      pCuenta = Encriptacion.encriptar(pCuenta);
+      ConexionBase con = new ConexionBase();
+      con.obtenerConexion();
+      con.excSentenciaSQL("UPDATE cuenta"
+        + "SET pin="+ "'" + pPinNuevo + "'"
+          + "WHERE numero="+ "'" + pCuenta + "'");
+      con.desconectar();
+    }
     
     public static ArrayList<Cuenta> getCuentasBD(){
         cuentas = new ArrayList<>();

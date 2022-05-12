@@ -46,6 +46,7 @@ public class Operacion {
         if(pCuentaDesencriptada.equals(pCuenta)){
           pPinNuevo = Encriptacion.encriptar(pPinNuevo);
           cuenta.setPin(pPinNuevo);
+          CuentaDAO.cambiarPinCuenta( pCuenta,  pPinNuevo);
           return true;
         }
       }

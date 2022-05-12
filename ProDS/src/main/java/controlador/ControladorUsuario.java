@@ -143,7 +143,7 @@ public class ControladorUsuario implements ActionListener{
     }
     
     //FUNCIONALIDADES----------------------------------------------------------------------------------------------------------------------------------
-    public void cambiarPIN_p1()
+    public void cambiarPIN()
     {
       boolean insertar;
       int contador =0;
@@ -161,7 +161,13 @@ public class ControladorUsuario implements ActionListener{
           insertar = esPinCuentaCambioPin (numCuenta,  pinActual);
           if (insertar == true)
           {
-            cambiarPIN_p2( numCuenta, pinNuevo);
+            operacion.cambiarPIN(numCuenta, pinNuevo);
+
+            this.vista6.txtNumeroCuenta.setText("");
+            this.vista6.txtPinActual.setText("");
+            this.vista6.txtPinNuevo.setText("");
+
+            JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta:"+numCuenta);
           }
           else
           {
@@ -177,21 +183,6 @@ public class ControladorUsuario implements ActionListener{
       {
         JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
       } 
-    }
-    
-    public void cambiarPIN_p2(String numCuenta, String pinNuevo)
-    {
-      
-      operacion.cambiarPIN(numCuenta, pinNuevo);
-      
-      //cargar los datos a la BD
-
-      this.vista6.txtNumeroCuenta.setText("");
-      this.vista6.txtPinActual.setText("");
-      this.vista6.txtPinNuevo.setText("");
-      
-      JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta:"+numCuenta);
-      
     }
     
     public void enviarPalabra()
