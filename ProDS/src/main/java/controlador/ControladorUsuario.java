@@ -11,6 +11,7 @@ import GUI.CrearCuenta;
 import GUI.Menu;
 import GUI.ListarPersonas;
 import GUI.Palabra;
+import GUI.RealizarDeposito;
 import GUI.RealizarRetiro;
 import dao.CuentaDAO;
 import dao.OperacionDAO;
@@ -18,6 +19,7 @@ import dao.PersonaDAO;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class ControladorUsuario implements ActionListener{
     public ConsultarEstadoCuenta vista4;
     public ConsultarEstadoCuentaP2 vista5;
     public CambiarPIN vista6; 
+    public RealizarDeposito vista7;
     public Palabra palabra;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
@@ -62,6 +65,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnCrearCuenta.addActionListener(this);
         this.menu.btnRealizarRetiro.addActionListener(this);
         this.menu.btnEstadoCuenta.addActionListener(this);
+        this.menu.btnDepositar.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -97,6 +101,9 @@ public class ControladorUsuario implements ActionListener{
                 break;
             case "Continuar Pin":
                 cambiarPIN();
+                break;
+            case "Realizar deposito":
+                abrirVista7();
                 break;
             default:
                 break;
@@ -145,6 +152,15 @@ public class ControladorUsuario implements ActionListener{
       this.menu.setVisible(false);
     }
     
+    public void abrirVista7()
+    {
+      this.vista7 = new RealizarDeposito();
+      this.vista7.btnContinuar.addActionListener(this);
+      this.vista7.btnAtras.addActionListener(this);
+      this.vista7.setVisible(true);
+      this.menu.setVisible(false);
+    }
+    
     //FUNCIONALIDADES----------------------------------------------------------------------------------------------------------------------------------
     public void cambiarPIN()
     {
@@ -186,6 +202,60 @@ public class ControladorUsuario implements ActionListener{
       {
         JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
       } 
+    }
+    
+    public void depositar()   
+    {
+      String cuenta = this.vista7.txtNumCuenta.getText();
+      Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+      int insertar = 0;
+      int contador = 0;
+      String resultado = "";
+      if(!"inactiva".equals(cuentaBase.getEstatus())){
+        String strMonto = this.vista7.txtMontoDeposito.getText();
+        String moneda = this.vista7.cmbTipoMoneda.getSelectedItem().toString();
+        contador += validarIngreso(cuenta, "cuenta");
+        contador += validarIngreso(strMonto, "monto");
+        contador += validarEntrMonto(strMonto);
+        if(contador == 0)
+        {
+          double monto = Double.parseDouble(strMonto);
+          insertar += validarMonto(monto, cuenta, moneda);
+          if (insertar == 0)
+          {
+            double comision;
+            double nuevoMonto;
+            boolean aplicaCom = Cuenta.aplicaComision(cuenta);
+            monto = montoCorrecto(monto, moneda);
+            comision = monto * 0.02;
+            nuevoMonto = nuevoMonto(comision, aplicaCom, monto);
+            String strSaldoViejo = cuentaBase.getSaldo();
+            double saldoViejo = Double.parseDouble(strSaldoViejo);
+            double nuevoSaldo = saldoViejo + nuevoMonto;
+            String strNuevoSaldo = Double.toString(nuevoSaldo);
+            cuentaBase.setSaldo(strNuevoSaldo);
+            CuentaDAO.actualizarSaldo(cuenta, strNuevoSaldo);
+            insertarOperacion("deposito", (comision>0) , comision, cuenta);
+            resultado = imprimirResultadoDeposito( moneda,comision,monto,cuenta);
+            JOptionPane.showMessageDialog(null, resultado);
+            this.vista7.txtMontoDeposito.setText("");
+            this.vista7.txtNumCuenta.setText("");
+            this.vista7.cmbTipoMoneda.setSelectedIndex(0);
+          }
+          else
+          {
+            JOptionPane.showMessageDialog(null, "Verifique sus datos");
+          }
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+        }
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
+      }   
     }
     
     public void enviarPalabra()
@@ -764,6 +834,36 @@ public class ControladorUsuario implements ActionListener{
         resultado += "Estimado usuario, el monto de este retiro es: " + montoDolares + " dólares";
         resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + ventaDolar +"]";
         resultado += "\n[El monto equivalente de su retiro es: " + monto + "colones]";
+        resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
+            + "automáticamente de su saldo actual]";
+      }
+      return resultado;
+    }  
+    
+    public static String imprimirResultadoDeposito(String moneda, double comision, double monto, String cuenta)
+    {
+      DecimalFormat df = new DecimalFormat("#.00");
+      String resultado = "";
+      double depositoReal;
+      if("colones".equals(moneda))
+      {
+        depositoReal=monto-comision;
+        
+        resultado += "Estimado usuario, se han depositado correctamente: " + (df.format(monto))+" colones";
+        resultado += "\n[El monto real depositado a su cuenta"+cuenta+" es de "+(df.format(depositoReal))+" colones]";
+        resultado += "\n[El monto cobrado por concepto de comisión fue de "+(df.format(comision))+" colones, que\n" +
+                        "fueron rebajados automáticamente de su saldo actual]";
+      }
+      else
+      {
+        ConsultaMoneda consulta = new ConsultaMoneda();
+        double ventaDolar = consulta.consultaCambioVenta();
+        double montoColones = monto*ventaDolar;
+        depositoReal=montoColones-comision;
+        resultado += "Estimado usuario, se han recibido correctamente: " + monto + " dólares";
+        resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + ventaDolar +"]";
+        resultado += "\n[El monto equivalente de su deposito es: " + montoColones + "colones]";
+        resultado += "\n[El monto real depositado a su cuenta" + cuenta + "es de "+depositoReal+"colones]";
         resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
             + "automáticamente de su saldo actual]";
       }

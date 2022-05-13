@@ -53,42 +53,15 @@ public class Operacion {
       return false;
     }
     
-    public boolean realizarDeposito(String pCuenta, String pCantColones){
-      String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
-      boolean resultado = false;
-      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
-        validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantColones))){
-        resultado = depositar( pCuenta, pCantColones);
-      }
-      return resultado;
-    }
-      
-    public boolean realizarDepositoDolares(String pCuenta, String pPinAcceso, 
-        double pCantDolares){
-      String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
-      String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAcceso);
-      String dinero;
-      boolean resultado = false;
-      double tipoCambioCompra = 0;/*ConsultaCompraDolar();*/ //Se debe igualar a la función ConsultaCompraDolar().
-      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada)) && 
-          validacion.ExpresionesRegulares.esNumero(String.valueOf(pCantDolares))){
-          dinero = String.valueOf(pCantDolares*tipoCambioCompra);
-          resultado = depositar(pCuentaDesencriptada,dinero);
-      }
-      return resultado;
-    }
-    
-    public boolean depositar(String pCuenta, String pCantColones){
+    public void depositar(String pCuenta, String pCantColones){
       ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
       for(int i=0;i<listaCuentas.size();i++){
         cuenta=listaCuentas.get(i);
         String dinero = cuenta.getSaldo();
-        if(cuenta.getNumero()== pCuenta){
+        if(cuenta.getNumero().equals(pCuenta)){
           cuenta.setSaldo(dinero+pCantColones);
-          return true;
         }
       }
-      return false;
     }
     
     public double consultarGananciaCuentaBanco(String pCuenta){

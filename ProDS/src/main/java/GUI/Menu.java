@@ -32,6 +32,7 @@ public class Menu extends javax.swing.JFrame {
     btnRealizarRetiro = new javax.swing.JButton();
     btnEstadoCuenta = new javax.swing.JButton();
     btnCambiarPIN = new javax.swing.JButton();
+    btnDepositar = new javax.swing.JButton();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,6 +58,8 @@ public class Menu extends javax.swing.JFrame {
       }
     });
 
+    btnDepositar.setText("Realizar deposito");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -74,8 +77,10 @@ public class Menu extends javax.swing.JFrame {
               .addComponent(btnRealizarRetiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
               .addComponent(btnEstadoCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGap(18, 18, 18)
-            .addComponent(btnCambiarPIN, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)))
-        .addContainerGap(21, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(btnCambiarPIN, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+              .addComponent(btnDepositar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        .addGap(21, 21, 21))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,7 +92,9 @@ public class Menu extends javax.swing.JFrame {
           .addComponent(btnCrearCuenta)
           .addComponent(btnCambiarPIN))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(btnListar)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(btnListar)
+          .addComponent(btnDepositar))
         .addGap(18, 18, 18)
         .addComponent(btnRealizarRetiro)
         .addGap(18, 18, 18)
@@ -146,6 +153,7 @@ public class Menu extends javax.swing.JFrame {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   public javax.swing.JButton btnCambiarPIN;
   public javax.swing.JButton btnCrearCuenta;
+  public javax.swing.JButton btnDepositar;
   public javax.swing.JButton btnEstadoCuenta;
   public javax.swing.JButton btnListar;
   public javax.swing.JButton btnRealizarRetiro;
