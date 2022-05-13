@@ -49,6 +49,7 @@ public class CLI {
             seleccionarMonedaEstado(opcion);
             consultarUnaCuenta(opcion);
             listarCuentas(opcion);
+            realizarTransferencia(opcion);
             
             
         }
