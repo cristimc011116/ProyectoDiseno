@@ -5,6 +5,7 @@
 package CLI;
 import webService.*;
 import controlador.ControladorUsuario;
+import static controlador.ControladorUsuario.inactivarCuenta;
 import static controlador.ControladorUsuario.recuperarUsuario;
 import java.util.Scanner;
 import validacion.ExpresionesRegulares;
@@ -15,6 +16,7 @@ import dao.CuentaDAO;
 import dao.OperacionDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logicadenegocios.Operacion;
 import util.ConexionMongo;
@@ -24,7 +26,7 @@ import util.Encriptacion;
  * @author Cristi Martínez
  */
 public class CLI {
-    
+    Operacion operacion = new Operacion();
     //MENU----------------------------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args)
     {
@@ -62,6 +64,39 @@ public class CLI {
     }
     
     //FUNCIONALIDADES----------------------------------------------------------------------------------------------------------------------------------
+    public void cambiarPIN(String opcion)
+    {
+      if ("5".equals(opcion))
+      {
+        String numCuenta = pedirNumCuenta();
+        String pinActual = esPinCuenta(numCuenta);
+        String pinNuevo = pedirPinNuevo();
+        String numero; 
+        boolean insertar;
+        int contador =0;
+        Cuenta cuentaBase = CuentaDAO.obtenerCuenta(numCuenta);
+        
+        if(!"inactiva".equals(cuentaBase.getEstatus())){
+          
+          String pin = esPinCuenta(numCuenta);
+          if("Se ha desactivado la cuenta".equals(pin))
+          {
+            System.out.println("La cuenta ha sido desactivada por el ingreso del pin incorrecto");
+            volverMenu();
+          }
+          else
+          {
+            operacion.cambiarPIN(numCuenta, pinNuevo);
+            JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta:"+numCuenta);
+          }
+        }
+        else
+        {
+          System.out.println("Su cuenta se encuentra desactivada");
+        } 
+      }
+    }
+    
     public static String retirar(String moneda)
     {
         String pNumCuenta = pedirNumCuenta();
@@ -360,6 +395,8 @@ public class CLI {
         
     }
     
+    
+    
     public static void  listarPersonas(String opcion)
     //public static void main(String[] args)
     {
@@ -574,6 +611,24 @@ public class CLI {
     {
         Scanner sc = new Scanner (System.in);
         String texto2 = "Digite el pin de la cuenta: ";
+        System.out.println(texto2);
+        String pin = sc.next();
+        boolean esPin = ExpresionesRegulares.validarPin(pin);
+        
+        while (esPin == false)
+        {
+            String texto3 = "Digite el pin de la cuenta: ";
+            System.out.println(texto3);
+            pin = sc.next();
+            esPin = ExpresionesRegulares.validarPin(pin);
+        }
+        return pin;
+    }
+    
+    public static String pedirPinNuevo()
+    {
+        Scanner sc = new Scanner (System.in);
+        String texto2 = "Digite el pin nuevo de la cuenta: ";
         System.out.println(texto2);
         String pin = sc.next();
         boolean esPin = ExpresionesRegulares.validarPin(pin);
