@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import logicadenegocios.Operacion;
+import util.ConexionMongo;
 import util.Encriptacion;
 /**
  *
@@ -27,7 +28,7 @@ public class CLI {
     //MENU----------------------------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args)
     {
-        Scanner sc = new Scanner (System.in);
+        /*Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
@@ -54,7 +55,8 @@ public class CLI {
         else
         {
             main(null);
-        }
+        }*/
+        ConexionMongo.conexionMD();
         
         
     }

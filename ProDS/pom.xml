@@ -22,6 +22,13 @@
             <artifactId>mssql-jdbc</artifactId>
             <version>9.3.1.jre15-preview</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+        <dependency>
+	<groupId>org.mongodb</groupId>
+	<artifactId>mongo-java-driver</artifactId>
+	<version>2.9.3</version>
+        </dependency>
+
 
         
 
