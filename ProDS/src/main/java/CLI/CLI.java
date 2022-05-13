@@ -245,11 +245,8 @@ public class CLI {
                     String strNuevoSaldoDestino = Double.toString(nuevoSaldoDestino);
                     cuenta.setSaldo(strNuevoSaldoDestino);
                     CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldoDestino);
-                    
-                    //falta print
-                    /*
                     resultado = ControladorUsuario.imprimirResultado("colones", comision, montoCorrecto);
-                    System.out.println(resultado);*/
+                    System.out.println(resultado);
                     volverMenu();
                 }
             }
