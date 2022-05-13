@@ -98,6 +98,56 @@ public class CLI {
       }
     }
     
+    public void realizarDeposito(String opcion)
+    {
+      if ("6".equals(opcion))
+        depositar("colones");
+      if ("7".equals(opcion))
+        depositar("dolares");
+    }
+    
+    public static void depositar(String moneda)
+    {
+      String pNumCuenta = pedirNumCuenta();
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+      String resultado="";
+      if(!"inactiva".equals(cuenta.getEstatus()))
+      {
+        String pin = esPinCuenta(pNumCuenta);
+        if("Se ha desactivado la cuenta".equals(pin))
+        {
+            System.out.println("La cuenta ha sido desactivada por el ingreso del pin incorrecto");
+            volverMenu();
+        }
+        else
+        {
+          String strMonto = pedirMonto();
+          double monto = Double.parseDouble(strMonto);
+          double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
+          double comision;
+          double nuevoMonto;
+          boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
+          comision = montoCorrecto * 0.02;
+          nuevoMonto = ControladorUsuario.nuevoMonto(comision, aplicaCom, montoCorrecto);
+          String strSaldoViejo = cuenta.getSaldo();
+          double saldoViejo = Double.parseDouble(strSaldoViejo);
+          double nuevoSaldo = saldoViejo + nuevoMonto;
+          String strNuevoSaldo = Double.toString(nuevoSaldo);
+          cuenta.setSaldo(strNuevoSaldo);
+          CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
+          ControladorUsuario.insertarOperacion("deposito", (comision>0) , comision, pNumCuenta);
+          resultado = ControladorUsuario.imprimirResultadoDeposito(moneda, comision, montoCorrecto,pNumCuenta);
+          System.out.println(resultado);
+          volverMenu();
+        }
+      }
+      else
+      {
+        System.out.println("Su cuenta se encuentra desactivada");
+        volverMenu();
+      }
+    }
+    
     public static String retirar(String moneda)
     {
         String pNumCuenta = pedirNumCuenta();
