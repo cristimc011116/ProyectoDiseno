@@ -7,6 +7,7 @@ package controlador;
 import GUI.CambiarPIN;
 import GUI.ConsultarEstadoCuenta;
 import GUI.ConsultarEstadoCuentaP2;
+import GUI.ConsultarSaldo;
 import GUI.CrearCuenta;
 import GUI.Menu;
 import GUI.ListarPersonas;
@@ -51,6 +52,7 @@ public class ControladorUsuario implements ActionListener{
     public ConsultarEstadoCuentaP2 vista5;
     public CambiarPIN vista6; 
     public RealizarDeposito vista7;
+    public ConsultarSaldo vista8;
     public Palabra palabra;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
@@ -66,6 +68,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnRealizarRetiro.addActionListener(this);
         this.menu.btnEstadoCuenta.addActionListener(this);
         this.menu.btnDepositar.addActionListener(this);
+        this.menu.btnConsultaSaldoCuenta.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -104,6 +107,9 @@ public class ControladorUsuario implements ActionListener{
                 break;
             case "Realizar deposito":
                 abrirVista7();
+                break;
+            case "Consultar Saldo Cuenta":
+                abrirVista8();
                 break;
             default:
                 break;
@@ -157,7 +163,17 @@ public class ControladorUsuario implements ActionListener{
       this.vista7 = new RealizarDeposito();
       this.vista7.btnContinuar.addActionListener(this);
       this.vista7.btnAtras.addActionListener(this);
+      this.vista7.cmbTipoMoneda.addActionListener(this);
       this.vista7.setVisible(true);
+      this.menu.setVisible(false);
+    }
+    public void abrirVista8()
+    {
+      this.vista8 = new ConsultarSaldo();
+      this.vista8.btnContinuar.addActionListener(this);
+      this.vista8.btnRegrasar.addActionListener(this);
+      this.vista8.cmbTipoMoneda.addActionListener(this);
+      this.vista8.setVisible(true);
       this.menu.setVisible(false);
     }
     
@@ -241,6 +257,52 @@ public class ControladorUsuario implements ActionListener{
             this.vista7.txtMontoDeposito.setText("");
             this.vista7.txtNumCuenta.setText("");
             this.vista7.cmbTipoMoneda.setSelectedIndex(0);
+          }
+          else
+          {
+            JOptionPane.showMessageDialog(null, "Verifique los datos");
+          }
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+        }
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
+      }   
+    }
+    
+    public void consultarSaldoCuenta()   
+    {
+      String cuenta = this.vista8.txtNumCuenta.getText();
+      Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+      boolean insertar ;
+      int contador = 0;
+      String resultado = "";
+      if(!"inactiva".equals(cuentaBase.getEstatus())){
+        String pin = this.vista8.txtPIN.getText();
+        String moneda = this.vista8.cmbTipoMoneda.getSelectedItem().toString();
+        contador += validarIngreso(cuenta, "cuenta");
+        contador += validarIngreso(pin, "pin");
+        if(contador == 0)
+        {
+          insertar = esPinCuentaConsultaSaldo(cuenta, pin);
+          if (insertar == true)
+          {
+            String saldo = consultarSaldo(cuenta);
+            
+            resultado = imprimirResultadoConsultaSaldo(moneda, saldo);
+            
+            JOptionPane.showMessageDialog(null, resultado);
+            this.vista3.txtCuenta.setText("");
+            this.vista3.txtPin.setText("");
+            this.vista3.txtPalabra.setText("");
+            this.vista3.txtMonto.setText("");
+            this.vista3.txtPalabra.setEnabled(false);
+            this.vista3.txtMonto.setEnabled(false);
+            this.vista3.btnRetirar.setEnabled(false);
           }
           else
           {
@@ -497,6 +559,23 @@ public class ControladorUsuario implements ActionListener{
     }
     
     //VALIDACIONES-------------------------------------------------------------------------------------------------------------------------------------
+    
+    public String consultarSaldo(String pNumCenta)
+    {
+      String cuentaEncrip=Encriptacion.encriptar(pNumCenta);
+      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+      Cuenta cuenta=new Cuenta();
+      for(int i=0;i<listaCuentas.size();i++){
+        cuenta = listaCuentas.get(i);
+        if(cuentaEncrip.equals(cuenta.getNumero())){
+          return cuenta.getSaldo();
+        }
+      }
+      return "-1";
+    }
+    
+    
+    
     public int validarIngreso(String pEntrada, String opcion)
     {
       if(pEntrada.length() == 0)
@@ -575,6 +654,34 @@ public class ControladorUsuario implements ActionListener{
         else
         {
           this.vista6.lblCantIntentosFall.setText(cont);
+        }
+        return false;
+      }
+      return true;
+    }
+    
+    public boolean esPinCuentaConsultaSaldo(String pNumCuenta, String pin)
+    {
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+      String cont;
+      int contador;
+      String pinDesencriptado = Encriptacion.desencriptar(cuenta.getPin());
+      if (!pin.equals(pinDesencriptado))
+      {
+        cont = this.vista8.lblFallosPin.getText();
+        contador = Integer.parseInt(cont);
+        contador++;
+        cont = Integer.toString(contador);
+
+        if(contador >= 2)
+        {
+          this.vista8.lblFallosPin.setText("2");
+          inactivarCuenta(pNumCuenta);
+          JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta por el ingreso del pin incorrecto");
+        }
+        else
+        {
+          this.vista8.lblFallosPin.setText(cont);
         }
         return false;
       }
@@ -848,7 +955,7 @@ public class ControladorUsuario implements ActionListener{
       if("colones".equals(moneda))
       {
         depositoReal=monto-comision;
-        
+        //operacion.depositar(cuenta,String.valueOf(depositoReal));
         resultado += "Estimado usuario, se han depositado correctamente: " + (df.format(monto))+" colones";
         resultado += "\n[El monto real depositado a su cuenta"+cuenta+" es de "+(df.format(depositoReal))+" colones]";
         resultado += "\n[El monto cobrado por concepto de comisión fue de "+(df.format(comision))+" colones, que\n" +
@@ -860,6 +967,7 @@ public class ControladorUsuario implements ActionListener{
         double ventaDolar = consulta.consultaCambioVenta();
         double montoColones = monto*ventaDolar;
         depositoReal=montoColones-comision;
+        //operacion.depositar(cuenta,String.valueOf(depositoReal));
         resultado += "Estimado usuario, se han recibido correctamente: " + monto + " dólares";
         resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + ventaDolar +"]";
         resultado += "\n[El monto equivalente de su deposito es: " + montoColones + "colones]";
@@ -870,6 +978,31 @@ public class ControladorUsuario implements ActionListener{
       return resultado;
     }  
     
+        public static String imprimirResultadoConsultaSaldo(String moneda, String saldo)
+    {
+      String SaldoDesencriptado = Encriptacion.desencriptar(saldo);
+      double saldoFinal = Double.parseDouble(SaldoDesencriptado);
+      DecimalFormat df = new DecimalFormat("#.00");
+      String resultado = "";
+      double depositoReal;
+      if("colones".equals(moneda))
+      {
+
+        resultado += "Estimado usuario el saldo actual de su cuenta es: " + (df.format(saldoFinal))+" colones";
+
+      }
+      else
+      {
+        ConsultaMoneda consulta = new ConsultaMoneda();
+        double compraDolar = consulta.consultaCambioCompra();
+        double montoDolares = saldoFinal/compraDolar;
+        resultado += "Estimado usuario el saldo actual de su cuenta es: " + (df.format(saldoFinal))+" colones";
+        resultado += "\n\nPara esta conversión se utilizó el tipo de cambio del dólar, precio de compra.";
+        resultado += "\n[Según el BCCR, el tipo de cambio de compra del dólar hoy es: " + compraDolar +"]";
+
+      }
+      return resultado;
+    }
     public static void inactivarCuenta(String pNumCuenta)
     {
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);

@@ -41,6 +41,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btnCambiarPIN" pref="181" max="32767" attributes="0"/>
                           <Component id="btnDepositar" max="32767" attributes="0"/>
+                          <Component id="btnConsultaSaldoCuenta" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -64,7 +65,10 @@
                   <Component id="btnDepositar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="btnRealizarRetiro" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnRealizarRetiro" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnConsultaSaldoCuenta" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnEstadoCuenta" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="104" max="32767" attributes="0"/>
@@ -127,6 +131,14 @@
     <Component class="javax.swing.JButton" name="btnDepositar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Realizar deposito"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnConsultaSaldoCuenta">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Consultar Saldo Cuenta"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>

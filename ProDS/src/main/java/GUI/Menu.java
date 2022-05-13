@@ -33,6 +33,7 @@ public class Menu extends javax.swing.JFrame {
     btnEstadoCuenta = new javax.swing.JButton();
     btnCambiarPIN = new javax.swing.JButton();
     btnDepositar = new javax.swing.JButton();
+    btnConsultaSaldoCuenta = new javax.swing.JButton();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,6 +61,8 @@ public class Menu extends javax.swing.JFrame {
 
     btnDepositar.setText("Realizar deposito");
 
+    btnConsultaSaldoCuenta.setText("Consultar Saldo Cuenta");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -79,7 +82,8 @@ public class Menu extends javax.swing.JFrame {
             .addGap(18, 18, 18)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(btnCambiarPIN, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-              .addComponent(btnDepositar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+              .addComponent(btnDepositar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(btnConsultaSaldoCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         .addGap(21, 21, 21))
     );
     layout.setVerticalGroup(
@@ -96,7 +100,9 @@ public class Menu extends javax.swing.JFrame {
           .addComponent(btnListar)
           .addComponent(btnDepositar))
         .addGap(18, 18, 18)
-        .addComponent(btnRealizarRetiro)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(btnRealizarRetiro)
+          .addComponent(btnConsultaSaldoCuenta))
         .addGap(18, 18, 18)
         .addComponent(btnEstadoCuenta)
         .addContainerGap(104, Short.MAX_VALUE))
@@ -152,6 +158,7 @@ public class Menu extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   public javax.swing.JButton btnCambiarPIN;
+  public javax.swing.JButton btnConsultaSaldoCuenta;
   public javax.swing.JButton btnCrearCuenta;
   public javax.swing.JButton btnDepositar;
   public javax.swing.JButton btnEstadoCuenta;
