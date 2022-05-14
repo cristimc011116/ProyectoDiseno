@@ -14,6 +14,8 @@ import GUI.ListarPersonas;
 import GUI.Palabra;
 import GUI.RealizarDeposito;
 import GUI.RealizarRetiro;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import dao.CuentaDAO;
 import dao.OperacionDAO;
 import dao.PersonaDAO;
@@ -32,6 +34,8 @@ import logicadenegocios.Cuenta;
 //import util.Mensaje;
 import logicadenegocios.Persona;
 import logicadenegocios.Operacion;
+import util.ConexionMongo;
+import static util.ConexionMongo.db;
 import util.Encriptacion;
 import validacion.ExpresionesRegulares;
 import webService.ConsultaMoneda;
@@ -606,6 +610,8 @@ public class ControladorUsuario implements ActionListener{
       String cont;
       int contador;
       String pinDesencriptado = Encriptacion.desencriptar(cuenta.getPin());
+      JOptionPane.showMessageDialog(null, pin);
+      JOptionPane.showMessageDialog(null, pinDesencriptado);
       if (!pin.equals(pinDesencriptado))
       {
         cont = this.vista3.txtIntPin.getText();
@@ -690,6 +696,7 @@ public class ControladorUsuario implements ActionListener{
       String cont;
       int contador;
       String pinDesencriptado = Encriptacion.desencriptar(cuenta.getPin());
+      
       if (!pin.equals(pinDesencriptado))
       {
         cont = this.vista4.lbintentos.getText();
@@ -1057,20 +1064,22 @@ public class ControladorUsuario implements ActionListener{
     }
     
     private void cargarDatosPersonas(){
-      ResultSet datos = PersonaDAO.recuperarTodosLosUsuariosBD();
+      ConexionMongo.conexionMD();
+      DBCollection colect = db.getCollection("Persona");
+      DBCursor cursor = colect.find();
       try{
-        while (datos.next()){
-          Persona usuarioCargar = new Persona(datos.getString("codigo"), datos.getString("primerApellido"),
-              datos.getString("segundoApellido"),
-              datos.getString("nombre"),
-              Integer.parseInt(datos.getString("id")),
-              LocalDate.parse(datos.getString("fechaNacimiento"), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-              Integer.parseInt(datos.getString("numero")),
-              datos.getString("correo"),
-              datos.getString("rol"));
+        while (cursor.hasNext()){
+          Persona usuarioCargar = new Persona(cursor.next().get("codigo").toString(), cursor.curr().get("primerApellido").toString(),
+              cursor.curr().get("segundoApellido").toString(),
+              cursor.curr().get("nombre").toString(),
+              Integer.parseInt(cursor.curr().get("id").toString()),
+              LocalDate.parse(cursor.curr().get("fechaNacimiento").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+              Integer.parseInt(cursor.curr().get("numero").toString()),
+              cursor.curr().get("correo").toString(),
+              cursor.curr().get("rol").toString());
           personasSistema.add(usuarioCargar);
         }
-      }catch(SQLException e){
+      }catch(Exception e){
         JOptionPane.showMessageDialog(null, "Error: " + e.toString());
       }
     }

@@ -23,7 +23,7 @@ public class ConexionMongo {
     public static DBCollection cuentaOperacion;
     public static DBCollection personaCuenta;
     public DBCursor cursor = null;
-    public BasicDBObject document = new BasicDBObject();
+    public static BasicDBObject document = new BasicDBObject();
     
     public static void conexionMD()
     {
