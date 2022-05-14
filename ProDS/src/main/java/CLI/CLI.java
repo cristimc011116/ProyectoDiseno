@@ -5,6 +5,7 @@
 package CLI;
 import webService.*;
 import controlador.ControladorUsuario;
+import static controlador.ControladorUsuario.imprimirResultadoConsultaSaldo;
 import static controlador.ControladorUsuario.inactivarCuenta;
 import static controlador.ControladorUsuario.recuperarUsuario;
 import java.util.Scanner;
@@ -137,6 +138,47 @@ public class CLI {
           CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
           ControladorUsuario.insertarOperacion("deposito", (comision>0) , comision, pNumCuenta);
           resultado = ControladorUsuario.imprimirResultadoDeposito(moneda, comision, montoCorrecto,pNumCuenta);
+          System.out.println(resultado);
+          volverMenu();
+        }
+      }
+      else
+      {
+        System.out.println("Su cuenta se encuentra desactivada");
+        volverMenu();
+      }
+    }
+    
+    public static void ConsultarSaldoActual(String opcion)
+    //public static void main(String[] args)
+    {
+      if("13".equals(opcion))
+      {
+        consultaSaldo("colones");
+      }
+      if("14".equals(opcion))
+      {
+        consultaSaldo("dolares");
+      }
+    }
+    
+    public static void consultaSaldo(String moneda)
+    {
+      String pNumCuenta = pedirNumCuenta();
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+      String resultado="";
+      if(!"inactiva".equals(cuenta.getEstatus()))
+      {
+        String pin = esPinCuenta(pNumCuenta);
+        if("Se ha desactivado la cuenta".equals(pin))
+        {
+            System.out.println("La cuenta ha sido desactivada por el ingreso del pin incorrecto");
+            volverMenu();
+        }
+        else
+        {
+          String saldo = cuenta.getSaldo();
+          resultado = ControladorUsuario.imprimirResultadoConsultaSaldo( moneda,  saldo);
           System.out.println(resultado);
           volverMenu();
         }
@@ -443,7 +485,7 @@ public class CLI {
             System.out.println(texto6); 
             volverMenu();
         }
-        
+    
     }
     
     

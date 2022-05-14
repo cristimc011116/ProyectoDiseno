@@ -296,13 +296,9 @@ public class ControladorUsuario implements ActionListener{
             resultado = imprimirResultadoConsultaSaldo(moneda, saldo);
             
             JOptionPane.showMessageDialog(null, resultado);
-            this.vista3.txtCuenta.setText("");
-            this.vista3.txtPin.setText("");
-            this.vista3.txtPalabra.setText("");
-            this.vista3.txtMonto.setText("");
-            this.vista3.txtPalabra.setEnabled(false);
-            this.vista3.txtMonto.setEnabled(false);
-            this.vista3.btnRetirar.setEnabled(false);
+            this.vista8.txtPIN.setText("");
+            this.vista8.txtNumCuenta.setText("");
+            this.vista8.cmbTipoMoneda.setSelectedIndex(0);
           }
           else
           {
@@ -978,7 +974,7 @@ public class ControladorUsuario implements ActionListener{
       return resultado;
     }  
     
-        public static String imprimirResultadoConsultaSaldo(String moneda, String saldo)
+    public static String imprimirResultadoConsultaSaldo(String moneda, String saldo)
     {
       String SaldoDesencriptado = Encriptacion.desencriptar(saldo);
       double saldoFinal = Double.parseDouble(SaldoDesencriptado);
@@ -1003,6 +999,7 @@ public class ControladorUsuario implements ActionListener{
       }
       return resultado;
     }
+        
     public static void inactivarCuenta(String pNumCuenta)
     {
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
