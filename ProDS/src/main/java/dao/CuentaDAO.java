@@ -109,11 +109,22 @@ public class CuentaDAO {
     {
         String numEncrip = Encriptacion.encriptar(pNumCuenta);
         String estado = "inactiva";
+        Cuenta cuenta = obtenerCuenta(pNumCuenta);
+        String pin = cuenta.getPin();
+        LocalDate pFecha = cuenta.getFechaCreacion();
+        String fecha = pFecha.toString();
+        String saldo = cuenta.getSaldo();
+        String saldoEncrip = Encriptacion.encriptar(saldo);
+        
         try
         {
             ConexionMongo.conexionMD();
             ConexionMongo.document.put("numero", numEncrip);
             BasicDBObject document_update = new BasicDBObject();
+            document_update.put("numero", numEncrip);
+            document_update.put("pin", pin);
+            document_update.put("fechaCreacion", fecha);
+            document_update.put("saldo", saldoEncrip);
             document_update.put("estatus", estado);
             ConexionMongo.cuenta.findAndModify(ConexionMongo.document, document_update);
             
@@ -137,12 +148,21 @@ public class CuentaDAO {
     {
         String numEncrip = Encriptacion.encriptar(pNumCuenta);
         String saldoEncrip = Encriptacion.encriptar(nuevoSaldo);
+        Cuenta cuenta = obtenerCuenta(pNumCuenta);
+        String pin = cuenta.getPin();
+        LocalDate pFecha = cuenta.getFechaCreacion();
+        String fecha = pFecha.toString();
+        String estatus = cuenta.getEstatus();
         try
         {
             ConexionMongo.conexionMD();
             ConexionMongo.document.put("numero", numEncrip);
             BasicDBObject document_update = new BasicDBObject();
-            document_update.put("saldo", nuevoSaldo);
+            document_update.put("numero", numEncrip);
+            document_update.put("pin", pin);
+            document_update.put("fechaCreacion", fecha);
+            document_update.put("saldo", saldoEncrip);
+            document_update.put("estatus", estatus);
             ConexionMongo.cuenta.findAndModify(ConexionMongo.document, document_update);
             
         }catch(Exception e)
@@ -187,13 +207,12 @@ public class CuentaDAO {
         DBCursor cursor = colect.find(consulta);
         try{
             while(cursor.hasNext()){
-              JOptionPane.showMessageDialog(null, "Encontrado");
               String strNumDes = Encriptacion.desencriptar(numEncrip);
               cuenta.setNumero(strNumDes);
-              //String strFecha = buscar.getString("fechaCreacion");
-              //LocalDate fecha = LocalDate.parse(strFecha, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-              //cuenta.setFechaCreacion2(fecha);
-              cuenta.setPin(cursor.next().get("pin").toString());
+              String strFecha = cursor.next().get("fechaCreacion").toString();
+              LocalDate fecha = LocalDate.parse(strFecha, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+              cuenta.setFechaCreacion2(fecha);
+              cuenta.setPin(cursor.curr().get("pin").toString());
               String noSaldo = cursor.curr().get("saldo").toString();
               String strSaldoDes = Encriptacion.desencriptar(noSaldo);
               cuenta.setSaldo(strSaldoDes);
@@ -419,6 +438,7 @@ public class CuentaDAO {
     
     public static int contadorOperacionesCuenta(String numCuenta){
         cuentas = new ArrayList<>();
+        int entId = 0;
         String numEncrip = Encriptacion.encriptar(numCuenta);
         int contador = 0;
         String tipo1 = "deposito";
@@ -431,18 +451,22 @@ public class CuentaDAO {
         try{
             while(cursor.hasNext()){
                 String idOperacion = cursor.next().get("idOperacion").toString();
-                DBCollection colect2 = db.getCollection("Operacion");
+                entId = Integer.parseInt(idOperacion);
+                /*DBCollection colect2 = db.getCollection("Operacion");
                 BasicDBObject consulta2 = new BasicDBObject();
                 consulta2.put("id", idOperacion);
                 DBCursor cursor2 = colect2.find(consulta2);
                 try{
                     while(cursor2.hasNext()){
+                        String id = cursor2.next().get("id").toString();
+                        
                         DBCollection colect3 = db.getCollection("Operacion");
                         BasicDBObject consulta3 = new BasicDBObject();
                         consulta3.put("tipo", tipo1);
                         DBCursor cursor3 = colect3.find(consulta3);
                         try{
                             while(cursor3.hasNext()){
+                                String id2 = cursor3.next().get("id").toString();
                                 contador++;
                             }
                         }
@@ -456,6 +480,7 @@ public class CuentaDAO {
                         DBCursor cursor4 = colect4.find(consulta4);
                         try{
                             while(cursor4.hasNext()){
+                                String id3 = cursor4.next().get("id").toString();
                                 contador++;
                             }
                         }
@@ -466,12 +491,13 @@ public class CuentaDAO {
                     }
                 }catch(Exception e){
                     JOptionPane.showMessageDialog(null, "Error: " + e.toString());
-                }  
+                }*/  
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Error: " + e.toString());
         }
-        return contador;
+        JOptionPane.showMessageDialog(null, "ContadorComi: " + entId);
+        return entId;
       }
 }
     

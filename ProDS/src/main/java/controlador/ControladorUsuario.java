@@ -37,6 +37,7 @@ import logicadenegocios.Operacion;
 import util.ConexionMongo;
 import static util.ConexionMongo.db;
 import util.Encriptacion;
+import util.Mensaje;
 import validacion.ExpresionesRegulares;
 import webService.ConsultaMoneda;
 
@@ -610,8 +611,6 @@ public class ControladorUsuario implements ActionListener{
       String cont;
       int contador;
       String pinDesencriptado = Encriptacion.desencriptar(cuenta.getPin());
-      JOptionPane.showMessageDialog(null, pin);
-      JOptionPane.showMessageDialog(null, pinDesencriptado);
       if (!pin.equals(pinDesencriptado))
       {
         cont = this.vista3.txtIntPin.getText();
@@ -1059,7 +1058,7 @@ public class ControladorUsuario implements ActionListener{
       Persona persona = PersonaDAO.obtenerPersona(id);
       int numero = persona.getNumero();
       String mensaje = crearPalabra();
-      //Mensaje.enviarMensaje(83211510, mensaje);
+      Mensaje.enviarMensaje(83211510, mensaje);
       return mensaje;
     }
     

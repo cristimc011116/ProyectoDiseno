@@ -99,7 +99,7 @@ public class OperacionDAO {
             document.put("cuenta", numEncrip);
             document.put("idOperacion", id);
             ConexionMongo.conexionMD();
-            ConexionMongo.personaCuenta.insert(document);
+            ConexionMongo.cuentaOperacion.insert(document);
         }catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, "Error: " + e.toString());
@@ -126,17 +126,22 @@ public class OperacionDAO {
     
     public static int cantOperacionesBD(){
         int contador = 1;
+        String tipo = "retiro";
         ConexionMongo.conexionMD();
         DBCollection colect = db.getCollection("Operacion");
-        BasicDBObject consulta = new BasicDBObject();
+        //BasicDBObject consulta = new BasicDBObject();
+        //consulta.put("tipo", tipo);
         DBCursor cursor = colect.find();
+        System.out.println("Aca2");
         try{
             while(cursor.hasNext()){
+                String idOperacion = cursor.next().get("id").toString();
                 contador++;
             }
         }catch(Exception ex){
            JOptionPane.showMessageDialog(null, ex.toString());
         }
+        JOptionPane.showMessageDialog(null, "Contador: " + contador);
         return contador;
     }
     
