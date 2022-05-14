@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logicadenegocios.Operacion;
-import util.ConexionMongo;
 import util.Encriptacion;
 /**
  *
@@ -31,7 +30,7 @@ public class CLI {
     //MENU----------------------------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args)
     {
-        /*Scanner sc = new Scanner (System.in);
+        Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
@@ -59,8 +58,7 @@ public class CLI {
         else
         {
             main(null);
-        }*/
-        ConexionMongo.conexionMD();
+        }
         
         
     }
@@ -250,69 +248,11 @@ public class CLI {
     return resultado; 
     }
     
-        public static String tranferencia(String moneda)
-    {
-        String pNumCuenta = pedirNumCuenta();
-        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
-        String mensaje;
-        String mensaje2;
-        String resultado="";
-        if(!"inactiva".equals(cuenta.getEstatus()))
-        {
-            String pin = esPinCuenta(pNumCuenta);
-            if("Se ha desactivado la cuenta".equals(pin))
-            {
-                System.out.println("La cuenta ha sido desactivada por el ingreso del pin incorrecto");
-                volverMenu();
-                return pin;
-            }
-            else
-            {
-                mensaje = ControladorUsuario.enviarMensaje(pNumCuenta);
-                System.out.println("Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
-                        + " y procesa a digitar la palabra enviada");
-                mensaje2 = pedirPalabra(mensaje, pNumCuenta);
-                if("Se ha desactivado la cuenta".equals(mensaje2))
-                {
-                    System.out.println("La cuenta ha sido desactivada por el ingreso de la palabra clave incorrecta");
-                    volverMenu();
-                    return mensaje2;
-                }
-                else
-                {
-                    String strMonto = pedirMonto();
-                    double monto = Double.parseDouble(strMonto);
-                    double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
-                    double comision;
-                    double nuevoMonto;
-                    boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
-                    comision = montoCorrecto * 0.02;
-                    nuevoMonto = ControladorUsuario.nuevoMonto(comision, aplicaCom, montoCorrecto);
-                    String strSaldoViejo = cuenta.getSaldo();
-                    double saldoViejo = Double.parseDouble(strSaldoViejo);
-                    double nuevoSaldo = saldoViejo - nuevoMonto;
-                    String strNuevoSaldo = Double.toString(nuevoSaldo);
-                    cuenta.setSaldo(strNuevoSaldo);
-                    CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-                    ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, pNumCuenta);
-                    resultado = ControladorUsuario.imprimirResultado(moneda, comision, montoCorrecto);
-                    System.out.println(resultado);
-                    volverMenu();
-                }
-            }
-            
-        }
-        else
-        {
-            System.out.println("Su cuenta se encuentra desactivada");
-            volverMenu();
-        }
-    return resultado; 
-    }
     
         public static String transferencia()
     {
         //ingresar cuenta
+        System.out.println("¿Cual es la cuenta origen de la que desea tranferir?");
         String pNumCuenta = pedirNumCuenta();
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
         String mensaje;
@@ -348,14 +288,15 @@ public class CLI {
                     double montoCorrecto = montoValido(monto, pNumCuenta, "colones");
                     
                     //pedir cuenta destino
+                    System.out.println("¿Cual es la cuenta destino a la que desea tranferir?");
                     String pNumCuentaDestino = pedirNumCuenta();
                     Cuenta cuentadestino = CuentaDAO.obtenerCuenta(pNumCuentaDestino);
                     
                     //rebajar saldo                    
                     double comision;
                     double nuevoMonto;
-                    boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
-                    comision = montoCorrecto * 0.02;
+                    boolean aplicaCom = false;
+                    comision = 0.00;
                     nuevoMonto = ControladorUsuario.nuevoMonto(comision, aplicaCom, montoCorrecto);
                     String strSaldoViejo = cuenta.getSaldo();
                     double saldoViejo = Double.parseDouble(strSaldoViejo);
@@ -363,17 +304,17 @@ public class CLI {
                     String strNuevoSaldo = Double.toString(nuevoSaldo);
                     cuenta.setSaldo(strNuevoSaldo);
                     CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-                    ControladorUsuario.insertarOperacion("transferencia", (comision>0) , comision, pNumCuenta);
+                    ControladorUsuario.insertarOperacion("transferencia", false , comision, pNumCuenta);
                     
                     //hacer transferencia
                     
                     String strSaldoViejoDestino = cuentadestino.getSaldo();
-                    double saldoViejoDestino = Double.parseDouble(strSaldoViejo);
-                    double nuevoSaldoDestino = saldoViejoDestino + montoCorrecto;
+                    double saldoViejoDestino = Double.parseDouble(strSaldoViejoDestino);
+                    double nuevoSaldoDestino = saldoViejoDestino + nuevoMonto;
                     String strNuevoSaldoDestino = Double.toString(nuevoSaldoDestino);
-                    cuenta.setSaldo(strNuevoSaldoDestino);
-                    CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldoDestino);
-                    resultado = ControladorUsuario.imprimirResultado("colones", comision, montoCorrecto);
+                    cuentadestino.setSaldo(strNuevoSaldoDestino);
+                    CuentaDAO.actualizarSaldo(pNumCuentaDestino, strNuevoSaldoDestino);
+                    resultado = ControladorUsuario.imprimirResultadoTransf(montoCorrecto);
                     System.out.println(resultado);
                     volverMenu();
                 }

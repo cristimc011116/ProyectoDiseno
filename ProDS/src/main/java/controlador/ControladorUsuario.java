@@ -34,8 +34,6 @@ import logicadenegocios.Cuenta;
 //import util.Mensaje;
 import logicadenegocios.Persona;
 import logicadenegocios.Operacion;
-import util.ConexionMongo;
-import static util.ConexionMongo.db;
 import util.Encriptacion;
 import util.Mensaje;
 import validacion.ExpresionesRegulares;
@@ -949,6 +947,15 @@ public class ControladorUsuario implements ActionListener{
       return resultado;
     }  
     
+    public static String imprimirResultadoTransf(double monto)
+    {
+      String resultado = "";
+      resultado += "Estimado usuario, la transferencia de fondos se ejecutó satisfactoriamente.\nEl monto retirado de la cuenta origen y depositado en la cuenta destino es " + monto + "0";
+      resultado += "\n[El monto cobrado por concepto de comisión a la cuenta origen fue de 0.00 colones, que fueron rebajados automáticamente de su saldo actual]";
+     
+      return resultado;
+    }  
+    
     public static String imprimirResultadoDeposito(String moneda, double comision, double monto, String cuenta)
     {
       DecimalFormat df = new DecimalFormat("#.00");
@@ -1063,22 +1070,20 @@ public class ControladorUsuario implements ActionListener{
     }
     
     private void cargarDatosPersonas(){
-      ConexionMongo.conexionMD();
-      DBCollection colect = db.getCollection("Persona");
-      DBCursor cursor = colect.find();
+      ResultSet datos = PersonaDAO.recuperarTodosLosUsuariosBD();
       try{
-        while (cursor.hasNext()){
-          Persona usuarioCargar = new Persona(cursor.next().get("codigo").toString(), cursor.curr().get("primerApellido").toString(),
-              cursor.curr().get("segundoApellido").toString(),
-              cursor.curr().get("nombre").toString(),
-              Integer.parseInt(cursor.curr().get("id").toString()),
-              LocalDate.parse(cursor.curr().get("fechaNacimiento").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-              Integer.parseInt(cursor.curr().get("numero").toString()),
-              cursor.curr().get("correo").toString(),
-              cursor.curr().get("rol").toString());
+        while (datos.next()){
+          Persona usuarioCargar = new Persona(datos.getString("codigo"), datos.getString("primerApellido"),
+              datos.getString("segundoApellido"),
+              datos.getString("nombre"),
+              Integer.parseInt(datos.getString("id")),
+              LocalDate.parse(datos.getString("fechaNacimiento"), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+              Integer.parseInt(datos.getString("numero")),
+              datos.getString("correo"),
+              datos.getString("rol"));
           personasSistema.add(usuarioCargar);
         }
-      }catch(Exception e){
+      }catch(SQLException e){
         JOptionPane.showMessageDialog(null, "Error: " + e.toString());
       }
     }
