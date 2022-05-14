@@ -5,6 +5,7 @@
 package GUI;
 
 import controlador.ControladorUsuario;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,7 +35,7 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
     jLabel2 = new javax.swing.JLabel();
     txtGananciaTotal = new javax.swing.JTextField();
     jButton1 = new javax.swing.JButton();
-    btnConsultaBancoTotal = new javax.swing.JButton();
+    btnLimpiar = new javax.swing.JButton();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -70,6 +71,8 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
 
     jLabel2.setText("Ganancia total del banco:");
 
+    txtGananciaTotal.setEditable(false);
+
     jButton1.setText("Regrasar");
     jButton1.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -77,7 +80,12 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
       }
     });
 
-    btnConsultaBancoTotal.setText("Consultar");
+    btnLimpiar.setText("Limpiar");
+    btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnLimpiarActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -89,19 +97,21 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
         .addGap(126, 126, 126))
       .addGroup(layout.createSequentialGroup()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addGap(26, 26, 26)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-              .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(btnConsultaBancoTotal)
+          .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+              .addGap(26, 26, 26)
+              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createSequentialGroup()
                   .addComponent(jLabel2)
                   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                  .addComponent(txtGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                  .addComponent(txtGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGroup(layout.createSequentialGroup()
+              .addContainerGap()
+              .addComponent(jButton1)))
           .addGroup(layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jButton1)))
+            .addGap(222, 222, 222)
+            .addComponent(btnLimpiar)))
         .addContainerGap(44, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
@@ -115,9 +125,9 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel2)
           .addComponent(txtGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addGap(18, 18, 18)
-        .addComponent(btnConsultaBancoTotal)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+        .addComponent(btnLimpiar)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jButton1)
         .addContainerGap())
     );
@@ -131,6 +141,11 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
     controlador.menu.setVisible(true);
     this.setVisible(false);
   }//GEN-LAST:event_jButton1ActionPerformed
+
+  private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+    this.txtGananciaTotal.setText("");
+    this.tblGananciasBancoTotalizado.setModel(new DefaultTableModel());
+  }//GEN-LAST:event_btnLimpiarActionPerformed
 
   /**
    * @param args the command line arguments
@@ -168,12 +183,12 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  public javax.swing.JButton btnConsultaBancoTotal;
+  private javax.swing.JButton btnLimpiar;
   private javax.swing.JButton jButton1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JTable tblGananciasBancoTotalizado;
-  private javax.swing.JTextField txtGananciaTotal;
+  public javax.swing.JTable tblGananciasBancoTotalizado;
+  public javax.swing.JTextField txtGananciaTotal;
   // End of variables declaration//GEN-END:variables
 }
