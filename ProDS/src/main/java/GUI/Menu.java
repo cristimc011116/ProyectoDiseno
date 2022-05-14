@@ -34,6 +34,8 @@ public class Menu extends javax.swing.JFrame {
     btnCambiarPIN = new javax.swing.JButton();
     btnDepositar = new javax.swing.JButton();
     btnConsultaSaldoCuenta = new javax.swing.JButton();
+    btnGananciaBancoTotalizado = new javax.swing.JButton();
+    btnGananciaBancoPorCuenta = new javax.swing.JButton();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,35 +65,42 @@ public class Menu extends javax.swing.JFrame {
 
     btnConsultaSaldoCuenta.setText("Consultar Saldo Cuenta");
 
+    btnGananciaBancoTotalizado.setText("Consulta ganancia del banco TOTALIZADO");
+
+    btnGananciaBancoPorCuenta.setText("Consulta ganancia del banco por cuenta");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
+        .addGap(193, 193, 193)
+        .addComponent(jLabel1)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+      .addGroup(layout.createSequentialGroup()
+        .addGap(21, 21, 21)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(btnEstadoCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(btnRealizarRetiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(btnListar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(layout.createSequentialGroup()
-            .addGap(118, 118, 118)
-            .addComponent(jLabel1))
-          .addGroup(layout.createSequentialGroup()
-            .addGap(21, 21, 21)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(btnListar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(btnCrearCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(btnRealizarRetiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(btnEstadoCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGap(18, 18, 18)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(btnCambiarPIN, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-              .addComponent(btnDepositar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(btnConsultaSaldoCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addComponent(btnCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(0, 0, Short.MAX_VALUE)))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(btnGananciaBancoPorCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(btnDepositar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(btnConsultaSaldoCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(btnGananciaBancoTotalizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(btnCambiarPIN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addGap(21, 21, 21))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addGap(20, 20, 20)
+        .addGap(21, 21, 21)
         .addComponent(jLabel1)
-        .addGap(54, 54, 54)
+        .addGap(53, 53, 53)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(btnCrearCuenta)
           .addComponent(btnCambiarPIN))
@@ -104,8 +113,12 @@ public class Menu extends javax.swing.JFrame {
           .addComponent(btnRealizarRetiro)
           .addComponent(btnConsultaSaldoCuenta))
         .addGap(18, 18, 18)
-        .addComponent(btnEstadoCuenta)
-        .addContainerGap(104, Short.MAX_VALUE))
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(btnEstadoCuenta)
+          .addComponent(btnGananciaBancoTotalizado))
+        .addGap(18, 18, 18)
+        .addComponent(btnGananciaBancoPorCuenta)
+        .addContainerGap(64, Short.MAX_VALUE))
     );
 
     pack();
@@ -162,6 +175,8 @@ public class Menu extends javax.swing.JFrame {
   public javax.swing.JButton btnCrearCuenta;
   public javax.swing.JButton btnDepositar;
   public javax.swing.JButton btnEstadoCuenta;
+  public javax.swing.JButton btnGananciaBancoPorCuenta;
+  public javax.swing.JButton btnGananciaBancoTotalizado;
   public javax.swing.JButton btnListar;
   public javax.swing.JButton btnRealizarRetiro;
   private javax.swing.JLabel jLabel1;

@@ -23,27 +23,29 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="193" max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
           <Group type="102" attributes="0">
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="btnEstadoCuenta" max="32767" attributes="0"/>
+                  <Component id="btnRealizarRetiro" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnListar" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnCrearCuenta" min="-2" pref="257" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnListar" max="32767" attributes="0"/>
-                          <Component id="btnCrearCuenta" max="32767" attributes="0"/>
-                          <Component id="btnRealizarRetiro" max="32767" attributes="0"/>
-                          <Component id="btnEstadoCuenta" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btnCambiarPIN" pref="181" max="32767" attributes="0"/>
-                          <Component id="btnDepositar" max="32767" attributes="0"/>
-                          <Component id="btnConsultaSaldoCuenta" alignment="0" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="btnGananciaBancoPorCuenta" max="32767" attributes="0"/>
+                  <Component id="btnDepositar" max="32767" attributes="0"/>
+                  <Component id="btnConsultaSaldoCuenta" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnGananciaBancoTotalizado" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnCambiarPIN" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
           </Group>
@@ -52,9 +54,9 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnCrearCuenta" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnCambiarPIN" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -70,8 +72,13 @@
                   <Component id="btnConsultaSaldoCuenta" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="btnEstadoCuenta" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="104" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnEstadoCuenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnGananciaBancoTotalizado" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnGananciaBancoPorCuenta" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="64" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -139,6 +146,22 @@
     <Component class="javax.swing.JButton" name="btnConsultaSaldoCuenta">
       <Properties>
         <Property name="text" type="java.lang.String" value="Consultar Saldo Cuenta"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnGananciaBancoTotalizado">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Consulta ganancia del banco TOTALIZADO"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnGananciaBancoPorCuenta">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Consulta ganancia del banco por cuenta"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
