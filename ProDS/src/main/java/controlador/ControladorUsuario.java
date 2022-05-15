@@ -11,8 +11,10 @@ import GUI.ConsultarEstadoCuenta;
 import GUI.ConsultarEstadoCuentaP2;
 import GUI.ConsultarSaldo;
 import GUI.CrearCuenta;
+import GUI.CrearCliente;
 import GUI.Menu;
 import GUI.ListarPersonas;
+import validacion.ExpresionesRegulares;
 import GUI.Palabra;
 import GUI.RealizarDeposito;
 import GUI.RealizarRetiro;
@@ -61,6 +63,7 @@ public class ControladorUsuario implements ActionListener{
     public ConsultaGananciaBancoCuenta vista9;
     public ConsultaGananciaBancoTotal vista10;
     public Palabra palabra;
+    public CrearCliente vista11;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
     
@@ -127,6 +130,10 @@ public class ControladorUsuario implements ActionListener{
                 abrirVista10();
                 consultarGananciaBancoTotalizado();
                 break;
+            case "Crear Cliente":
+                abrirVista11();
+                
+                break;
             default:
                 break;
         }
@@ -138,6 +145,14 @@ public class ControladorUsuario implements ActionListener{
         this.vista1 = new CrearCuenta();
         this.vista1.btnContinuar.addActionListener(this);
         this.vista1.setVisible(true);
+        this.menu.setVisible(false);
+    }
+    
+    public void abrirVista11()
+    {
+        this.vista11 = new CrearCliente();
+        this.vista11.btnContinuar.addActionListener(this);
+        this.vista11.setVisible(true);
         this.menu.setVisible(false);
     }
     
@@ -206,6 +221,7 @@ public class ControladorUsuario implements ActionListener{
       this.vista10.setVisible(true);
       this.menu.setVisible(false);
     }
+
     //FUNCIONALIDADES----------------------------------------------------------------------------------------------------------------------------------
     public void cambiarPIN()
     {
@@ -483,6 +499,52 @@ public class ControladorUsuario implements ActionListener{
       }
     }
     
+    
+    public void crearCliente()
+    {
+      int insertar = 0;
+      int contador = 0;
+      String apellido1 = this.vista11.tfApellido1.getText();
+      String apellido2 = this.vista11.tfApellido2.getText();
+      String nombre = this.vista11.tfNombre.getText();
+      String identificacion = this.vista11.tfIdCliente.getText();
+      String fechaNacimiento = this.vista11.tfFecha.getText();
+      String telefono = this.vista11.tfTelefono.getText();
+      String correo = this.vista11.tfCorreo.getText();
+      /*
+      contador += validarIngreso(correo, "correo");
+      contador += validarIngreso(telefono, "telefono");
+      
+      if(contador == 0)
+      {
+        insertar += validarEntrCorreo(correo);
+        insertar += validarEntrTelefono(telefono);
+
+        if (insertar == 0)
+        {
+          int idCliente = Integer.parseInt(identificacion);
+          int telefonoCliente = Integer.parseInt(telefono);
+          String NuevoCliente = ControladorUsuario.insertarCuenta(apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo);
+
+          String mensaje = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: \n";
+          mensaje += ControladorUsuario.imprimirCuenta(NuevoCliente);
+          mensaje += "\n---\n";
+          mensaje += ControladorUsuario.imprimirPersona(id);
+          JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, "Verifique sus datos");
+        }
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+      }*/
+    }
+    
+    
+
     public void listarPersonas(){
       this.latabla = new ListarPersonas();
       String[] titulos = {
@@ -903,6 +965,29 @@ public class ControladorUsuario implements ActionListener{
       return 0;
     }
     
+    public int validarEntrCorreo(String strCorreo)
+    {
+      boolean esCorreo = ExpresionesRegulares.validarEmail(strCorreo);
+      if (esCorreo==false)
+      {
+        JOptionPane.showMessageDialog(null, "Correcto electrónico no válido, verifique el formato");
+        return 1;
+      }
+      return 0;
+    }
+    
+        public int validarEntrTelefono(String strTelefono)
+    {
+      boolean esTelefono = ExpresionesRegulares.validarTelefono(strTelefono);
+      if (esTelefono==false)
+      {
+        JOptionPane.showMessageDialog(null, "Número de teléfono inválido, revise nuevamente");
+        return 1;
+      }
+      return 0;
+    }
+    
+    
     public int validarEntrPin(String pin)
     {
       boolean esPin = ExpresionesRegulares.validarPin(pin);
@@ -1222,6 +1307,16 @@ public class ControladorUsuario implements ActionListener{
 
       return numero;
     }
+  
+    public static Persona insertarCliente(String apellido1,String apellido2, String nombre,
+            int idCliente, LocalDate fechaNacimiento,int telefonoCliente, String correo)
+    {
+      Persona cliente = new Persona("CIF_#", apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo, "Cliente");
+      PersonaDAO.insertarCliente(cliente);
+      return cliente;
+    }
+
+    
     
     public static void insertarOperacion(String pTipo, boolean pEsComision, double pMontoComision, String pNumCuenta)
     {

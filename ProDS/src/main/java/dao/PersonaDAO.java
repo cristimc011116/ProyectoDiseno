@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import util.ConexionBase;
 import logicadenegocios.Persona;
+import util.Encriptacion;
 /**
  *
  * @author Cristi Martínez
@@ -29,6 +30,27 @@ public class PersonaDAO {
         }
         return true;
     }
+    
+        public static void insertarCliente(Persona pCliente)
+    {
+        String apellido1 = pCliente.getPrimerApellido();
+        String apellido2 = pCliente.getSegundoApellido();
+        String nombre = pCliente.getNombre();
+        LocalDate fecha = pCliente.getFechaNacimiento();
+        int id = pCliente.getId();
+        int telefono = pCliente.getNumero();
+        String correo = pCliente.getCorreo();
+        String codigo = pCliente.getCodigo();
+        String rol = pCliente.getRol();
+
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        con.excSentenciaSQL("INSERT INTO Persona VALUES('" + codigo + "', '" + apellido1 + "', '" + apellido2 +
+                "', '" + nombre + "', '" + id + "', '" + fecha + "', '" + telefono + "', '" + correo + "' ,"
+                        + " '" + rol + "' ,)");
+        con.desconectar();
+    }
+    
     
     public static Persona obtenerPersona(int id){
         ConexionBase con = new ConexionBase();
