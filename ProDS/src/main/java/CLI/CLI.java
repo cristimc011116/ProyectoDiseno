@@ -649,7 +649,7 @@ public class CLI {
         {
             if("1".equals(op))
             {
-                pedirInfoCuenta();
+                consultarUnaCuenta("18");
                 volverMenu();
             }
             else
@@ -788,7 +788,8 @@ public class CLI {
         String mensaje = consultarCliente(usuario);
         System.out.println(mensaje);
     }
-    
+    //COMENTE ESTO A VER SI NO SE CAE
+   /* 
         public static void pedirInfoCuenta()
     {
         Scanner sc = new Scanner (System.in);
@@ -796,7 +797,7 @@ public class CLI {
         String cuenta = sc.next();
         String mensaje = consultarCuenta(cuenta);
         System.out.println(mensaje);
-    }
+    }*/
     
     public static int pedirId()
     {
