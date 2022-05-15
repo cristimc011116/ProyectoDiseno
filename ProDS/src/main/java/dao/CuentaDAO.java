@@ -67,6 +67,16 @@ public class CuentaDAO {
         con.desconectar();
     }
     
+    public static void actualizarPin(String pNumCuenta, String nuevoPin)
+    {
+        String numEncrip = Encriptacion.encriptar(pNumCuenta);
+        String pinEncrip = Encriptacion.encriptar(nuevoPin);
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        con.excSentenciaSQL("UPDATE Cuenta SET pin = '" + pinEncrip + "' WHERE numero = '" + numEncrip + "'");
+        con.desconectar();
+    }
+    
     public static Cuenta obtenerCuenta(String strNumero){
         String numEncrip = Encriptacion.encriptar(strNumero);
         ConexionBase con = new ConexionBase();

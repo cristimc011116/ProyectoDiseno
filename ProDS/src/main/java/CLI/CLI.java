@@ -26,7 +26,7 @@ import util.Encriptacion;
  * @author Cristi Martínez
  */
 public class CLI {
-    Operacion operacion = new Operacion();
+    //Operacion operacion = new Operacion();
     //MENU----------------------------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args)
     {
@@ -52,8 +52,8 @@ public class CLI {
             consultarUnaCuenta(opcion);
             listarCuentas(opcion);
             realizarTransferencia(opcion);
-            
-            
+            cambiarPIN(opcion);
+            ConsultarSaldoActual(opcion);
         }
         else
         {
@@ -64,13 +64,13 @@ public class CLI {
     }
     
     //FUNCIONALIDADES----------------------------------------------------------------------------------------------------------------------------------
-    public void cambiarPIN(String opcion)
+    public static  void cambiarPIN(String opcion)
     {
       if ("5".equals(opcion))
       {
         String numCuenta = pedirNumCuenta();
-        String pinActual = esPinCuenta(numCuenta);
-        String pinNuevo = pedirPinNuevo();
+        //String pinActual = esPinCuenta(numCuenta);
+        
         String numero; 
         boolean insertar;
         int contador =0;
@@ -86,13 +86,16 @@ public class CLI {
           }
           else
           {
-            operacion.cambiarPIN(numCuenta, pinNuevo);
-            JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta:"+numCuenta);
+            String pinNuevo = pedirPinNuevo();  
+            Operacion.cambiarPIN(numCuenta, pinNuevo);
+            System.out.println("Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta: "+numCuenta);
+            volverMenu();
           }
         }
         else
         {
           System.out.println("Su cuenta se encuentra desactivada");
+          volverMenu();
         } 
       }
     }
@@ -726,7 +729,7 @@ public class CLI {
         
         while (esPin == false)
         {
-            String texto3 = "Digite el pin de la cuenta: ";
+            String texto3 = "Digite un pin válido para la cuenta: ";
             System.out.println(texto3);
             pin = sc.next();
             esPin = ExpresionesRegulares.validarPin(pin);
