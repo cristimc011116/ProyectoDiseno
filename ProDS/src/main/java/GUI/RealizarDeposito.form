@@ -121,10 +121,9 @@
     <Component class="javax.swing.JComboBox" name="cmbTipoMoneda">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="--Tipo Moneda--"/>
-            <StringItem index="1" value="colones"/>
-            <StringItem index="2" value="dolares"/>
+          <StringArray count="2">
+            <StringItem index="0" value="colones"/>
+            <StringItem index="1" value="dolares"/>
           </StringArray>
         </Property>
       </Properties>
@@ -155,6 +154,7 @@
     <Component class="javax.swing.JButton" name="btnContinuar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Continuar"/>
+        <Property name="actionCommand" type="java.lang.String" value="ContinuarDeposito"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>

@@ -115,6 +115,12 @@ public class ControladorUsuario implements ActionListener{
             case "Consultar Saldo Cuenta":
                 abrirVista8();
                 break;
+            case "ContinuarSaldo":
+                consultarSaldoCuenta();
+                break;
+            case "ContinuarDeposito":
+                depositar();
+                break;
             default:
                 break;
         }
@@ -205,7 +211,7 @@ public class ControladorUsuario implements ActionListener{
             this.vista6.txtPinActual.setText("");
             this.vista6.txtPinNuevo.setText("");
 
-            JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta:"+numCuenta);
+            JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta: "+numCuenta);
           }
           else
           {
@@ -239,7 +245,7 @@ public class ControladorUsuario implements ActionListener{
         if(contador == 0)
         {
           double monto = Double.parseDouble(strMonto);
-          insertar += validarMonto(monto, cuenta, moneda);
+          insertar += validarEntrCuenta(cuenta);
           if (insertar == 0)
           {
             double comision;
@@ -281,7 +287,7 @@ public class ControladorUsuario implements ActionListener{
     {
       String cuenta = this.vista8.txtNumCuenta.getText();
       Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
-      boolean insertar ;
+      int insertar= 0;
       int contador = 0;
       String resultado = "";
       if(!"inactiva".equals(cuentaBase.getEstatus())){
@@ -291,8 +297,8 @@ public class ControladorUsuario implements ActionListener{
         contador += validarIngreso(pin, "pin");
         if(contador == 0)
         {
-          insertar = esPinCuentaConsultaSaldo(cuenta, pin);
-          if (insertar == true)
+          insertar += validarCuentaPinSaldo(cuenta, pin);
+          if (insertar == 0)
           {
             String saldo = consultarSaldo(cuenta);
             
@@ -561,16 +567,9 @@ public class ControladorUsuario implements ActionListener{
     
     public String consultarSaldo(String pNumCenta)
     {
-      String cuentaEncrip=Encriptacion.encriptar(pNumCenta);
-      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-      Cuenta cuenta=new Cuenta();
-      for(int i=0;i<listaCuentas.size();i++){
-        cuenta = listaCuentas.get(i);
-        if(cuentaEncrip.equals(cuenta.getNumero())){
-          return cuenta.getSaldo();
-        }
-      }
-      return "-1";
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
+      String saldo = cuenta.getSaldo();
+      return saldo;
     }
     
     
@@ -785,6 +784,15 @@ public class ControladorUsuario implements ActionListener{
       return 1;
     }
     
+    public int validarPinSaldo(String pNumCuenta, String pPin)
+    {
+      if(esPinCuentaConsultaSaldo(pNumCuenta, pPin))
+      {
+        return 0;
+      }
+      return 1;
+    }
+    
     
     public int validarEntrCuenta(String numCuenta)
     {
@@ -850,6 +858,21 @@ public class ControladorUsuario implements ActionListener{
       if(insertar==0)
       {
         insertar += validarPinCambio(numCuenta, pin, pinNuevo);
+        if(insertar==0)
+        {
+           return 0;
+        }
+      }
+      return 1;
+    }
+    
+    public int validarCuentaPinSaldo(String numCuenta, String pin)
+    {
+      int insertar = 0;
+      insertar += validarEntrCuenta(numCuenta);
+      if(insertar==0)
+      {
+        insertar += validarPinSaldo(numCuenta, pin);
         if(insertar==0)
         {
            return 0;
@@ -990,7 +1013,7 @@ public class ControladorUsuario implements ActionListener{
         depositoReal=monto-comision;
         //operacion.depositar(cuenta,String.valueOf(depositoReal));
         resultado += "Estimado usuario, se han depositado correctamente: " + (df.format(monto))+" colones";
-        resultado += "\n[El monto real depositado a su cuenta"+cuenta+" es de "+(df.format(depositoReal))+" colones]";
+        resultado += "\n[El monto real depositado a su cuenta "+cuenta+" es de "+(df.format(depositoReal))+" colones]";
         resultado += "\n[El monto cobrado por concepto de comisión fue de "+(df.format(comision))+" colones, que\n" +
                         "fueron rebajados automáticamente de su saldo actual]";
       }
@@ -1003,8 +1026,8 @@ public class ControladorUsuario implements ActionListener{
         //operacion.depositar(cuenta,String.valueOf(depositoReal));
         resultado += "Estimado usuario, se han recibido correctamente: " + monto + " dólares";
         resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + ventaDolar +"]";
-        resultado += "\n[El monto equivalente de su deposito es: " + montoColones + "colones]";
-        resultado += "\n[El monto real depositado a su cuenta" + cuenta + "es de "+depositoReal+"colones]";
+        resultado += "\n[El monto equivalente de su deposito es: " + montoColones + " colones]";
+        resultado += "\n[El monto real depositado a su cuenta " + cuenta + " es de "+depositoReal+" colones]";
         resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
             + "automáticamente de su saldo actual]";
       }
@@ -1013,11 +1036,9 @@ public class ControladorUsuario implements ActionListener{
     
     public static String imprimirResultadoConsultaSaldo(String moneda, String saldo)
     {
-      String SaldoDesencriptado = Encriptacion.desencriptar(saldo);
-      double saldoFinal = Double.parseDouble(SaldoDesencriptado);
+      double saldoFinal = Double.parseDouble(saldo);
       DecimalFormat df = new DecimalFormat("#.00");
       String resultado = "";
-      double depositoReal;
       if("colones".equals(moneda))
       {
 
@@ -1029,7 +1050,7 @@ public class ControladorUsuario implements ActionListener{
         ConsultaMoneda consulta = new ConsultaMoneda();
         double compraDolar = consulta.consultaCambioCompra();
         double montoDolares = saldoFinal/compraDolar;
-        resultado += "Estimado usuario el saldo actual de su cuenta es: " + (df.format(saldoFinal))+" colones";
+        resultado += "Estimado usuario el saldo actual de su cuenta es: " + (df.format(montoDolares))+" dólares";
         resultado += "\n\nPara esta conversión se utilizó el tipo de cambio del dólar, precio de compra.";
         resultado += "\n[Según el BCCR, el tipo de cambio de compra del dólar hoy es: " + compraDolar +"]";
 

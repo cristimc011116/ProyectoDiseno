@@ -37,23 +37,9 @@ public class Operacion {
     
 
 //------------------------------------------METODOS DE CLASE----------------------------------------    
-    public void cambiarPIN(String pCuenta, String pPinNuevo)
+    public static void cambiarPIN(String pCuenta, String pPinNuevo)
     {
       CuentaDAO.actualizarPin(pCuenta, pPinNuevo);
-      
-      
-      /*ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-      for(int i=0;i<listaCuentas.size();i++){
-        cuenta=listaCuentas.get(i);
-        String pCuentaDesencriptada = Encriptacion.desencriptar(cuenta.getNumero());
-        if(pCuentaDesencriptada.equals(pCuenta)){
-          pPinNuevo = Encriptacion.encriptar(pPinNuevo);
-          cuenta.setPin(pPinNuevo);
-          CuentaDAO.cambiarPinCuenta( pCuenta,  pPinNuevo);
-          return true;
-        }
-      }
-      return false;*/
     }
     
     public void depositar(String pCuenta, String pCantColones){
