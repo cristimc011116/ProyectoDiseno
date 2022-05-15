@@ -193,7 +193,7 @@ public class CuentaDAO {
     public static int contadorOperacionesCuenta(String numCuenta){
         cuentas = new ArrayList<>();
         String numEncrip = Encriptacion.encriptar(numCuenta);
-        int contador = 0;
+        int contador = 1;
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
         ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE cuenta = " +"'"+ numEncrip+"'");

@@ -34,8 +34,6 @@ public class ConsultarCambioDolar extends javax.swing.JFrame {
         txtCompra = new javax.swing.JTextField();
         txtVenta = new javax.swing.JTextField();
         btnRegrasar = new javax.swing.JButton();
-        btnLimpiar = new javax.swing.JButton();
-        btnCambio = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,20 +56,6 @@ public class ConsultarCambioDolar extends javax.swing.JFrame {
             }
         });
 
-        btnLimpiar.setText("Limpiar");
-        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimpiarActionPerformed(evt);
-            }
-        });
-
-        btnCambio.setText("Consultar Cambio");
-        btnCambio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCambioActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -90,19 +74,12 @@ public class ConsultarCambioDolar extends javax.swing.JFrame {
                     .addComponent(txtCompra, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(101, 101, 101))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnRegrasar)
-                        .addGap(54, 54, 54)
-                        .addComponent(btnLimpiar)
-                        .addGap(187, 187, 187))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(135, 135, 135))))
+                .addContainerGap(186, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(135, 135, 135))
             .addGroup(layout.createSequentialGroup()
-                .addGap(209, 209, 209)
-                .addComponent(btnCambio)
+                .addGap(224, 224, 224)
+                .addComponent(btnRegrasar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -118,22 +95,13 @@ public class ConsultarCambioDolar extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addComponent(btnCambio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegrasar)
-                    .addComponent(btnLimpiar))
-                .addGap(22, 22, 22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addComponent(btnRegrasar)
+                .addGap(43, 43, 43))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-  private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-    this.txtVenta.setText("");
-    this.txtCompra.setText("");
-  }//GEN-LAST:event_btnLimpiarActionPerformed
 
   private void btnRegrasarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegrasarActionPerformed
     Menu menu = new Menu();
@@ -141,10 +109,6 @@ public class ConsultarCambioDolar extends javax.swing.JFrame {
     controlador.menu.setVisible(true);
     this.setVisible(false);
   }//GEN-LAST:event_btnRegrasarActionPerformed
-
-    private void btnCambioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCambioActionPerformed
 
     private void txtCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCompraActionPerformed
         // TODO add your handling code here:
@@ -187,8 +151,6 @@ public class ConsultarCambioDolar extends javax.swing.JFrame {
   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JButton btnCambio;
-    public javax.swing.JButton btnLimpiar;
     public javax.swing.JButton btnRegrasar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

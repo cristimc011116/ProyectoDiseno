@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.time.format.DateTimeFormatter;
 import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
 import util.Encriptacion;
 /**
  *
@@ -124,7 +125,20 @@ public class Cuenta implements Comparable<Cuenta>{
        {
            return 0.00;
        }
-   }    
+   }   
+   
+   public static double aplicaComisionRetiro(String numCuenta, double monto)
+   {
+       int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
+       if (contador >= 10)
+       {
+           return (monto*0.02);
+       }
+       else
+       {
+           return 0.00;
+       }
+   } 
 //-------------------------------------METODOS ACCESORES------------------------------------------
     public String getNumero() {
         return numero;

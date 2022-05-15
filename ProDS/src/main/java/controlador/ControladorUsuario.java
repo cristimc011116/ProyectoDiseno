@@ -149,6 +149,9 @@ public class ControladorUsuario implements ActionListener{
             case "ContinuarSaldo":
                 consultarSaldoCuenta();
                 break;
+            case "Registrar Cliente":
+                crearCliente();
+                break;
             default:
                 break;
         }
@@ -166,7 +169,7 @@ public class ControladorUsuario implements ActionListener{
     public void abrirVista11()
     {
         this.vista11 = new CrearCliente();
-        this.vista11.btnContinuar.addActionListener(this);
+        this.vista11.btnRegistrar.addActionListener(this);
         this.vista11.setVisible(true);
         this.menu.setVisible(false);
     }
@@ -174,7 +177,6 @@ public class ControladorUsuario implements ActionListener{
         public void abrirVista12()
     {
         this.vista12 = new ConsultarCambioDolar();
-        this.vista12.btnCambio.addActionListener(this);
         this.vista12.setVisible(true);
         this.menu.setVisible(false);
     }
@@ -460,7 +462,7 @@ public class ControladorUsuario implements ActionListener{
             double comision;
             double nuevoMonto;
             monto = montoCorrecto(monto, moneda);
-            comision = Cuenta.aplicaComision(cuenta, monto);
+            comision = Cuenta.aplicaComisionRetiro(cuenta, monto);
             nuevoMonto = monto + comision;
             String strSaldoViejo = cuentaBase.getSaldo();
             double saldoViejo = Double.parseDouble(strSaldoViejo);
@@ -543,17 +545,23 @@ public class ControladorUsuario implements ActionListener{
       String identificacion = this.vista11.tfIdCliente.getText();
       String fechaNacimiento = this.vista11.tfFecha.getText();
       
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
       LocalDate localDate = LocalDate.parse(fechaNacimiento, formatter);
       
       String telefono = this.vista11.tfTelefono.getText();
       String correo = this.vista11.tfCorreo.getText();
       
+      contador += validarIngreso(apellido1, "primer apellido");
+      contador += validarIngreso(apellido2, "segundo apellido");
+      contador += validarIngreso(nombre, "nombre");
+      contador += validarIngreso(identificacion, "identificacion");
+      contador += validarIngreso(fechaNacimiento, "fecha nacimiento");
       contador += validarIngreso(correo, "correo");
       contador += validarIngreso(telefono, "telefono");
       
       if(contador == 0)
       {
+        insertar += validarId(identificacion);
         insertar += validarEntrCorreo(correo);
         insertar += validarEntrTelefono(telefono);
 
@@ -1043,6 +1051,15 @@ public class ControladorUsuario implements ActionListener{
       }
       return 0;
     }
+        
+    public int validarId(String id){
+        boolean num = ExpresionesRegulares.esNumero(id);
+        if(num==false){
+            JOptionPane.showMessageDialog(null, "Número de id inválido, revise nuevamente");
+            return 1;
+        }
+        return 0;
+    }
     
     
     public int validarEntrPin(String pin)
@@ -1330,7 +1347,7 @@ public class ControladorUsuario implements ActionListener{
       Persona persona = PersonaDAO.obtenerPersona(id);
       int numero = persona.getNumero();
       String mensaje = crearPalabra();
-      Mensaje.enviarMensaje(83211510, mensaje);
+      Mensaje.enviarMensaje(numero, mensaje);
       return mensaje;
     }
     
