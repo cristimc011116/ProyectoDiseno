@@ -19,6 +19,7 @@ import GUI.Palabra;
 import GUI.ConsultarCambioDolar;
 import GUI.RealizarDeposito;
 import GUI.RealizarRetiro;
+import GUI.RealizarTransferencia;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import dao.CuentaDAO;
@@ -68,6 +69,7 @@ public class ControladorUsuario implements ActionListener{
     public Palabra palabra;
     public CrearCliente vista11;
     public ConsultarCambioDolar vista12;
+    public RealizarTransferencia vista13;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
     
@@ -87,6 +89,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnCrearCliente.addActionListener(this);
         this.menu.btnCambioDolar.addActionListener(this);
         this.menu.btnCambiarPIN.addActionListener(this);
+        this.menu.btnTransferencia.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -101,6 +104,9 @@ public class ControladorUsuario implements ActionListener{
                 break;
             case "Realizar retiro":
                 abrirVista3();
+                break;
+            case "TransferenciaMenu":
+                abrirVista13();
                 break;
             case "Consultar estado de cuenta":
                 abrirVista4();
@@ -192,6 +198,20 @@ public class ControladorUsuario implements ActionListener{
         this.vista3.txtMonto.setEnabled(false);
         this.vista3.btnRetirar.setEnabled(false);
         this.vista3.setVisible(true);
+        this.menu.setVisible(false);
+    }
+    
+        public void abrirVista13()
+    {
+        this.vista13 = new RealizarTransferencia();
+        this.vista13.btnRegresar.addActionListener(this);
+        this.vista13.btnLimpiar.addActionListener(this);
+        this.vista13.btnEnviarPalabra.addActionListener(this);
+        this.vista13.btnTransferir.addActionListener(this);
+        this.vista13.txtPalabra.setEnabled(false);
+        this.vista13.txtMonto.setEnabled(false);
+        this.vista13.btnTransferir.setEnabled(false);
+        this.vista13.setVisible(true);
         this.menu.setVisible(false);
     }
     
@@ -496,6 +516,85 @@ public class ControladorUsuario implements ActionListener{
         JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
       }   
     }
+    
+
+    public void transferir()   
+    {
+      String cuentaDestino = this.vista13.txtCuentaDestino .getText();
+      Cuenta cuentaBaseDestino = CuentaDAO.obtenerCuenta(cuentaDestino);
+      String cuentaOrigen = this.vista13.txtCuentaOrigen .getText();
+      Cuenta cuentaBaseOrigen = CuentaDAO.obtenerCuenta(cuentaOrigen);
+      int insertar = 0;
+      int contador = 0;
+      String mensaje;
+      String resultado = "";
+      if(!"inactiva".equals(cuentaBaseOrigen.getEstatus())){
+        String pin = this.vista13.txtPin.getText();
+        String palabra = this.vista13.txtPalabra.getText();
+        String strMonto = this.vista13.txtMonto.getText();
+        String palabraClave = this.palabra.lbPalabra.getText();
+        contador += validarIngreso(cuentaOrigen, "cuenta");
+        contador += validarIngreso(pin, "pin");
+        contador += validarIngreso(palabra, "palabra clave");
+        contador += validarIngreso(strMonto, "monto");
+        contador += validarEntrMonto(strMonto);
+
+        if(contador == 0)
+        {
+          insertar += validarCuentaPin(cuentaOrigen, pin);
+          double monto = Double.parseDouble(strMonto);
+          insertar += validarMonto(monto, cuentaOrigen, "colones");
+          insertar += validarPalabra(palabraClave, cuentaOrigen);
+          if (insertar == 0)
+          {                              
+            //rebajar saldo                    
+            double comision;
+            double nuevoMonto;
+            boolean aplicaCom = false;
+            comision = 0.00;
+            String strSaldoViejo = cuentaBaseOrigen.getSaldo();
+            double saldoViejo = Double.parseDouble(strSaldoViejo);
+            double nuevoSaldo = saldoViejo - monto;
+            String strNuevoSaldo = Double.toString(nuevoSaldo);
+            cuentaBaseOrigen.setSaldo(strNuevoSaldo);
+            CuentaDAO.actualizarSaldo(cuentaOrigen, strNuevoSaldo);
+            ControladorUsuario.insertarOperacion("transferencia", false , comision, cuentaOrigen);
+
+            //hacer transferencia
+
+            String strSaldoViejoDestino = cuentaBaseDestino.getSaldo();
+            double saldoViejoDestino = Double.parseDouble(strSaldoViejoDestino);
+            double nuevoSaldoDestino = saldoViejoDestino + monto;
+            String strNuevoSaldoDestino = Double.toString(nuevoSaldoDestino);
+            cuentaBaseDestino.setSaldo(strNuevoSaldoDestino);
+            CuentaDAO.actualizarSaldo(cuentaDestino, strNuevoSaldoDestino);
+            resultado = imprimirResultadoTransf(monto);
+            JOptionPane.showMessageDialog(null, resultado);
+            this.vista13.txtCuentaDestino.setText("");
+            this.vista13.txtCuentaOrigen.setText("");
+            this.vista13.txtPin.setText("");
+            this.vista13.txtPalabra.setText("");
+            this.vista13.txtMonto.setText("");
+            this.vista13.txtPalabra.setEnabled(false);
+            this.vista13.txtMonto.setEnabled(false);
+            this.vista13.btnTransferir.setEnabled(false);
+          }
+          else
+          {
+            JOptionPane.showMessageDialog(null, "Verifique sus datos");
+          }
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+        }
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
+      }   
+    }
+    //-------------
     
     public void crearCuenta()
     {

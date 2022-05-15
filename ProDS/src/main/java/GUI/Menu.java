@@ -38,6 +38,7 @@ public class Menu extends javax.swing.JFrame {
         btnGananciaBancoPorCuenta = new javax.swing.JButton();
         btnCrearCliente = new javax.swing.JButton();
         btnCambioDolar = new javax.swing.JButton();
+        btnTransferencia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -81,6 +82,14 @@ public class Menu extends javax.swing.JFrame {
         btnCambioDolar.setText("Consultar tipo de cambio de dólar");
         btnCambioDolar.setActionCommand("CambioDolarMenu");
 
+        btnTransferencia.setText("Realizar Transferencia");
+        btnTransferencia.setActionCommand("TransferenciaMenu");
+        btnTransferencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransferenciaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -106,7 +115,8 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(btnDepositar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnConsultaSaldoCuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnGananciaBancoTotalizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCambiarPIN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnCambiarPIN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnTransferencia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
@@ -135,7 +145,9 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(btnGananciaBancoPorCuenta)
                     .addComponent(btnCrearCliente))
                 .addGap(18, 18, 18)
-                .addComponent(btnCambioDolar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCambioDolar)
+                    .addComponent(btnTransferencia))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -153,6 +165,10 @@ public class Menu extends javax.swing.JFrame {
     private void btnCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCuentaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCrearCuentaActionPerformed
+
+    private void btnTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferenciaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTransferenciaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -201,6 +217,7 @@ public class Menu extends javax.swing.JFrame {
     public javax.swing.JButton btnGananciaBancoTotalizado;
     public javax.swing.JButton btnListar;
     public javax.swing.JButton btnRealizarRetiro;
+    public javax.swing.JButton btnTransferencia;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
