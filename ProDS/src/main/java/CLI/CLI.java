@@ -574,11 +574,16 @@ public class CLI {
         Persona consulta = new Persona();
         ArrayList<Cuenta> cuentas = CuentaDAO.getCuentasBD();
         Collections.sort(cuentas);
+        int contador = 1;
         for(Cuenta cuenta: cuentas){
-            int infoId = CuentaDAO.obtenerPersonaCuenta(cuenta.getNumero());
+            String cuentaDes = Encriptacion.desencriptar(cuenta.getNumero());
+            int infoId = CuentaDAO.obtenerPersonaCuenta(cuentaDes);
             consulta = PersonaDAO.obtenerPersona(infoId);
+            System.out.println("Cuenta número: " + contador);
             System.out.println(cuenta);
             System.out.println(consulta.toString());
+            System.out.println("\n");
+            contador++;
         }
         seleccionarCuenta();
     }
