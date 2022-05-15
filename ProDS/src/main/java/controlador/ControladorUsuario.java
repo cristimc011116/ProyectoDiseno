@@ -72,6 +72,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnEstadoCuenta.addActionListener(this);
         this.menu.btnDepositar.addActionListener(this);
         this.menu.btnConsultaSaldoCuenta.addActionListener(this);
+        this.menu.btnCambiarPIN.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -183,21 +184,20 @@ public class ControladorUsuario implements ActionListener{
     //FUNCIONALIDADES----------------------------------------------------------------------------------------------------------------------------------
     public void cambiarPIN()
     {
-      boolean insertar;
+      int insertar = 0;
       int contador =0;
-      
       String numCuenta = this.vista6.txtNumeroCuenta.getText();
       Cuenta cuentaBase = CuentaDAO.obtenerCuenta(numCuenta);
       if(!"inactiva".equals(cuentaBase.getEstatus())){
         String pinActual = this.vista6.txtPinActual.getText();
         String pinNuevo = this.vista6.txtPinNuevo.getText();
         contador += validarIngreso(numCuenta, "cuenta");
-        contador += validarIngreso(pinActual, "pin");
-        contador += validarIngreso(pinNuevo, "pin");
+        contador += validarIngreso(pinActual, "pin actual");
+        contador += validarIngreso(pinNuevo, "pin nuevo");
         if(contador == 0)
         {
-          insertar = esPinCuentaCambioPin (numCuenta,  pinActual);
-          if (insertar == true)
+          insertar += validarCuentaPinCambio(numCuenta,  pinActual, pinNuevo);
+          if (insertar == 0)
           {
             operacion.cambiarPIN(numCuenta, pinNuevo);
 
@@ -766,6 +766,15 @@ public class ControladorUsuario implements ActionListener{
       return 1;
     }
     
+    public int validarPinCambio(String pNumCuenta, String pPin, String pinNuevo)
+    {
+      if(esPinCuentaCambioPin(pNumCuenta, pPin) & ExpresionesRegulares.validarPin(pinNuevo))
+      {
+        return 0;
+      }
+      return 1;
+    }
+    
     
     public int validarPin2(String pNumCuenta, String pPin)
     {
@@ -826,6 +835,21 @@ public class ControladorUsuario implements ActionListener{
       if(insertar==0)
       {
         insertar += validarPin(numCuenta, pin);
+        if(insertar==0)
+        {
+           return 0;
+        }
+      }
+      return 1;
+    }
+    
+    public int validarCuentaPinCambio(String numCuenta, String pin, String pinNuevo)
+    {
+      int insertar = 0;
+      insertar += validarEntrCuenta(numCuenta);
+      if(insertar==0)
+      {
+        insertar += validarPinCambio(numCuenta, pin, pinNuevo);
         if(insertar==0)
         {
            return 0;
