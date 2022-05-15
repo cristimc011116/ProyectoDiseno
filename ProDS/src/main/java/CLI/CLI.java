@@ -52,7 +52,7 @@ public class CLI {
             consultarStatus(opcion);
             seleccionarMonedaEstado(opcion);
             consultarUnaCuenta(opcion);
-            listarCuentas(opcion);
+            MenulistarCuentas(opcion);
             realizarTransferencia(opcion);
             cambiarPIN(opcion);
             ConsultarSaldoActual(opcion);
@@ -569,12 +569,18 @@ public class CLI {
     
     }
     
+        //dani
     public static void listarCuentas(){
+        Persona consulta = new Persona();
         ArrayList<Cuenta> cuentas = CuentaDAO.getCuentasBD();
         Collections.sort(cuentas);
         for(Cuenta cuenta: cuentas){
+            int infoId = CuentaDAO.obtenerPersonaCuenta(cuenta.getNumero());
+            consulta = PersonaDAO.obtenerPersona(infoId);
             System.out.println(cuenta);
+            System.out.println(consulta.toString());
         }
+        seleccionarCuenta();
     }
 
     
@@ -591,23 +597,15 @@ public class CLI {
         }   
     }
     
-    public static void  listarCuentas(String opcion)
+    public static void  MenulistarCuentas(String opcion)
     //public static void main(String[] args)
     {
         Scanner sc = new Scanner (System.in);
         if("4".equals(opcion))
         {
-            listadoCuentas();
+            listarCuentas();
 
         }   
-    }
-    
-    //NO PASA POR CONTROLADOS HAY QUE CAMBIARLO PERO ESTA EN CUENTAS
-    public static void listadoCuentas()
-    {
-        ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD(); 
-        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta1.convertirSaldo(cuenta2).compareTo(cuenta1.convertirSaldo(cuenta1)));
-        listaCuentas.forEach((es)->System.out.println(es));
     }
     
     
@@ -635,6 +633,32 @@ public class CLI {
         }
         
     }
+    
+        public static void seleccionarCuenta()
+    {
+        Scanner sc = new Scanner (System.in);
+        System.out.println("Digite 1 si desea consultar a una cuenta en específico, o 0 si desea volver al menú principal");
+        String op = sc.next();
+        boolean esCorrecto = validarOpcion(op, 0, 1);
+        if(esCorrecto)
+        {
+            if("1".equals(op))
+            {
+                pedirInfoCuenta();
+                volverMenu();
+            }
+            else
+            {
+                main(null);
+            }
+        } 
+        else
+        {
+            seleccionarCuenta();
+        }
+        
+    }
+    
     
     public static void seleccionarMonedaRetiro(String opcion)
     {

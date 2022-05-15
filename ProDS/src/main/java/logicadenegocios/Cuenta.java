@@ -101,12 +101,6 @@ public class Cuenta implements Comparable<Cuenta>{
     }
 
 
-    public static ArrayList listarCuentas()
-    {
-        ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD(); 
-        listaCuentas.sort((Cuenta cuenta1, Cuenta cuenta2)-> cuenta1.convertirSaldo(cuenta2).compareTo(cuenta1.convertirSaldo(cuenta1)));
-        return listaCuentas;
-    }
     
     public static Double convertirSaldo(Cuenta pCuenta){
         String saldoS = Encriptacion.desencriptar(pCuenta.getSaldo());
