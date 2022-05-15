@@ -451,6 +451,41 @@ public class ControladorUsuario implements ActionListener{
       }
     }   
     
+        public void enviarPalabraTransferencia()
+    {
+      this.palabra = new Palabra();
+      int insertar = 0;
+      int contador = 0;
+      String mensaje = "";
+      String cuenta = this.vista13.txtCuentaOrigen.getText();
+      String pin = this.vista13.txtPin.getText();
+      contador += validarIngreso(cuenta, "cuenta");
+      contador += validarIngreso(pin, "pin");
+      if(contador == 0)
+      {
+        insertar += validarCuentaPin(cuenta, pin);
+        if (insertar == 0)
+        {
+          this.vista13.txtPalabra.setEnabled(true);
+          this.vista13.txtMonto.setEnabled(true);
+          this.vista13.btnTransferir.setEnabled(true);
+          mensaje = enviarMensaje(cuenta);
+          this.palabra.lbPalabra.setText(mensaje);
+          JOptionPane.showMessageDialog(null, "Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
+                  + " y procesa a digitar la palabra enviada");
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, "La cuenta o el pin esta incorrecto");
+        }
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+      }
+    }   
+    
+    
     public void retirar()   
     {
       String cuenta = this.vista3.txtCuenta.getText();
@@ -544,7 +579,7 @@ public class ControladorUsuario implements ActionListener{
           insertar += validarCuentaPin(cuentaOrigen, pin);
           double monto = Double.parseDouble(strMonto);
           insertar += validarMonto(monto, cuentaOrigen, "colones");
-          insertar += validarPalabra(palabraClave, cuentaOrigen);
+          insertar += validarPalabraTransferencia(palabraClave, cuentaOrigen);
           if (insertar == 0)
           {                              
             //rebajar saldo                    
@@ -904,6 +939,15 @@ public class ControladorUsuario implements ActionListener{
     public int validarPalabra(String pPalabra, String pNumCuenta)
     {
       if(pedirPalabra(pPalabra, pNumCuenta))
+      {
+        return 0;
+      }
+      return 1;
+    }
+    
+    public int validarPalabraTransferencia(String pPalabra, String pNumCuenta)
+    {
+      if(pedirPalabraTransferencia(pPalabra, pNumCuenta))
       {
         return 0;
       }
@@ -1316,6 +1360,37 @@ public class ControladorUsuario implements ActionListener{
       }
       return true;
     }
+    
+    public boolean pedirPalabraTransferencia(String pPalabra, String pNumCuenta)
+    {
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+      String cont;
+      int contador;
+      String palabra = this.vista13.txtPalabra.getText();
+      if (!pPalabra.equals(palabra))
+      {
+        cont = this.vista13.txtIntPalabra.getText();
+        contador = Integer.parseInt(cont);
+        contador++;
+        cont = Integer.toString(contador);
+        this.vista13.txtIntPalabra.setText(cont);
+        if(contador >= 2)
+        {
+          inactivarCuenta(pNumCuenta);
+          JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta por el ingreso incorrecto de la palabra clave");
+        }
+        else
+        {
+          //JOptionPane.showMessageDialog(null, "Para otro intento, presione en el botón 'Enviar palabra'");
+          //this.palabra.lbPalabra.setText("");
+
+          enviarPalabraTransferencia();
+        }
+        return false;
+      }
+      return true;
+    }
+    
     
     //OTROS--------------------------------------------------------------------------------------------------------------------------------------------
     public static String imprimirResultado(String moneda, double comision, double monto)
