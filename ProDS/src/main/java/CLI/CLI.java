@@ -55,7 +55,7 @@ public class CLI {
             realizarTransferencia(opcion);
             cambiarPIN(opcion);
             ConsultarSaldoActual(opcion);
-            ConsultarTipoCambio(opcion);
+            ConsultarTipoCambioOpcion(opcion);
             crearCliente(opcion);
         }
         else
