@@ -21,6 +21,7 @@ import GUI.RealizarRetiro;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import dao.CuentaDAO;
+import webService.ConsultaMoneda;
 import dao.OperacionDAO;
 import dao.PersonaDAO;
 import java.awt.event.ActionListener;
@@ -318,6 +319,19 @@ public class ControladorUsuario implements ActionListener{
         JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
       }   
     }
+    
+    public static Double consultarCambioDolar(String opcion){
+      Double resultado= 0.0;
+      ConsultaMoneda consulta = new ConsultaMoneda();
+      if (opcion == "compra"){
+          resultado = consulta.consultaCambioCompra();
+      }
+      else if (opcion == "venta"){
+          resultado = consulta.consultaCambioVenta();
+      }
+    return resultado;
+    }
+    
     
     public void consultarSaldoCuenta()   
     {

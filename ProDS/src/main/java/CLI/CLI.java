@@ -55,6 +55,7 @@ public class CLI {
             realizarTransferencia(opcion);
             cambiarPIN(opcion);
             ConsultarSaldoActual(opcion);
+            ConsultarTipoCambio(opcion);
             crearCliente(opcion);
         }
         else
@@ -164,6 +165,37 @@ public class CLI {
         consultaSaldo("dolares");
       }
     }
+    
+    public static void ConsultarTipoCambioOpcion(String opcion)
+    //public static void main(String[] args)
+    {
+      if("11".equals(opcion))
+      {
+        ConsultaCambioResultado("compra");
+      }
+      if("12".equals(opcion))
+      {
+        ConsultaCambioResultado("venta");
+      }
+    }
+    
+    public static void ConsultaCambioResultado(String opcion){
+      Double cambio = 0.0;
+      if("compra".equals(opcion))
+      {
+        cambio = ControladorUsuario.consultarCambioDolar("compra");
+      }
+      if("venta".equals(opcion))
+      {
+        cambio = ControladorUsuario.consultarCambioDolar("venta");
+      }
+      
+      String resultado = "El tipo de cambio de dolar en" + opcion + " es de: " + cambio + "";
+      System.out.println(resultado);
+    }
+    
+        
+        
     
     public static void consultaSaldo(String moneda)
     {
