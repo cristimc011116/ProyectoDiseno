@@ -80,7 +80,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnDepositar.addActionListener(this);
         this.menu.btnConsultaSaldoCuenta.addActionListener(this);
         this.menu.btnGananciaBancoPorCuenta.addActionListener(this);
-        this.menu.btnGananciaBancoTotalizado.addActionListener(this);
+        this.menu.btnCrearCliente.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -509,9 +509,13 @@ public class ControladorUsuario implements ActionListener{
       String nombre = this.vista11.tfNombre.getText();
       String identificacion = this.vista11.tfIdCliente.getText();
       String fechaNacimiento = this.vista11.tfFecha.getText();
+      
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+      LocalDate localDate = LocalDate.parse(fechaNacimiento, formatter);
+      
       String telefono = this.vista11.tfTelefono.getText();
       String correo = this.vista11.tfCorreo.getText();
-      /*
+      
       contador += validarIngreso(correo, "correo");
       contador += validarIngreso(telefono, "telefono");
       
@@ -524,12 +528,10 @@ public class ControladorUsuario implements ActionListener{
         {
           int idCliente = Integer.parseInt(identificacion);
           int telefonoCliente = Integer.parseInt(telefono);
-          String NuevoCliente = ControladorUsuario.insertarCuenta(apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo);
+          Persona NuevoCliente = ControladorUsuario.insertarCliente(apellido1,apellido2,nombre,idCliente,localDate,telefonoCliente,correo);
 
-          String mensaje = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: \n";
-          mensaje += ControladorUsuario.imprimirCuenta(NuevoCliente);
-          mensaje += "\n---\n";
-          mensaje += ControladorUsuario.imprimirPersona(id);
+          String mensaje = "Se ha creado un nuevo cliente en el sistema, los datos del cliente son: ";
+          mensaje += NuevoCliente.toStringCompleto();
           JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
         }
         else
@@ -540,7 +542,7 @@ public class ControladorUsuario implements ActionListener{
       else
       {
         JOptionPane.showMessageDialog(null, "Complete todos sus datos");
-      }*/
+      }
     }
     
     

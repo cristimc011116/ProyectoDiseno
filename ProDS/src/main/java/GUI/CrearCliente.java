@@ -74,6 +74,7 @@ public class CrearCliente extends javax.swing.JFrame {
         });
 
         btnContinuar.setText("Cliente");
+        btnContinuar.setActionCommand("Crear Cliente");
         btnContinuar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnContinuarActionPerformed(evt);
@@ -140,8 +141,7 @@ public class CrearCliente extends javax.swing.JFrame {
                         .addGap(75, 75, 75)
                         .addComponent(jLabel3)
                         .addGap(73, 73, 73)
-                        .addComponent(tfFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(tfFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
