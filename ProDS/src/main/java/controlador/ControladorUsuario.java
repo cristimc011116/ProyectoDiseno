@@ -41,6 +41,7 @@ import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import logicadenegocios.Operacion;
 import util.Encriptacion;
+import util.Mensaje;
 //import util.Mensaje;
 import validacion.ExpresionesRegulares;
 import webService.ConsultaMoneda;
@@ -85,6 +86,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnGananciaBancoPorCuenta.addActionListener(this);
         this.menu.btnCrearCliente.addActionListener(this);
         this.menu.btnCambioDolar.addActionListener(this);
+        this.menu.btnCambiarPIN.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -140,7 +142,12 @@ public class ControladorUsuario implements ActionListener{
             case "CambioDolarMenu":
                 abrirVista12();
                 ConsultarCambioVentaCompra();
-                
+                break;
+            case "ContinuarDeposito":
+                depositar();
+                break;
+            case "ContinuarSaldo":
+                consultarSaldoCuenta();
                 break;
             default:
                 break;
@@ -241,7 +248,7 @@ public class ControladorUsuario implements ActionListener{
     //FUNCIONALIDADES----------------------------------------------------------------------------------------------------------------------------------
     public void cambiarPIN()
     {
-      boolean insertar;
+      int insertar = 0;
       int contador =0;
       
       String numCuenta = this.vista6.txtNumeroCuenta.getText();
@@ -250,20 +257,19 @@ public class ControladorUsuario implements ActionListener{
         String pinActual = this.vista6.txtPinActual.getText();
         String pinNuevo = this.vista6.txtPinNuevo.getText();
         contador += validarIngreso(numCuenta, "cuenta");
-        contador += validarIngreso(pinActual, "pin");
-        contador += validarIngreso(pinNuevo, "pin");
+        contador += validarIngreso(pinActual, "pin actual");
+        contador += validarIngreso(pinNuevo, "pin nuevo");
         if(contador == 0)
         {
-          insertar = esPinCuentaCambioPin (numCuenta,  pinActual);
-          if (insertar == true)
-          {
+          insertar += validarCuentaPinCambio(numCuenta,  pinActual, pinNuevo);
+          if (insertar == 0){
             operacion.cambiarPIN(numCuenta, pinNuevo);
 
             this.vista6.txtNumeroCuenta.setText("");
             this.vista6.txtPinActual.setText("");
             this.vista6.txtPinNuevo.setText("");
 
-            JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta:"+numCuenta);
+            JOptionPane.showMessageDialog(null, "Estimado usuario, se ha cambiado satisfactoriamente el PIN de su cuenta: "+numCuenta);
           }
           else
           {
@@ -297,22 +303,21 @@ public class ControladorUsuario implements ActionListener{
         if(contador == 0)
         {
           double monto = Double.parseDouble(strMonto);
-          insertar += validarMonto(monto, cuenta, moneda);
+          insertar += validarEntrCuenta(cuenta);
           if (insertar == 0)
           {
             double comision;
             double nuevoMonto;
-            boolean aplicaCom = Cuenta.aplicaComision(cuenta);
             monto = montoCorrecto(monto, moneda);
-            comision = monto * 0.02;
-            nuevoMonto = nuevoMonto(comision, aplicaCom, monto);
+            comision = Cuenta.aplicaComision(cuenta, monto);
+            nuevoMonto = monto + comision;
             String strSaldoViejo = cuentaBase.getSaldo();
             double saldoViejo = Double.parseDouble(strSaldoViejo);
-            double nuevoSaldo = saldoViejo + nuevoMonto;
+            double nuevoSaldo = saldoViejo + monto;
             String strNuevoSaldo = Double.toString(nuevoSaldo);
             cuentaBase.setSaldo(strNuevoSaldo);
             CuentaDAO.actualizarSaldo(cuenta, strNuevoSaldo);
-            insertarOperacion("deposito", (comision>0) , comision, cuenta);
+            insertarOperacion("deposito", (comision>0.00) , comision, cuenta);
             resultado = imprimirResultadoDeposito( moneda,comision,monto,cuenta);
             JOptionPane.showMessageDialog(null, resultado);
             this.vista7.txtMontoDeposito.setText("");
@@ -352,7 +357,7 @@ public class ControladorUsuario implements ActionListener{
     {
       String cuenta = this.vista8.txtNumCuenta.getText();
       Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
-      boolean insertar ;
+      int insertar = 0;
       int contador = 0;
       String resultado = "";
       if(!"inactiva".equals(cuentaBase.getEstatus())){
@@ -362,8 +367,8 @@ public class ControladorUsuario implements ActionListener{
         contador += validarIngreso(pin, "pin");
         if(contador == 0)
         {
-          insertar = esPinCuentaConsultaSaldo(cuenta, pin);
-          if (insertar == true)
+          insertar += validarCuentaPinSaldo(cuenta, pin);
+          if (insertar == 0)
           {
             String saldo = consultarSaldo(cuenta);
             
@@ -454,17 +459,16 @@ public class ControladorUsuario implements ActionListener{
           {
             double comision;
             double nuevoMonto;
-            boolean aplicaCom = Cuenta.aplicaComision(cuenta);
             monto = montoCorrecto(monto, moneda);
-            comision = monto * 0.02;
-            nuevoMonto = nuevoMonto(comision, aplicaCom, monto);
+            comision = Cuenta.aplicaComision(cuenta, monto);
+            nuevoMonto = monto + comision;
             String strSaldoViejo = cuentaBase.getSaldo();
             double saldoViejo = Double.parseDouble(strSaldoViejo);
             double nuevoSaldo = saldoViejo - nuevoMonto;
             String strNuevoSaldo = Double.toString(nuevoSaldo);
             cuentaBase.setSaldo(strNuevoSaldo);
             CuentaDAO.actualizarSaldo(cuenta, strNuevoSaldo);
-            ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, cuenta);
+            ControladorUsuario.insertarOperacion("retiro", (comision>0.00) , comision, cuenta);
             resultado = imprimirResultado(moneda, comision, monto);
             JOptionPane.showMessageDialog(null, resultado);
             this.vista3.txtCuenta.setText("");
@@ -773,16 +777,9 @@ public class ControladorUsuario implements ActionListener{
     
     public String consultarSaldo(String pNumCenta)
     {
-      String cuentaEncrip=Encriptacion.encriptar(pNumCenta);
-      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-      Cuenta cuenta=new Cuenta();
-      for(int i=0;i<listaCuentas.size();i++){
-        cuenta = listaCuentas.get(i);
-        if(cuentaEncrip.equals(cuenta.getNumero())){
-          return cuenta.getSaldo();
-        }
-      }
-      return "-1";
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
+      String saldo = cuenta.getSaldo();
+      return saldo;
     }
     
     
@@ -978,6 +975,14 @@ public class ControladorUsuario implements ActionListener{
       return 1;
     }
     
+    public int validarPinCambio(String pNumCuenta, String pPin, String pinNuevo)
+    {
+      if(esPinCuentaCambioPin(pNumCuenta, pPin) & ExpresionesRegulares.validarPin(pinNuevo))
+      {
+        return 0;
+      }
+      return 1;
+    }
     
     public int validarPin2(String pNumCuenta, String pPin)
     {
@@ -988,6 +993,14 @@ public class ControladorUsuario implements ActionListener{
       return 1;
     }
     
+    public int validarPinSaldo(String pNumCuenta, String pPin)
+    {
+      if(esPinCuentaConsultaSaldo(pNumCuenta, pPin))
+      {
+        return 0;
+      }
+      return 1;
+    }
     
     public int validarEntrCuenta(String numCuenta)
     {
@@ -1069,6 +1082,21 @@ public class ControladorUsuario implements ActionListener{
       return 1;
     }
     
+    public int validarCuentaPinSaldo(String numCuenta, String pin)
+    {
+      int insertar = 0;
+      insertar += validarEntrCuenta(numCuenta);
+      if(insertar==0)
+      {
+        insertar += validarPinSaldo(numCuenta, pin);
+        if(insertar==0)
+        {
+           return 0;
+        }
+      }
+      return 1;
+    }
+    
     public int validarCuentaPin2(String numCuenta, String pin)
     {
       int insertar = 0;
@@ -1079,6 +1107,21 @@ public class ControladorUsuario implements ActionListener{
         if(insertar==0)
         {
           return 0;
+        }
+      }
+      return 1;
+    }
+    
+    public int validarCuentaPinCambio(String numCuenta, String pin, String pinNuevo)
+    {
+      int insertar = 0;
+      insertar += validarEntrCuenta(numCuenta);
+      if(insertar==0)
+      {
+        insertar += validarPinCambio(numCuenta, pin, pinNuevo);
+        if(insertar==0)
+        {
+           return 0;
         }
       }
       return 1;
@@ -1201,7 +1244,7 @@ public class ControladorUsuario implements ActionListener{
         depositoReal=monto-comision;
         //operacion.depositar(cuenta,String.valueOf(depositoReal));
         resultado += "Estimado usuario, se han depositado correctamente: " + (df.format(monto))+" colones";
-        resultado += "\n[El monto real depositado a su cuenta"+cuenta+" es de "+(df.format(depositoReal))+" colones]";
+        resultado += "\n[El monto real depositado a su cuenta "+cuenta+" es de "+(df.format(depositoReal))+" colones]";
         resultado += "\n[El monto cobrado por concepto de comisión fue de "+(df.format(comision))+" colones, que\n" +
                         "fueron rebajados automáticamente de su saldo actual]";
       }
@@ -1215,7 +1258,7 @@ public class ControladorUsuario implements ActionListener{
         resultado += "Estimado usuario, se han recibido correctamente: " + monto + " dólares";
         resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + ventaDolar +"]";
         resultado += "\n[El monto equivalente de su deposito es: " + montoColones + "colones]";
-        resultado += "\n[El monto real depositado a su cuenta" + cuenta + "es de "+depositoReal+"colones]";
+        resultado += "\n[El monto real depositado a su cuenta " + cuenta + " es de "+depositoReal+" colones]";
         resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
             + "automáticamente de su saldo actual]";
       }
@@ -1224,11 +1267,9 @@ public class ControladorUsuario implements ActionListener{
     
     public static String imprimirResultadoConsultaSaldo(String moneda, String saldo)
     {
-      String SaldoDesencriptado = Encriptacion.desencriptar(saldo);
-      double saldoFinal = Double.parseDouble(SaldoDesencriptado);
+      double saldoFinal = Double.parseDouble(saldo);
       DecimalFormat df = new DecimalFormat("#.00");
       String resultado = "";
-      double depositoReal;
       if("colones".equals(moneda))
       {
 
@@ -1240,7 +1281,7 @@ public class ControladorUsuario implements ActionListener{
         ConsultaMoneda consulta = new ConsultaMoneda();
         double compraDolar = consulta.consultaCambioCompra();
         double montoDolares = saldoFinal/compraDolar;
-        resultado += "Estimado usuario el saldo actual de su cuenta es: " + (df.format(saldoFinal))+" colones";
+        resultado += "Estimado usuario el saldo actual de su cuenta es: " + (df.format(montoDolares))+" dólares";
         resultado += "\n\nPara esta conversión se utilizó el tipo de cambio del dólar, precio de compra.";
         resultado += "\n[Según el BCCR, el tipo de cambio de compra del dólar hoy es: " + compraDolar +"]";
 
@@ -1253,17 +1294,6 @@ public class ControladorUsuario implements ActionListener{
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
       cuenta.setEstatus("inactiva");
       CuentaDAO.inactivarCuentaBase(pNumCuenta);
-    }
-    
-    public static double nuevoMonto(double comision, boolean aplicaCom, double montoCorrecto)
-    {
-      double nuevoMonto = montoCorrecto;
-      if(aplicaCom)
-      {
-        comision = montoCorrecto * 0.02;
-        nuevoMonto += comision;
-      }
-      return nuevoMonto;
     }
     
     public static String crearPalabra()
@@ -1300,7 +1330,7 @@ public class ControladorUsuario implements ActionListener{
       Persona persona = PersonaDAO.obtenerPersona(id);
       int numero = persona.getNumero();
       String mensaje = crearPalabra();
-      //Mensaje.enviarMensaje(83211510, mensaje);
+      Mensaje.enviarMensaje(83211510, mensaje);
       return mensaje;
     }
     

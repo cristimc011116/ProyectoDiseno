@@ -14,7 +14,7 @@ import util.Encriptacion;
  *
  * @author Cristi Martínez
  */
-public class Cuenta {
+public class Cuenta implements Comparable<Cuenta>{
     private String numero;
     private String pin;
     private LocalDate fechaCreacion;
@@ -37,6 +37,7 @@ public class Cuenta {
     
     public Cuenta(String pNumero, String pEstatus, String pSaldo)
     {
+        setNumero(pNumero);
         setSaldo(pSaldo);
         setEstatus(pEstatus);
         this.operaciones = new ArrayList<>();
@@ -76,6 +77,28 @@ public class Cuenta {
         double numDec = Double.parseDouble(resultado);
         return numDec;
     }
+    
+    @Override
+    public int compareTo(Cuenta e){
+        String strSaldoEncrip1 = e.getSaldo();
+        String strSaldo1 = Encriptacion.desencriptar(strSaldoEncrip1);
+        double saldo1 = Double.parseDouble(strSaldo1);
+        
+        String strSaldoEncrip2 = saldo;
+        String strSaldo2 = Encriptacion.desencriptar(strSaldoEncrip2);
+        double saldo2 = Double.parseDouble(strSaldo2);
+        if(saldo1>saldo2){
+            return -1;
+        }
+        else if(saldo1==saldo2){
+            return 0;
+            
+        }
+        else{
+            return 1;
+        }
+    }
+
 
     public static ArrayList listarCuentas()
     {
@@ -90,16 +113,16 @@ public class Cuenta {
         return saldoDouble;   
     }
     
-   public static boolean aplicaComision(String numCuenta)
+   public static double aplicaComision(String numCuenta, double monto)
    {
        int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
        if (contador > 3)
        {
-           return true;
+           return (monto*0.02);
        }
        else
        {
-           return false;
+           return 0.00;
        }
    }    
 //-------------------------------------METODOS ACCESORES------------------------------------------

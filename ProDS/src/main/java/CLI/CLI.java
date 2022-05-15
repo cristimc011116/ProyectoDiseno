@@ -18,6 +18,7 @@ import dao.OperacionDAO;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logicadenegocios.Operacion;
@@ -31,7 +32,7 @@ public class CLI {
     //MENU----------------------------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args)
     {
-        Scanner sc = new Scanner (System.in);
+        /*Scanner sc = new Scanner (System.in);
         System.out.println("Bienvenido al gestor de cuentas\nDigite la funcionalidad que desea realizar:\n1.Registrar un cliente"
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
@@ -62,7 +63,8 @@ public class CLI {
         {
             main(null);
         }
-        
+        */
+        listarCuentas();
         
     }
     
@@ -131,16 +133,15 @@ public class CLI {
           double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
           double comision;
           double nuevoMonto;
-          boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
-          comision = montoCorrecto * 0.02;
-          nuevoMonto = ControladorUsuario.nuevoMonto(comision, aplicaCom, montoCorrecto);
+          comision = Cuenta.aplicaComision(pNumCuenta, montoCorrecto);
+          nuevoMonto = montoCorrecto + comision;
           String strSaldoViejo = cuenta.getSaldo();
           double saldoViejo = Double.parseDouble(strSaldoViejo);
           double nuevoSaldo = saldoViejo + nuevoMonto;
           String strNuevoSaldo = Double.toString(nuevoSaldo);
           cuenta.setSaldo(strNuevoSaldo);
           CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-          ControladorUsuario.insertarOperacion("deposito", (comision>0) , comision, pNumCuenta);
+          ControladorUsuario.insertarOperacion("deposito", (comision>0.00) , comision, pNumCuenta);
           resultado = ControladorUsuario.imprimirResultadoDeposito(moneda, comision, montoCorrecto,pNumCuenta);
           System.out.println(resultado);
           volverMenu();
@@ -317,16 +318,15 @@ public class CLI {
                     double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
                     double comision;
                     double nuevoMonto;
-                    boolean aplicaCom = Cuenta.aplicaComision(pNumCuenta);
-                    comision = montoCorrecto * 0.02;
-                    nuevoMonto = ControladorUsuario.nuevoMonto(comision, aplicaCom, montoCorrecto);
+                    comision = Cuenta.aplicaComision(pNumCuenta, montoCorrecto);
+                    nuevoMonto = montoCorrecto + comision;
                     String strSaldoViejo = cuenta.getSaldo();
                     double saldoViejo = Double.parseDouble(strSaldoViejo);
                     double nuevoSaldo = saldoViejo - nuevoMonto;
                     String strNuevoSaldo = Double.toString(nuevoSaldo);
                     cuenta.setSaldo(strNuevoSaldo);
                     CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-                    ControladorUsuario.insertarOperacion("retiro", (comision>0) , comision, pNumCuenta);
+                    ControladorUsuario.insertarOperacion("retiro", (comision>0.00) , comision, pNumCuenta);
                     resultado = ControladorUsuario.imprimirResultado(moneda, comision, montoCorrecto);
                     System.out.println(resultado);
                     volverMenu();
@@ -391,10 +391,9 @@ public class CLI {
                     double nuevoMonto;
                     boolean aplicaCom = false;
                     comision = 0.00;
-                    nuevoMonto = ControladorUsuario.nuevoMonto(comision, aplicaCom, montoCorrecto);
                     String strSaldoViejo = cuenta.getSaldo();
                     double saldoViejo = Double.parseDouble(strSaldoViejo);
-                    double nuevoSaldo = saldoViejo - nuevoMonto;
+                    double nuevoSaldo = saldoViejo - montoCorrecto;
                     String strNuevoSaldo = Double.toString(nuevoSaldo);
                     cuenta.setSaldo(strNuevoSaldo);
                     CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
@@ -404,7 +403,7 @@ public class CLI {
                     
                     String strSaldoViejoDestino = cuentadestino.getSaldo();
                     double saldoViejoDestino = Double.parseDouble(strSaldoViejoDestino);
-                    double nuevoSaldoDestino = saldoViejoDestino + nuevoMonto;
+                    double nuevoSaldoDestino = saldoViejoDestino + montoCorrecto;
                     String strNuevoSaldoDestino = Double.toString(nuevoSaldoDestino);
                     cuentadestino.setSaldo(strNuevoSaldoDestino);
                     CuentaDAO.actualizarSaldo(pNumCuentaDestino, strNuevoSaldoDestino);
@@ -555,7 +554,14 @@ public class CLI {
     
     }
     
-    
+    public static void listarCuentas(){
+        ArrayList<Cuenta> cuentas = CuentaDAO.getCuentasBD();
+        Collections.sort(cuentas);
+        for(Cuenta cuenta: cuentas){
+            System.out.println(cuenta);
+        }
+    }
+
     
     public static void  listarPersonas(String opcion)
     //public static void main(String[] args)
