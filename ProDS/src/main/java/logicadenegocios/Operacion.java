@@ -64,30 +64,6 @@ public class Operacion {
       }
     }
     
-    public double consultarGananciaCuentaBanco(String pCuenta){
-      String pCuentaDesencriptada = Encriptacion.desencriptar(pCuenta);
-      ArrayList<Operacion> listaOperaciones = OperacionDAO.getOperacionesCuenta(pCuentaDesencriptada);
-      double gananciaBancoPorCuenta=0;
-      for(int i=0 ; i < listaOperaciones.size();i++){
-        Operacion operacion = listaOperaciones.get(i);
-        gananciaBancoPorCuenta = gananciaBancoPorCuenta + operacion.getMontoComision();
-      }
-      return gananciaBancoPorCuenta;
-    }
-    
-    public double consultarGananciaBancoTotal(){
-      ArrayList<Cuenta> listaCuentasTotales = CuentaDAO.getCuentasBD();
-      double gananciaBancoTotal=0;
-      for(int i=0; i < listaCuentasTotales.size() ; i++){
-        ArrayList<Operacion> listaOperaciones = OperacionDAO.getOperacionesCuenta(listaCuentasTotales.get(i).getNumero());
-        for(int e=0 ; e < listaOperaciones.size();e++){
-          Operacion operacion = listaOperaciones.get(e);
-          gananciaBancoTotal=gananciaBancoTotal+operacion.getMontoComision();
-        }
-      }
-      return gananciaBancoTotal;
-    } 
-    
 //-------------------------------------METODOS ACCESORES--------------------------------------------------
     public int getId() {
         return id;

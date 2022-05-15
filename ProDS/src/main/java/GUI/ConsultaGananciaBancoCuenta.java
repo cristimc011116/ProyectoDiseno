@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Josue
  */
 public class ConsultaGananciaBancoCuenta extends javax.swing.JFrame {
-
+  public DefaultTableModel modelo;
   /**
    * Creates new form ConsultaGananciaBancoCuenta
    */
@@ -35,7 +35,7 @@ public class ConsultaGananciaBancoCuenta extends javax.swing.JFrame {
     jButton1 = new javax.swing.JButton();
     jLabel2 = new javax.swing.JLabel();
     txtNumCuenta = new javax.swing.JTextField();
-    jButton2 = new javax.swing.JButton();
+    btnConsultar = new javax.swing.JButton();
     jLabel3 = new javax.swing.JLabel();
     txtGananciasBanco = new javax.swing.JTextField();
     jButton3 = new javax.swing.JButton();
@@ -46,17 +46,17 @@ public class ConsultaGananciaBancoCuenta extends javax.swing.JFrame {
 
     tblGananciaBancoComicionesCuenta.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
-        {null, null, null},
-        {null, null, null},
-        {null, null, null},
-        {null, null, null}
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null}
       },
       new String [] {
-        "Detalle de la Opeación", "Fecha de la operación", "Monto"
+        "Detalle de la Opeación", "Fecha de la operación", "Monto", "Comisión del Banco"
       }
     ) {
       boolean[] canEdit = new boolean [] {
-        false, false, false
+        false, false, false, true
       };
 
       public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -74,7 +74,7 @@ public class ConsultaGananciaBancoCuenta extends javax.swing.JFrame {
 
     jLabel2.setText("Número de cuenta:");
 
-    jButton2.setText("Consultar");
+    btnConsultar.setText("Consultar");
 
     jLabel3.setText("Ganancia total del banco:");
 
@@ -103,25 +103,25 @@ public class ConsultaGananciaBancoCuenta extends javax.swing.JFrame {
             .addGap(135, 135, 135))))
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-            .addGap(39, 39, 39)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtNumCuenta))))
           .addGroup(layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(218, 297, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(layout.createSequentialGroup()
                 .addComponent(jButton3)
                 .addGap(163, 163, 163)
-                .addComponent(jButton2))
+                .addComponent(btnConsultar))
               .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtGananciasBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addComponent(txtGananciasBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))))
+          .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            .addGap(39, 39, 39)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtNumCuenta)))))
         .addGap(51, 51, 51))
     );
     layout.setVerticalGroup(
@@ -141,7 +141,7 @@ public class ConsultaGananciaBancoCuenta extends javax.swing.JFrame {
           .addComponent(txtGananciasBanco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButton2)
+          .addComponent(btnConsultar)
           .addComponent(jButton3))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jButton1)
@@ -200,8 +200,8 @@ public class ConsultaGananciaBancoCuenta extends javax.swing.JFrame {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  public javax.swing.JButton btnConsultar;
   private javax.swing.JButton jButton1;
-  private javax.swing.JButton jButton2;
   private javax.swing.JButton jButton3;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;

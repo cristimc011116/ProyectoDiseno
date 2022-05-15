@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Josue
  */
 public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
-
+  public DefaultTableModel modelo;
   /**
    * Creates new form ConsultaGananciaBancoTotal
    */
@@ -35,7 +35,6 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
     jLabel2 = new javax.swing.JLabel();
     txtGananciaTotal = new javax.swing.JTextField();
     jButton1 = new javax.swing.JButton();
-    btnLimpiar = new javax.swing.JButton();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,13 +79,6 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
       }
     });
 
-    btnLimpiar.setText("Limpiar");
-    btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        btnLimpiarActionPerformed(evt);
-      }
-    });
-
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -97,21 +89,17 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
         .addGap(126, 126, 126))
       .addGroup(layout.createSequentialGroup()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-              .addGap(26, 26, 26)
-              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createSequentialGroup()
-                  .addComponent(jLabel2)
-                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                  .addComponent(txtGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(layout.createSequentialGroup()
-              .addContainerGap()
-              .addComponent(jButton1)))
           .addGroup(layout.createSequentialGroup()
-            .addGap(222, 222, 222)
-            .addComponent(btnLimpiar)))
+            .addGap(26, 26, 26)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))
+          .addGroup(layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(jButton1)))
         .addContainerGap(44, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
@@ -125,9 +113,7 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel2)
           .addComponent(txtGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-        .addComponent(btnLimpiar)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
         .addComponent(jButton1)
         .addContainerGap())
     );
@@ -141,11 +127,6 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
     controlador.menu.setVisible(true);
     this.setVisible(false);
   }//GEN-LAST:event_jButton1ActionPerformed
-
-  private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-    this.txtGananciaTotal.setText("");
-    this.tblGananciasBancoTotalizado.setModel(new DefaultTableModel());
-  }//GEN-LAST:event_btnLimpiarActionPerformed
 
   /**
    * @param args the command line arguments
@@ -183,7 +164,6 @@ public class ConsultaGananciaBancoTotal extends javax.swing.JFrame {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton btnLimpiar;
   private javax.swing.JButton jButton1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;

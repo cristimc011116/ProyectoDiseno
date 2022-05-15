@@ -5,6 +5,8 @@
 package controlador;
 
 import GUI.CambiarPIN;
+import GUI.ConsultaGananciaBancoCuenta;
+import GUI.ConsultaGananciaBancoTotal;
 import GUI.ConsultarEstadoCuenta;
 import GUI.ConsultarEstadoCuentaP2;
 import GUI.ConsultarSaldo;
@@ -35,7 +37,7 @@ import logicadenegocios.Cuenta;
 import logicadenegocios.Persona;
 import logicadenegocios.Operacion;
 import util.Encriptacion;
-import util.Mensaje;
+//import util.Mensaje;
 import validacion.ExpresionesRegulares;
 import webService.ConsultaMoneda;
 
@@ -56,6 +58,8 @@ public class ControladorUsuario implements ActionListener{
     public CambiarPIN vista6; 
     public RealizarDeposito vista7;
     public ConsultarSaldo vista8;
+    public ConsultaGananciaBancoCuenta vista9;
+    public ConsultaGananciaBancoTotal vista10;
     public Palabra palabra;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
@@ -72,6 +76,8 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnEstadoCuenta.addActionListener(this);
         this.menu.btnDepositar.addActionListener(this);
         this.menu.btnConsultaSaldoCuenta.addActionListener(this);
+        this.menu.btnGananciaBancoPorCuenta.addActionListener(this);
+        this.menu.btnGananciaBancoTotalizado.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -113,6 +119,13 @@ public class ControladorUsuario implements ActionListener{
                 break;
             case "Consultar Saldo Cuenta":
                 abrirVista8();
+                break;
+            case "Consulta ganancia del banco por cuenta":
+                abrirVista9();
+                break;
+            case "Consulta ganancia del banco TOTALIZADO":
+                abrirVista10();
+                consultarGananciaBancoTotalizado();
                 break;
             default:
                 break;
@@ -180,6 +193,19 @@ public class ControladorUsuario implements ActionListener{
       this.menu.setVisible(false);
     }
     
+    public void abrirVista9()
+    {
+      this.vista9 = new ConsultaGananciaBancoCuenta();
+      this.vista9.btnConsultar.addActionListener(this);
+      this.vista9.setVisible(true);
+      this.menu.setVisible(false);
+    }
+    public void abrirVista10()
+    {
+      this.vista10 = new ConsultaGananciaBancoTotal();
+      this.vista10.setVisible(true);
+      this.menu.setVisible(false);
+    }
     //FUNCIONALIDADES----------------------------------------------------------------------------------------------------------------------------------
     public void cambiarPIN()
     {
@@ -503,6 +529,86 @@ public class ControladorUsuario implements ActionListener{
           JOptionPane.showMessageDialog(null, "La cuenta o pin está incorrecto");
         }
       }
+    }
+    
+    public void consultarGananciaBancoCuenta()
+    {
+      this.vista9 = new ConsultaGananciaBancoCuenta();
+      String cuenta = this.vista9.txtNumCuenta.getText();
+      Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+      int contador = 0;
+      String resultado = "";
+      if(!"inactiva".equals(cuentaBase.getEstatus())){
+        contador += validarIngreso(cuenta, "cuenta");
+        if (contador == 0)
+        {
+          LlenarTablaConsultaBancoPorCuenta(cuenta);
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, "Verifique los datos");
+        }
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
+      }
+    }
+    
+    public void LlenarTablaConsultaBancoPorCuenta(String cuenta)
+    {
+      double sumaComisiones = 0;
+
+      String[] titulos = {
+      "Detalle de la operación",
+      "Fecha de la operación",
+      "Monto",
+      "Comisión del Banco"};
+      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuenta);
+      this.vista9.modelo = new DefaultTableModel(null, titulos);
+      this.vista9.tblGananciaBancoComicionesCuenta.setModel(this.vista9.modelo);
+      for(Operacion operacion: operaciones)
+      {
+        double monto = (operacion.getMontoComision()/0.02);
+        Object[] info = {operacion.getTipo(),operacion.getFechaOperacion(), monto, operacion.getMontoComision()};
+        sumaComisiones = sumaComisiones + operacion.getMontoComision();
+        this.vista9.modelo.addRow(info);
+        this.vista9.txtGananciasBanco.setText(String.valueOf(sumaComisiones));
+      }
+    }
+    
+    public void consultarGananciaBancoTotalizado()
+    {
+      double sumaComisiones = 0;
+      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+      Cuenta cuenta=new Cuenta();
+      for(int i=0;i<listaCuentas.size();i++){
+        cuenta = listaCuentas.get(i);
+        sumaComisiones = sumaComisiones + LlenarTablaConsultaBancoTotalizado(cuenta.getNumero());
+      }
+      this.vista10.txtGananciaTotal.setText(String.valueOf(sumaComisiones));
+    }
+    
+    public double LlenarTablaConsultaBancoTotalizado(String cuenta)
+    {
+      double sumaComi=0;
+      String[] titulos = {
+      "Cuenta",
+      "Detalle de la operación",
+      "Fecha de la operación",
+      "Monto",
+      "Comisión del Banco"};
+      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuenta);
+      this.vista10.modelo = new DefaultTableModel(null, titulos);
+      this.vista10.tblGananciasBancoTotalizado.setModel(this.vista10.modelo);
+      for(Operacion operacion: operaciones)
+      {
+        double monto = (operacion.getMontoComision()/0.02);
+        Object[] info = {cuenta, operacion.getTipo(),operacion.getFechaOperacion(), monto, operacion.getMontoComision()};
+        this.vista10.modelo.addRow(info);
+        sumaComi=sumaComi+operacion.getMontoComision();
+      }
+      return sumaComi;
     }
     
     public void consultarEstadoCuentaP2(){
@@ -1065,7 +1171,7 @@ public class ControladorUsuario implements ActionListener{
       Persona persona = PersonaDAO.obtenerPersona(id);
       int numero = persona.getNumero();
       String mensaje = crearPalabra();
-      Mensaje.enviarMensaje(83211510, mensaje);
+      //Mensaje.enviarMensaje(83211510, mensaje);
       return mensaje;
     }
     
