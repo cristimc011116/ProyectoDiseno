@@ -16,6 +16,7 @@ import GUI.Menu;
 import GUI.ListarPersonas;
 import validacion.ExpresionesRegulares;
 import GUI.Palabra;
+import GUI.ConsultarCambioDolar;
 import GUI.RealizarDeposito;
 import GUI.RealizarRetiro;
 import com.mongodb.DBCollection;
@@ -65,6 +66,7 @@ public class ControladorUsuario implements ActionListener{
     public ConsultaGananciaBancoTotal vista10;
     public Palabra palabra;
     public CrearCliente vista11;
+    public ConsultarCambioDolar vista12;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
     
@@ -82,6 +84,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnConsultaSaldoCuenta.addActionListener(this);
         this.menu.btnGananciaBancoPorCuenta.addActionListener(this);
         this.menu.btnCrearCliente.addActionListener(this);
+        this.menu.btnCambioDolar.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -133,6 +136,10 @@ public class ControladorUsuario implements ActionListener{
                 break;
             case "Crear Cliente":
                 abrirVista11();
+                break;
+            case "CambioDolarMenu":
+                abrirVista12();
+                ConsultarCambioVentaCompra();
                 
                 break;
             default:
@@ -154,6 +161,14 @@ public class ControladorUsuario implements ActionListener{
         this.vista11 = new CrearCliente();
         this.vista11.btnContinuar.addActionListener(this);
         this.vista11.setVisible(true);
+        this.menu.setVisible(false);
+    }
+    
+        public void abrirVista12()
+    {
+        this.vista12 = new ConsultarCambioDolar();
+        this.vista12.btnCambio.addActionListener(this);
+        this.vista12.setVisible(true);
         this.menu.setVisible(false);
     }
     
@@ -665,6 +680,19 @@ public class ControladorUsuario implements ActionListener{
         sumaComisiones = sumaComisiones + LlenarTablaConsultaBancoTotalizado(cuenta.getNumero());
       }
       this.vista10.txtGananciaTotal.setText(String.valueOf(sumaComisiones));
+    }
+    
+    public void ConsultarCambioVentaCompra()
+    {
+      Double cambioCompra = 0.0;
+      Double cambioVenta = 0.0;
+      cambioCompra = ControladorUsuario.consultarCambioDolar("compra");
+      cambioVenta = ControladorUsuario.consultarCambioDolar("compra");
+  
+      
+      this.vista12.txtCompra.setText(String.valueOf(cambioCompra));
+      this.vista12.txtVenta.setText(String.valueOf(cambioVenta));
+      
     }
     
     public double LlenarTablaConsultaBancoTotalizado(String cuenta)
