@@ -57,7 +57,7 @@ public class CLI {
             ConsultarSaldoActual(opcion);
             seleccionarMonedaEstado(opcion);
             consultarStatus(opcion);
-            //ConsultaGananciaBanco(opcion);
+            ConsultaGananciaBanco(opcion);
             salirPrograma(opcion);
             
             
@@ -236,7 +236,7 @@ public class CLI {
       }
     }
     
-    public void ConsultaGananciaBanco(String opcion)
+    public static void ConsultaGananciaBanco(String opcion)
     {
       //totalizado
       if ("18".equals(opcion))
@@ -244,39 +244,44 @@ public class CLI {
         double sumaComisiones = 0;
         ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
         Cuenta cuenta=new Cuenta();
+        System.out.println("------------------------------------------------------------------------------------");
+        System.out.println("|  Cuenta   |-|  Detalle de la operación|-|Fecha de la operación|-|   Monto  |-| Comisión del Banco|");
         for(int i=0;i<listaCuentas.size();i++){
           cuenta = listaCuentas.get(i);
           sumaComisiones = sumaComisiones + LlenarTablaConsultaBancoTotalizado(cuenta.getNumero());
         }
+        System.out.println("------------------------------------------------------------------------------------");
         System.out.println("LA SUMA TOTAL DE LA GANANCIA DEL BANCO ES DE:"+ sumaComisiones);
+        volverMenu();
       }
       //Cuenta específica:
       if ("19".equals(opcion))
       {
         String pNumCuenta = pedirNumCuenta();
         LlenarTablaConsultaBancoPorCuenta(pNumCuenta);
+        volverMenu();
       }
         
     }
     
-    public double LlenarTablaConsultaBancoTotalizado(String cuenta)
+    public static double LlenarTablaConsultaBancoTotalizado(String cuenta)
     {
       double sumaComisiones = 0;
-      System.out.println("------------------------------------------------------------------------------------");
-      System.out.println("|  Cuenta   |-|  Detalle de la operación|-|Fecha de la operación|-|   Monto  |-| Comisión del Banco|");
-      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuenta);
+      
+      String cuentaDesencrip = Encriptacion.desencriptar(cuenta);
+      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuentaDesencrip);
       for(Operacion operacion: operaciones)
       {
         double monto = (operacion.getMontoComision()/0.02);
         System.out.println("------------------------------------------------------------------------------------");
-        System.out.println("|"+cuenta+"|-|"+operacion.getTipo()+"|-|"+operacion.getFechaOperacion()+"|-|"+ monto+"|-|"+operacion.getMontoComision()+"|");
+        System.out.println("|"+cuentaDesencrip+"|-|"+operacion.getTipo()+"|-|"+operacion.getFechaOperacion()+"|-|"+ monto+"|-|"+operacion.getMontoComision()+"|");
         sumaComisiones = sumaComisiones + operacion.getMontoComision();
       }
-      System.out.println("------------------------------------------------------------------------------------");
+      
       return sumaComisiones;
     }
     
-    public void LlenarTablaConsultaBancoPorCuenta(String cuenta)
+    public static void LlenarTablaConsultaBancoPorCuenta(String cuenta)
     {
       double sumaComisiones = 0;
       System.out.println("------------------------------------------------------------------------------------");

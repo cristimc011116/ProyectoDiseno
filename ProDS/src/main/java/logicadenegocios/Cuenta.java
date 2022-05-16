@@ -88,7 +88,7 @@ public class Cuenta implements Comparable<Cuenta>{
         String strSaldoEncrip2 = saldo;
         String strSaldo2 = Encriptacion.desencriptar(strSaldoEncrip2);
         double saldo2 = Double.parseDouble(strSaldo2);
-        if(saldo1>saldo2){
+        if(saldo1<saldo2){
             return -1;
         }
         else if(saldo1==saldo2){

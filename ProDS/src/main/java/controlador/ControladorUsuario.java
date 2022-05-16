@@ -45,6 +45,7 @@ import logicadenegocios.Cuenta;
 //import util.Mensaje;
 import logicadenegocios.Persona;
 import logicadenegocios.Operacion;
+import util.CorreoElectronico;
 import util.Encriptacion;
 import util.Mensaje;
 //import util.Mensaje;
@@ -1665,7 +1666,11 @@ public void crearCliente()
     public static void inactivarCuenta(String pNumCuenta)
     {
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+      int id = CuentaDAO.obtenerPersonaCuenta(pNumCuenta);
+      Persona persona = PersonaDAO.obtenerPersona(id);
+      String correo = persona.getCorreo();
       cuenta.setEstatus("inactiva");
+      CorreoElectronico.enviarCorreo(correo, "Inactivación de cuenta: " + pNumCuenta, "Hola, se ha desactivado la cuenta por motivo del ingreso incorrecto del pin o la palabra clave");
       CuentaDAO.inactivarCuentaBase(pNumCuenta);
     }
     
