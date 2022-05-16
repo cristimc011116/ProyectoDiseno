@@ -69,6 +69,34 @@ public class OperacionDAO {
         return contador;
     }
     
+    public static ArrayList<Operacion> getOperacionesBD(){
+        operaciones = new ArrayList<>();
+        
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        ResultSet resultado;
+        Operacion operacion = null;
+        try{
+            resultado = con.consultas("SELECT * FROM Operacion");
+            while(resultado.next()){
+                String strId = resultado.getString("id");
+                int id = Integer.parseInt(strId);
+                LocalDate fecha = LocalDate.parse(resultado.getString("fechaOperacion"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String tipo = resultado.getString("tipo");
+                String strComision = resultado.getString("comision");
+                int comision = Integer.parseInt(strComision);
+                String strMontoCom = resultado.getString("montoComision");
+                double montoCom = Double.parseDouble(strMontoCom);
+                operacion = new Operacion(id, fecha, tipo, (comision==1), montoCom);
+                operaciones.add(operacion);
+            }
+        }catch(SQLException ex){
+           JOptionPane.showMessageDialog(null, ex.toString());
+        }
+        con.desconectar();
+        return operaciones;
+    }
+    
     public static ArrayList<Operacion> getOperacionesCuenta(String numCuenta){
         operaciones = new ArrayList<>();
         String numEncrip = Encriptacion.encriptar(numCuenta);

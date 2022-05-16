@@ -90,6 +90,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnCambioDolar.addActionListener(this);
         this.menu.btnCambiarPIN.addActionListener(this);
         this.menu.btnTransferencia.addActionListener(this);
+        this.menu.btnGananciaBancoTotalizado.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -140,7 +141,7 @@ public class ControladorUsuario implements ActionListener{
                 break;
             case "Consulta ganancia del banco TOTALIZADO":
                 abrirVista10();
-                consultarGananciaBancoTotalizado();
+                LlenarTablaConsultaBancoTotalizado();
                 break;
             case "Crear Cliente":
                 abrirVista11();
@@ -161,6 +162,8 @@ public class ControladorUsuario implements ActionListener{
             case "Transferir":
                 transferir();
                 break;
+            case "ConsultarComCuenta":
+                consultarGananciaBancoCuenta();
             default:
                 break;
         }
@@ -780,16 +783,14 @@ public class ControladorUsuario implements ActionListener{
     
     public void consultarGananciaBancoCuenta()
     {
-      this.vista9 = new ConsultaGananciaBancoCuenta();
-      String cuenta = this.vista9.txtNumCuenta.getText();
-      Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+      String cuentaText = this.vista9.txtNumCuenta.getText();
+      Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuentaText);
       int contador = 0;
-      String resultado = "";
       if(!"inactiva".equals(cuentaBase.getEstatus())){
-        contador += validarIngreso(cuenta, "cuenta");
+        contador += validarIngreso(cuentaText, "cuenta");
         if (contador == 0)
         {
-          LlenarTablaConsultaBancoPorCuenta(cuenta);
+          LlenarTablaConsultaBancoPorCuenta(cuentaText);
         }
         else
         {
@@ -831,7 +832,7 @@ public class ControladorUsuario implements ActionListener{
       Cuenta cuenta=new Cuenta();
       for(int i=0;i<listaCuentas.size();i++){
         cuenta = listaCuentas.get(i);
-        sumaComisiones = sumaComisiones + LlenarTablaConsultaBancoTotalizado(cuenta.getNumero());
+        sumaComisiones = sumaComisiones + LlenarTablaConsultaBancoTotalizado();
       }
       this.vista10.txtGananciaTotal.setText(String.valueOf(sumaComisiones));
     }
@@ -849,7 +850,7 @@ public class ControladorUsuario implements ActionListener{
       
     }
     
-    public double LlenarTablaConsultaBancoTotalizado(String cuenta)
+    public double LlenarTablaConsultaBancoTotalizado()
     {
       double sumaComi=0;
       String[] titulos = {
@@ -858,7 +859,7 @@ public class ControladorUsuario implements ActionListener{
       "Fecha de la operación",
       "Monto",
       "Comisión del Banco"};
-      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuenta);
+      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesBD();
       this.vista10.modelo = new DefaultTableModel(null, titulos);
       this.vista10.tblGananciasBancoTotalizado.setModel(this.vista10.modelo);
       for(Operacion operacion: operaciones)
@@ -868,6 +869,7 @@ public class ControladorUsuario implements ActionListener{
         this.vista10.modelo.addRow(info);
         sumaComi=sumaComi+operacion.getMontoComision();
       }
+      this.vista10.txtGananciaTotal.setText(String.valueOf(sumaComi));
       return sumaComi;
     }
     

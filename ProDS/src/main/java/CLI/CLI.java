@@ -37,7 +37,7 @@ public class CLI {
                 + "\n2.Crear cuenta\n3.Listar los clientes en orden ascendente\n4.Listar las cuentas en orden descendente de acuerdo al saldo"
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
                 + "\n9.Realizar retiro en dólares\n10.Realizar transferencia en colones\n11.Consultar tipo de cambio de compra en dólares"
-                + "\n12.Consultar tipo de cambio de ventar en dólares\n13.Consultar saldo actual\n14.Consultar saldo actual (dólares)"
+                + "\n12.Consultar tipo de cambio de venta en dólares\n13.Consultar saldo actual\n14.Consultar saldo actual (dólares)"
                 + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n17.Consultar estatus de la cuenta\n18.Consultar informacion de una cuenta"
                 + "\n18.Consultar ganancias del banco por comisiones\n19.Consultar ganancias del banco por comisiones en una cuenta específica"
                 + "\n20.Salir"
@@ -45,20 +45,31 @@ public class CLI {
         String opcion = sc.next();
         boolean esCorrecta = validarOpcion(opcion, 1,20);
         if(esCorrecta){
+            crearCliente(opcion);
             crearCuenta(opcion);
             listarPersonas(opcion);
-            seleccionarMonedaRetiro(opcion);
-            salirPrograma(opcion);
-            consultarStatus(opcion);
-            seleccionarMonedaEstado(opcion);
-            consultarUnaCuenta(opcion);
             MenulistarCuentas(opcion);
-            realizarTransferencia(opcion);
             cambiarPIN(opcion);
-            ConsultarSaldoActual(opcion);
-            ConsultarTipoCambioOpcion(opcion);
-            crearCliente(opcion);
             realizarDeposito(opcion);
+            seleccionarMonedaRetiro(opcion);
+            realizarTransferencia(opcion);
+            ConsultarTipoCambioOpcion(opcion);
+            ConsultarSaldoActual(opcion);
+            seleccionarMonedaEstado(opcion);
+            consultarStatus(opcion);
+            //ConsultaGananciaBanco(opcion);
+            salirPrograma(opcion);
+            
+            
+            
+            //consultarUnaCuenta(opcion);
+            
+            
+            
+            
+            
+            
+            
         }
         else
         {
