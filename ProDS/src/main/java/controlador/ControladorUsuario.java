@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -675,8 +676,17 @@ public class ControladorUsuario implements ActionListener{
       }
     }
     
+    public LocalDate obtenerFecha(){
+        Date date = this.vista11.tfFecha.getDate();
+        long dateTime = date.getTime();
+        java.sql.Date fecha = new java.sql.Date(dateTime);
+        LocalDate fechaLocal = fecha.toLocalDate();
+        
+        return fechaLocal; 
+    }
     
-    public void crearCliente()
+    
+public void crearCliente()
     {
       int insertar = 0;
       int contador = 0;
@@ -684,11 +694,9 @@ public class ControladorUsuario implements ActionListener{
       String apellido2 = this.vista11.tfApellido2.getText();
       String nombre = this.vista11.tfNombre.getText();
       String identificacion = this.vista11.tfIdCliente.getText();
-      String fechaNacimiento = this.vista11.tfFecha.getText();
-      
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-      LocalDate localDate = LocalDate.parse(fechaNacimiento, formatter);
-      
+      LocalDate fechaNacimiento = obtenerFecha();
+      String fechaParaValidar = fechaNacimiento.format(DateTimeFormatter.ofPattern("dd-MMM-yy"));
+
       String telefono = this.vista11.tfTelefono.getText();
       String correo = this.vista11.tfCorreo.getText();
       
@@ -696,7 +704,7 @@ public class ControladorUsuario implements ActionListener{
       contador += validarIngreso(apellido2, "segundo apellido");
       contador += validarIngreso(nombre, "nombre");
       contador += validarIngreso(identificacion, "identificacion");
-      contador += validarIngreso(fechaNacimiento, "fecha nacimiento");
+      contador += validarIngreso(fechaParaValidar, "fecha nacimiento");
       contador += validarIngreso(correo, "correo");
       contador += validarIngreso(telefono, "telefono");
       
@@ -714,7 +722,7 @@ public class ControladorUsuario implements ActionListener{
         {
           int idCliente = Integer.parseInt(identificacion);
           int telefonoCliente = Integer.parseInt(telefono);
-          Persona NuevoCliente = ControladorUsuario.insertarCliente(apellido1,apellido2,nombre,idCliente,localDate,telefonoCliente,correo);
+          Persona NuevoCliente = ControladorUsuario.insertarCliente(apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo);
 
           String mensaje = "Se ha creado un nuevo cliente en el sistema, los datos del cliente son: ";
           mensaje += NuevoCliente.toStringCompleto();
@@ -730,6 +738,7 @@ public class ControladorUsuario implements ActionListener{
         JOptionPane.showMessageDialog(null, "Complete todos sus datos");
       }
     }
+
     
     
 
