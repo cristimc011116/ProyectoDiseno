@@ -115,7 +115,7 @@ public class ControladorUsuario implements ActionListener{
                 crearCuenta();
                 break;
             case "Enviar palabra clave":
-                enviarPalabra();
+                enviarPalabraTransferencia();
                 break;
             case "Retirar":
                 retirar();
@@ -466,7 +466,7 @@ public class ControladorUsuario implements ActionListener{
       contador += validarIngreso(pin, "pin");
       if(contador == 0)
       {
-        insertar += validarCuentaPin(cuenta, pin);
+        insertar += validarCuentaPinTransferencia(cuenta, pin);
         if (insertar == 0)
         {
           this.vista13.txtPalabra.setEnabled(true);
@@ -479,7 +479,7 @@ public class ControladorUsuario implements ActionListener{
         }
         else
         {
-          JOptionPane.showMessageDialog(null, "La cuenta o el pin esta incorrecto");
+          JOptionPane.showMessageDialog(null, "La cuenta o el pin está incorrecto");
         }
       }
       else
@@ -579,7 +579,8 @@ public class ControladorUsuario implements ActionListener{
 
         if(contador == 0)
         {
-          insertar += validarCuentaPin(cuentaOrigen, pin);
+          insertar += validarEntrCuenta(cuentaDestino);
+          insertar += validarCuentaPinTransferencia(cuentaOrigen, pin);
           double monto = Double.parseDouble(strMonto);
           insertar += validarMonto(monto, cuentaOrigen, "colones");
           insertar += validarPalabraTransferencia(palabraClave, cuentaOrigen);
@@ -994,6 +995,34 @@ public class ControladorUsuario implements ActionListener{
       return true;
     }
     
+    public boolean esPinCuentaTransferencia(String pNumCuenta, String pin)
+    {
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+      String cont;
+      int contador;
+      String pinDesencriptado = Encriptacion.desencriptar(cuenta.getPin());
+      if (!pin.equals(pinDesencriptado))
+      {
+        cont = this.vista13.txtIntPin.getText();
+        contador = Integer.parseInt(cont);
+        contador++;
+        cont = Integer.toString(contador);
+
+        if(contador >= 2)
+        {
+          this.vista13.txtIntPin.setText("2");
+          inactivarCuenta(pNumCuenta);
+          JOptionPane.showMessageDialog(null, "Se ha desactivado la cuenta por el ingreso del pin incorrecto");
+        }
+        else
+        {
+          this.vista13.txtIntPin.setText(cont);
+        }
+        return false;
+      }
+      return true;
+    }
+    
     public boolean esPinCuentaCambioPin(String pNumCuenta, String pin)
     {
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
@@ -1129,6 +1158,15 @@ public class ControladorUsuario implements ActionListener{
       return 1;
     }
     
+    public int validarPinTransferencia(String pNumCuenta, String pPin)
+    {
+      if(esPinCuentaTransferencia(pNumCuenta, pPin))
+      {
+        return 0;
+      }
+      return 1;
+    }
+    
     public int validarPinCambio(String pNumCuenta, String pPin, String pinNuevo)
     {
       if(esPinCuentaCambioPin(pNumCuenta, pPin) & ExpresionesRegulares.validarPin(pinNuevo))
@@ -1161,6 +1199,9 @@ public class ControladorUsuario implements ActionListener{
         if(auxNumCuentaP1(numCuenta))
         {
             return 0;
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Verifique la cuenta");
         }
         return 1;
     }
@@ -1237,6 +1278,21 @@ public class ControladorUsuario implements ActionListener{
       if(insertar==0)
       {
         insertar += validarPin(numCuenta, pin);
+        if(insertar==0)
+        {
+           return 0;
+        }
+      }
+      return 1;
+    }
+    
+    public int validarCuentaPinTransferencia(String numCuenta, String pin)
+    {
+      int insertar = 0;
+      insertar += validarEntrCuenta(numCuenta);
+      if(insertar==0)
+      {
+        insertar += validarPinTransferencia(numCuenta, pin);
         if(insertar==0)
         {
            return 0;
