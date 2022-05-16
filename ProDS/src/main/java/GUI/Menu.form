@@ -50,6 +50,7 @@
                   <Component id="btnGananciaBancoTotalizado" alignment="0" max="32767" attributes="0"/>
                   <Component id="btnCambiarPIN" alignment="0" max="32767" attributes="0"/>
                   <Component id="btnTransferencia" max="32767" attributes="0"/>
+                  <Component id="btnListarCuentas" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
           </Group>
@@ -91,7 +92,10 @@
                   <Component id="btnTransferencia" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="btnConsultaStatus" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnConsultaStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnListarCuentas" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace pref="39" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -215,9 +219,20 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnConsultaStatus">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Consultar Estado Cuenta"/>
+        <Property name="text" type="java.lang.String" value="Consultar status de cuenta"/>
         <Property name="actionCommand" type="java.lang.String" value="Consultar status"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnListarCuentas">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Listar cuentas"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnListarCuentasActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>

@@ -37,7 +37,7 @@ public class ConsultarStatus extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Consultar Saldo de Cuenta");
+        jLabel1.setText("Consultar status de Cuenta");
 
         jLabel2.setText("Número de cuenta:");
 
@@ -56,7 +56,7 @@ public class ConsultarStatus extends javax.swing.JFrame {
         });
 
         btnContinuar.setText("Continuar");
-        btnContinuar.setActionCommand("ContinuarSaldo");
+        btnContinuar.setActionCommand("ContinuarStatus");
         btnContinuar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnContinuarActionPerformed(evt);

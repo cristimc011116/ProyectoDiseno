@@ -75,7 +75,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Consultar Saldo de Cuenta"/>
+        <Property name="text" type="java.lang.String" value="Consultar status de Cuenta"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
@@ -113,7 +113,7 @@
     <Component class="javax.swing.JButton" name="btnContinuar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Continuar"/>
-        <Property name="actionCommand" type="java.lang.String" value="ContinuarSaldo"/>
+        <Property name="actionCommand" type="java.lang.String" value="ContinuarStatus"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnContinuarActionPerformed"/>

@@ -18,6 +18,7 @@ import GUI.ListarPersonas;
 import validacion.ExpresionesRegulares;
 import GUI.Palabra;
 import GUI.ConsultarCambioDolar;
+import GUI.ListarCuentas;
 import GUI.RealizarDeposito;
 import GUI.RealizarRetiro;
 import GUI.RealizarTransferencia;
@@ -34,6 +35,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Random;
@@ -74,14 +76,18 @@ public class ControladorUsuario implements ActionListener{
     public RealizarTransferencia vista13;
     public ConsultarStatus vista14;
     private ArrayList<Persona> personasSistema;
+    private ArrayList<Cuenta> cuentasSistema;
     private ListarPersonas latabla;
+    private ListarCuentas latabla2;
     
     public ControladorUsuario(Menu pMenu)
     {
         this.menu = pMenu;
         this.latabla = null;
+        this.latabla2 = null;
         this.vista1 = null;
         this.personasSistema = new ArrayList<>();
+        this.cuentasSistema = new ArrayList<>();
         this.menu.btnListar.addActionListener(this);
         this.menu.btnCrearCuenta.addActionListener(this);
         this.menu.btnRealizarRetiro.addActionListener(this);
@@ -95,14 +101,20 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnTransferencia.addActionListener(this);
         this.menu.btnGananciaBancoTotalizado.addActionListener(this);
         this.menu.btnConsultaStatus.addActionListener(this);
+        this.menu.btnListarCuentas.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
+        cargarDatosCuentas();
+        ordenarCuentas();
     }
     
     public void actionPerformed(java.awt.event.ActionEvent e) {
         switch(e.getActionCommand()){
             case "Listar personas":
                 listarPersonas();
+                break;
+            case "Listar cuentas":
+                listarCuentas();
                 break;
             case "Crear cuenta":
                 abrirVista1();
@@ -166,11 +178,18 @@ public class ControladorUsuario implements ActionListener{
             case "Transferir":
                 transferir();
                 break;
-            case "Consultar status": //ayuda dani no se jajja
+            case "ContinuarStatus": 
                 consultarStatus();
-                
+                break;
             case "ConsultarComCuenta":
                 consultarGananciaBancoCuenta();
+                break;
+            case "Consultar status":
+                abrirVista14();
+                break;
+            case "Consultar cuenta en específico":
+                consultarInfoCuenta();
+                break;
             default:
                 break;
         }
@@ -447,31 +466,25 @@ public class ControladorUsuario implements ActionListener{
       int insertar = 0;
       int contador = 0;
       String resultado = "";
-      if(!"inactiva".equals(cuentaBase.getEstatus())){ //como quito esto sin que se caiga
-        contador += validarIngreso(cuenta, "cuenta");
-        if(contador == 0)
+      contador += validarIngreso(cuenta, "cuenta");
+      if(contador == 0)
+      {
+        insertar += validarEntrCuenta(cuenta);
+        if (insertar == 0)
         {
-          //creo que hay que validar num de cuenta
-          if (insertar == 0)
-          {
-            String status = consultarStatus(cuenta);
-            resultado = imprimirResultadoConsultaStatus(status);
-            JOptionPane.showMessageDialog(null, resultado);
-            this.vista14.txtNumCuenta.setText("");
-          }
-          else
-          {
-            JOptionPane.showMessageDialog(null, "Verifique sus datos");
-          }
+          String status = consultarStatus(cuenta);
+          resultado = imprimirResultadoConsultaStatus(status);
+          JOptionPane.showMessageDialog(null, resultado);
+          this.vista14.txtNumCuenta.setText("");
         }
         else
         {
-          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+          JOptionPane.showMessageDialog(null, "Verifique sus datos");
         }
       }
       else
       {
-        JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
+        JOptionPane.showMessageDialog(null, "Complete todos sus datos");
       }   
     }
     
@@ -807,12 +820,39 @@ public void crearCliente()
       this.menu.setVisible(false);
     }
     
+    public void listarCuentas(){
+      Persona consulta = new Persona();
+      this.latabla2 = new ListarCuentas();
+      this.latabla2.btnConsultar.addActionListener(this);
+      String[] titulos = {
+        "Número",
+        "Estatus",
+        "Saldo",
+        "Identificación de dueño",
+        "Nombre de dueño"};
+      this.latabla2.modelo = new DefaultTableModel(null, titulos);
+      this.latabla2.tablaCuentas.setModel(this.latabla2.modelo);
+      for(Cuenta cuenta: cuentasSistema)
+      {
+        String numero = Encriptacion.desencriptar(cuenta.getNumero());
+        String saldo = Encriptacion.desencriptar(cuenta.getSaldo());
+        int infoId = CuentaDAO.obtenerPersonaCuenta(numero);
+        consulta = PersonaDAO.obtenerPersona(infoId);
+        String mensaje = consulta.getNombre() + consulta.getPrimerApellido() + consulta.getSegundoApellido();
+        Object[] info = {numero, cuenta.getEstatus(), saldo, consulta.getId(), mensaje};
+        this.latabla2.modelo.addRow(info);
+      }
+      this.latabla2.setVisible(true);
+      this.menu.setVisible(false);
+    }
+    
     public void consultarEstadoCuentaP1(){
       int insertar = 0;
       int contador = 0;
       String mensaje;
       String cuenta = this.vista4.txtCuenta.getText();
       String pin = this.vista4.txtPin.getText();
+      String moneda = this.vista4.cbMoneda.getSelectedItem().toString();
       contador += validarIngreso(cuenta, "cuenta");
       contador += validarIngreso(pin, "pin");
       if(contador == 0)
@@ -823,7 +863,8 @@ public void crearCliente()
 
           Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
           if("activo".equals(cuentaBase.getEstatus())){
-            consultarEstadoCuentaP2();
+            consultarEstadoCuentaP2(cuenta, moneda);
+            this.vista4.setVisible(false);
           }
           else
           {
@@ -929,10 +970,17 @@ public void crearCliente()
       return sumaComi;
     }
     
-    public void consultarEstadoCuentaP2(){
+    public void consultarInfoCuenta(){
+        String numeroCuenta = this.latabla2.txtCuenta.getText();
+        System.out.println(numeroCuenta);
+        consultarEstadoCuentaP2(numeroCuenta,"colones");
+        this.latabla2.setVisible(false);
+    }
+    
+    public void consultarEstadoCuentaP2(String cuenta, String moneda){
       ConsultaMoneda consulta = new ConsultaMoneda();
       this.vista5 = new ConsultarEstadoCuentaP2();
-      String cuenta = this.vista4.txtCuenta.getText();
+      //String cuenta = this.vista4.txtCuenta.getText();
       Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
       this.vista5.lbCuenta.setText(cuenta);
       String pin = cuentaBase.getPin();
@@ -941,11 +989,9 @@ public void crearCliente()
       String strIdDueno = Integer.toString(idDueno);
       this.vista5.lbIdDueno.setText(strIdDueno);
       Persona persona = PersonaDAO.obtenerPersona(idDueno);
-      String nombreDueno = persona.getNombre() + persona.getPrimerApellido() + persona.getSegundoApellido();
+      String nombreDueno = persona.getNombre() + " " + persona.getPrimerApellido() + " " + persona.getSegundoApellido();
       this.vista5.lbNombreDueno.setText(nombreDueno);
-      String moneda = this.vista4.cbMoneda.getSelectedItem().toString();
-      String numCuenta = this.vista4.txtCuenta.getText();
-      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(numCuenta);
+      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuenta);
       String[] titulos = {
         "Fecha",
         "Tipo",
@@ -978,7 +1024,7 @@ public void crearCliente()
         }
       }
       this.vista5.setVisible(true);
-      this.vista4.setVisible(false);
+      
     }
     
     //VALIDACIONES-------------------------------------------------------------------------------------------------------------------------------------
@@ -1680,6 +1726,10 @@ public void crearCliente()
       }
     }
     
+    private void cargarDatosCuentas(){
+      cuentasSistema = CuentaDAO.getCuentasBD();
+    }
+    
     public static String recuperarUsuario(String idUsuario)
     {
       int id = Integer.parseInt(idUsuario);
@@ -1732,6 +1782,10 @@ public void crearCliente()
     
     private void ordenarClientes(){
       personasSistema.sort(Comparator.comparing(Persona::getPrimerApellido));
+    }
+    
+    public void ordenarCuentas(){
+        Collections.sort(cuentasSistema);
     }
     
     public static String imprimirCuenta(String pNum){

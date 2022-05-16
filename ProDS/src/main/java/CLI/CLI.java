@@ -38,7 +38,7 @@ public class CLI {
                 + "\n5.Cambiar PIN\n6.Realizar depósito en colones\n7.Realizar depósito en doláres\n8.Realizar retiro en colones"
                 + "\n9.Realizar retiro en dólares\n10.Realizar transferencia en colones\n11.Consultar tipo de cambio de compra en dólares"
                 + "\n12.Consultar tipo de cambio de venta en dólares\n13.Consultar saldo actual\n14.Consultar saldo actual (dólares)"
-                + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n17.Consultar estatus de la cuenta\n18.Consultar informacion de una cuenta"
+                + "\n15.Consultar estado de cuenta\n16.Consultar estado de cuenta (dólares)\n17.Consultar estatus de la cuenta"
                 + "\n18.Consultar ganancias del banco por comisiones\n19.Consultar ganancias del banco por comisiones en una cuenta específica"
                 + "\n20.Salir"
                 + "\nDigite su opción: ");
@@ -61,8 +61,6 @@ public class CLI {
             salirPrograma(opcion);
             
             
-            
-            //consultarUnaCuenta(opcion);
             
             
             
@@ -141,33 +139,19 @@ public class CLI {
         else
         {
           String strMonto = pedirMonto();
-          System.out.println(1);
           double monto = Double.parseDouble(strMonto);
-          System.out.println(2);
           double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
-          System.out.println(3);
           double comision;
-          System.out.println(4);
           double nuevoMonto;
-          System.out.println(5);
           comision = Cuenta.aplicaComision(pNumCuenta, montoCorrecto);
-          System.out.println(6);
           nuevoMonto = montoCorrecto + comision;
-          System.out.println(7);
           String strSaldoViejo = cuenta.getSaldo();
-          System.out.println(8);
           double saldoViejo = Double.parseDouble(strSaldoViejo);
-          System.out.println(9);
           double nuevoSaldo = saldoViejo + nuevoMonto;
-          System.out.println(10);
           String strNuevoSaldo = Double.toString(nuevoSaldo);
-          System.out.println(11);
           cuenta.setSaldo(strNuevoSaldo);
-          System.out.println(12);
           CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-          System.out.println(13);
           ControladorUsuario.insertarOperacion("deposito", (comision>0.00) , comision, pNumCuenta);
-          System.out.println(14);
           resultado = ControladorUsuario.imprimirResultadoDeposito(moneda, comision, montoCorrecto,pNumCuenta);
           System.out.println(resultado);
           volverMenu();
@@ -549,27 +533,23 @@ public class CLI {
     }
     
         public static void crearCliente(String opcion)
-    //public static void main(String[] args)
     {
         if ("1".equals(opcion))
         {
-            int id = pedirId();
+            int id = validarId();
             int validar = 0;
             Scanner sc = new Scanner (System.in);
-            String apellido1 = "Digite su primer apellido: ";
-            validar += ExpresionesRegulares.esLetra(apellido1);
-            sc.next();
-            String apellido2 = "Digite su segundo apellido: ";
-            validar += ExpresionesRegulares.esLetra(apellido2);
-            sc.next();
-            String nombre = "Digite su nombre: ";
-            validar += ExpresionesRegulares.esLetra(nombre);
+            String apellido1 = validarNombre("primer apellido");
+            String apellido2 = validarNombre("segundo apellido");
+            String nombre = validarNombre("nombre");
             
             if (validar == 0 ){
             
                 //hacer funcion pedir fecha 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                String fechaNacimiento = "Digite su fecha de nacimiento (FORMATO AAAA/MM/DD): ";
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                String mensaje = "Digite su fecha de nacimiento (FORMATO AAAA-MM-DD): ";
+                System.out.println(mensaje);
+                String fechaNacimiento = sc.next();
                 LocalDate localDate = LocalDate.parse(fechaNacimiento, formatter);
                 int telefono = pedirTelefono();
                 String correo = pedirCorreo();
@@ -741,6 +721,56 @@ public class CLI {
         }
     }
     
+    public static boolean validarIdExiste(int id){
+        Persona persona = PersonaDAO.obtenerPersona(id);
+        String nombre = persona.getNombre();
+        if(nombre!=null){
+            return true;
+        }
+        return false;
+    }
+    
+    public static int validarId()
+    {
+        Scanner sc = new Scanner (System.in);
+        String texto = "Digite su identificacion: ";
+        System.out.println(texto);
+        String strid = sc.next();
+        boolean esCorrecto = ExpresionesRegulares.esNumero(strid);
+        
+        while (esCorrecto == false)
+        {
+            String texto1 = "Digite su identificacion: ";
+            System.out.println(texto1);
+            strid = sc.next();
+            esCorrecto = ExpresionesRegulares.esNumero(strid);
+        }
+        int id = Integer.parseInt(strid);
+        if(validarIdExiste(id)){
+            validarId();
+        }
+        else{
+            return id;
+        }
+        return id;
+    }
+    
+    public static String validarNombre(String palabra)
+    {
+        Scanner sc = new Scanner (System.in);
+        String texto = "Digite su " + palabra + ": ";
+        System.out.println(texto);
+        String strNombre = sc.next();
+        
+        while (strNombre=="")
+        {
+            String texto1 = "Digite su " + palabra + ": ";
+            System.out.println(texto1);
+            strNombre = sc.next();
+        }
+        return strNombre;
+    }
+    
     public static String esPinCuenta(String pNumCuenta)
     {
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
@@ -838,6 +868,8 @@ public class CLI {
         int id = Integer.parseInt(strid);
         return id;
     }
+    
+    
     
         public static int pedirTelefono()
     {
