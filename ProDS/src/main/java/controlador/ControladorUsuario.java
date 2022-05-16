@@ -10,6 +10,7 @@ import GUI.ConsultaGananciaBancoTotal;
 import GUI.ConsultarEstadoCuenta;
 import GUI.ConsultarEstadoCuentaP2;
 import GUI.ConsultarSaldo;
+import GUI.ConsultarStatus;
 import GUI.CrearCuenta;
 import GUI.CrearCliente;
 import GUI.Menu;
@@ -71,6 +72,7 @@ public class ControladorUsuario implements ActionListener{
     public CrearCliente vista11;
     public ConsultarCambioDolar vista12;
     public RealizarTransferencia vista13;
+    public ConsultarStatus vista14;
     private ArrayList<Persona> personasSistema;
     private ListarPersonas latabla;
     
@@ -92,6 +94,7 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnCambiarPIN.addActionListener(this);
         this.menu.btnTransferencia.addActionListener(this);
         this.menu.btnGananciaBancoTotalizado.addActionListener(this);
+        this.menu.btnConsultaStatus.addActionListener(this);
         cargarDatosPersonas();
         ordenarClientes();
     }
@@ -163,6 +166,9 @@ public class ControladorUsuario implements ActionListener{
             case "Transferir":
                 transferir();
                 break;
+            case "Consultar status": //ayuda dani no se jajja
+                consultarStatus();
+                
             case "ConsultarComCuenta":
                 consultarGananciaBancoCuenta();
             default:
@@ -229,6 +235,16 @@ public class ControladorUsuario implements ActionListener{
         this.vista4.btnLimpiar.addActionListener(this);
         this.vista4.btnRegresar.addActionListener(this);
         this.vista4.setVisible(true);
+        this.menu.setVisible(false);
+    }
+    
+        public void abrirVista14()
+    {
+        this.vista14 = new ConsultarStatus();
+        this.vista14.btnContinuar.addActionListener(this);
+        this.vista14.btnLimpiar.addActionListener(this);
+        this.vista14.btnRegrasar.addActionListener(this);
+        this.vista14.setVisible(true);
         this.menu.setVisible(false);
     }
     
@@ -407,6 +423,41 @@ public class ControladorUsuario implements ActionListener{
             this.vista8.txtPIN.setText("");
             this.vista8.txtNumCuenta.setText("");
             this.vista8.cmbTipoMoneda.setSelectedIndex(0);
+          }
+          else
+          {
+            JOptionPane.showMessageDialog(null, "Verifique sus datos");
+          }
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
+        }
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
+      }   
+    }
+    
+    public void consultarStatus()   
+    {
+      String cuenta = this.vista14.txtNumCuenta.getText();
+      Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+      int insertar = 0;
+      int contador = 0;
+      String resultado = "";
+      if(!"inactiva".equals(cuentaBase.getEstatus())){ //como quito esto sin que se caiga
+        contador += validarIngreso(cuenta, "cuenta");
+        if(contador == 0)
+        {
+          //creo que hay que validar num de cuenta
+          if (insertar == 0)
+          {
+            String status = consultarStatus(cuenta);
+            resultado = imprimirResultadoConsultaStatus(status);
+            JOptionPane.showMessageDialog(null, resultado);
+            this.vista14.txtNumCuenta.setText("");
           }
           else
           {
@@ -937,6 +988,13 @@ public void crearCliente()
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
       String saldo = cuenta.getSaldo();
       return saldo;
+    }
+    
+    public String consultarStatus(String pNumCenta)
+    {
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
+      String status = cuenta.getEstatus();
+      return status;
     }
     
     
@@ -1547,6 +1605,14 @@ public void crearCliente()
         resultado += "\n[Según el BCCR, el tipo de cambio de compra del dólar hoy es: " + compraDolar +"]";
 
       }
+      return resultado;
+    }
+    
+    public static String imprimirResultadoConsultaStatus(String status)
+    {
+
+      String resultado = "";
+      resultado += "Estimado usuario el status actual de su cuenta es: " + status +"";
       return resultado;
     }
         

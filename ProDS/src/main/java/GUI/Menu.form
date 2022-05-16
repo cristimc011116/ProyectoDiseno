@@ -40,6 +40,7 @@
                   </Group>
                   <Component id="btnCrearCliente" alignment="1" max="32767" attributes="0"/>
                   <Component id="btnCambioDolar" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnConsultaStatus" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -89,7 +90,9 @@
                   <Component id="btnCambioDolar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnTransferencia" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="24" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnConsultaStatus" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="39" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -206,6 +209,15 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTransferenciaActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnConsultaStatus">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Consultar Estado Cuenta"/>
+        <Property name="actionCommand" type="java.lang.String" value="Consultar status"/>
+      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
