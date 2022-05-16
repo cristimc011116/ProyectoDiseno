@@ -543,33 +543,43 @@ public class CLI {
         if ("1".equals(opcion))
         {
             int id = pedirId();
+            int validar = 0;
             Scanner sc = new Scanner (System.in);
             String apellido1 = "Digite su primer apellido: ";
+            validar += ExpresionesRegulares.esLetra(apellido1);
             sc.next();
             String apellido2 = "Digite su segundo apellido: ";
+            validar += ExpresionesRegulares.esLetra(apellido2);
             sc.next();
             String nombre = "Digite su nombre: ";
+            validar += ExpresionesRegulares.esLetra(nombre);
             
-            //hacer funcion pedir fecha 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String fechaNacimiento = "Digite su fecha de nacimiento (FORMATO AAAA/MM/DD): ";
-            LocalDate localDate = LocalDate.parse(fechaNacimiento, formatter);
-            int telefono = pedirTelefono();
-            String correo = pedirCorreo();
+            if (validar == 0 ){
             
+                //hacer funcion pedir fecha 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                String fechaNacimiento = "Digite su fecha de nacimiento (FORMATO AAAA/MM/DD): ";
+                LocalDate localDate = LocalDate.parse(fechaNacimiento, formatter);
+                int telefono = pedirTelefono();
+                String correo = pedirCorreo();
 
-            Persona numero = ControladorUsuario.insertarCliente(apellido1,apellido2,nombre,id,localDate,telefono,correo);
 
-            String texto4 = "Se ha creado un nuevo cliente en el sistema, los datos del cliente son: ";
-            System.out.println(texto4);
-            String texto5 = numero.toStringCompleto();
-            System.out.println(texto5);
-            volverMenu();
+                Persona numero = ControladorUsuario.insertarCliente(apellido1,apellido2,nombre,id,localDate,telefono,correo);
+
+                String texto4 = "Se ha creado un nuevo cliente en el sistema, los datos del cliente son: ";
+                System.out.println(texto4);
+                String texto5 = numero.toStringCompleto();
+                System.out.println(texto5);
+                volverMenu();
+            }else{
+                System.out.println("Datos incorrectos, revise que su nombre y apellidos no contengan letras");  
+                crearCliente("1");
+             }
         }
     
     }
-    
-        //dani
+
+        
     public static void listarCuentas(){
         Persona consulta = new Persona();
         ArrayList<Cuenta> cuentas = CuentaDAO.getCuentasBD();
