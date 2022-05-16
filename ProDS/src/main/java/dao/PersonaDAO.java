@@ -46,8 +46,7 @@ public class PersonaDAO {
         ConexionBase con = new ConexionBase();
         con.obtenerConexion();
         con.excSentenciaSQL("INSERT INTO Persona VALUES('" + codigo + "', '" + apellido1 + "', '" + apellido2 +
-                "', '" + nombre + "', '" + id + "', '" + fecha + "', '" + telefono + "', '" + correo + "' ,"
-                        + " '" + rol + "' ,)");
+                "', '" + nombre + "', " + id + ", '" + fecha + "', " + telefono + ", '" + correo + "' ,'" + rol + "')");
         con.desconectar();
     }
     
@@ -101,6 +100,24 @@ public class PersonaDAO {
         }
         con.desconectar();
         return personas;
+    }
+    
+    public static int contadorPersonasBD(){
+        
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        ResultSet resultado;
+        int contador = 1;
+        try{
+            resultado = con.consultas("SELECT * FROM Persona");
+            while(resultado.next()){
+                contador++;
+            }
+        }catch(SQLException ex){
+           JOptionPane.showMessageDialog(null, ex.toString());
+        }
+        con.desconectar();
+        return contador;
     }
     
     public static ResultSet recuperarTodosLosUsuariosBD(){

@@ -713,10 +713,6 @@ public void crearCliente()
         insertar += validarId(identificacion);
         insertar += validarEntrCorreo(correo);
         insertar += validarEntrTelefono(telefono);
-        insertar += ExpresionesRegulares.esLetra(apellido1);
-        insertar += ExpresionesRegulares.esLetra(apellido2);
-        insertar += ExpresionesRegulares.esLetra(nombre);
-        
 
         if (insertar == 0)
         {
@@ -1650,7 +1646,9 @@ public void crearCliente()
     public static Persona insertarCliente(String apellido1,String apellido2, String nombre,
             int idCliente, LocalDate fechaNacimiento,int telefonoCliente, String correo)
     {
-      Persona cliente = new Persona("CIF_#", apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo, "Cliente");
+      int codigo = PersonaDAO.contadorPersonasBD();
+      String strCodigo = Integer.toString(codigo);
+      Persona cliente = new Persona("CIF_" + strCodigo, apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo, "usuario");
       PersonaDAO.insertarCliente(cliente);
       return cliente;
     }

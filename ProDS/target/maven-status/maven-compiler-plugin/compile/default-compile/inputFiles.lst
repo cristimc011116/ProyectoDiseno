@@ -1,33 +1,33 @@
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\Menu.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\webService\ConsultaMoneda.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\MainGUI.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\webService\ConexionBCCR.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\controlador\ControladorUsuario.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarEstadoCuentaP2.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarCambioDolar.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\dao\CuentaDAO.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarEstadoCuenta.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\util\ConexionBase.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\dao\PersonaDAO.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\CrearCliente.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\util\Encriptacion.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\util\ComparatorSaldo.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\webService\ExtraerXML.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\util\ComparatorApellido.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\ListarPersonas.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\CrearCuenta.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarSaldo.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\Palabra.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\logicadenegocios\Operacion.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\validacion\ExpresionesRegulares.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\CambiarPIN.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\RealizarTransferencia.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\logicadenegocios\Cuenta.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultaGananciaBancoCuenta.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\logicadenegocios\Persona.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\CLI\CLI.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\RealizarDeposito.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\RealizarRetiro.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\util\Mensaje.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultaGananciaBancoTotal.java
-C:\Users\User\OneDrive - Estudiantes ITCR\Documentos\PD1\ProyectoDiseno\ProDS\src\main\java\dao\OperacionDAO.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\Palabra.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\CLI\CLI.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\util\Mensaje.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\logicadenegocios\Persona.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarEstadoCuenta.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\util\ConexionBase.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\webService\ExtraerXML.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\RealizarRetiro.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\webService\ConexionBCCR.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\RealizarTransferencia.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\dao\OperacionDAO.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\validacion\ExpresionesRegulares.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\dao\PersonaDAO.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\Menu.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarEstadoCuentaP2.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\util\ComparatorApellido.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultaGananciaBancoTotal.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultaGananciaBancoCuenta.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\MainGUI.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\RealizarDeposito.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ListarPersonas.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\logicadenegocios\Cuenta.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\util\Encriptacion.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\CambiarPIN.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarCambioDolar.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\util\ComparatorSaldo.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarSaldo.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\dao\CuentaDAO.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\controlador\ControladorUsuario.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\webService\ConsultaMoneda.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\logicadenegocios\Operacion.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\CrearCuenta.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\CrearCliente.java
