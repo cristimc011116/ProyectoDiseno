@@ -702,6 +702,10 @@ public class ControladorUsuario implements ActionListener{
         insertar += validarId(identificacion);
         insertar += validarEntrCorreo(correo);
         insertar += validarEntrTelefono(telefono);
+        insertar += ExpresionesRegulares.esLetra(apellido1);
+        insertar += ExpresionesRegulares.esLetra(apellido2);
+        insertar += ExpresionesRegulares.esLetra(nombre);
+        
 
         if (insertar == 0)
         {

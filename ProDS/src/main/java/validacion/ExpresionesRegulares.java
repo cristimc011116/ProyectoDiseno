@@ -64,6 +64,17 @@ public class ExpresionesRegulares {
         return isNumeric;
     }
     
+    public static int esLetra(String pLetra) 
+    {
+        //Verficar si tambien valida con decimales
+        boolean isLetra =  pLetra.matches("[A-Z]*");
+        if (isLetra == false){
+            return 1;
+        }
+        else
+            return 0;
+    }
+    
     public static boolean validarEmail(String email){
         String regx = "^(.+)@(.+)$";
         //Compile regular expression to get the pattern  
