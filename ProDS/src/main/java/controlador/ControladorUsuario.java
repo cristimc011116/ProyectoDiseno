@@ -158,6 +158,9 @@ public class ControladorUsuario implements ActionListener{
             case "Registrar Cliente":
                 crearCliente();
                 break;
+            case "Transferir":
+                transferir();
+                break;
             default:
                 break;
         }
