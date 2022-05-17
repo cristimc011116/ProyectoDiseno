@@ -3,11 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package logicadenegocios;
+import controlador.ControladorUsuario;
+import static controlador.ControladorUsuario.montoCorrecto;
 import dao.CuentaDAO;
 import dao.OperacionDAO;
+import dao.PersonaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import util.Encriptacion;
+import util.Mensaje;
+import webService.ConsultaMoneda;
 /**
  *
  * @author Cristi Martínez
@@ -42,17 +47,112 @@ public class Operacion {
       CuentaDAO.actualizarPin(pCuenta, pPinNuevo);
     }
     
-    public void depositar(String pCuenta, String pCantColones){
-      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
-      for(int i=0;i<listaCuentas.size();i++){
-        cuenta=listaCuentas.get(i);
-        String dinero = cuenta.getSaldo();
-        if(cuenta.getNumero().equals(pCuenta)){
-          cuenta.setSaldo(dinero+pCantColones);
-        }
-      }
+    public static void realizarDeposito(double monto, String moneda, String cuenta){
+        double comision;
+        double nuevoMonto;
+        Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+        monto = montoCorrecto(monto, moneda);
+        comision = Cuenta.aplicaComision(cuenta, monto);
+        nuevoMonto = monto + comision;
+        String strSaldoViejo = cuentaBase.getSaldo();
+        double saldoViejo = Double.parseDouble(strSaldoViejo);
+        double nuevoSaldo = saldoViejo + monto;
+        String strNuevoSaldo = Double.toString(nuevoSaldo);
+        cuentaBase.setSaldo(strNuevoSaldo);
+        CuentaDAO.actualizarSaldo(cuenta, strNuevoSaldo);
+        insertarOperacion("deposito", (comision>0.00) , comision, cuenta);
     }
     
+    public static void realizarRetiro(double monto, String moneda, String cuenta){
+        double comision;
+        double nuevoMonto;
+        Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
+        monto = montoCorrecto(monto, moneda);
+        comision = Cuenta.aplicaComisionRetiro(cuenta, monto);
+        nuevoMonto = monto + comision;
+        String strSaldoViejo = cuentaBase.getSaldo();
+        double saldoViejo = Double.parseDouble(strSaldoViejo);
+        double nuevoSaldo = saldoViejo - nuevoMonto;
+        String strNuevoSaldo = Double.toString(nuevoSaldo);
+        cuentaBase.setSaldo(strNuevoSaldo);
+        CuentaDAO.actualizarSaldo(cuenta, strNuevoSaldo);
+        insertarOperacion("retiro", (comision>0.00) , comision, cuenta);
+    }
+    
+    public static void realizarTransferencia(String cuentaOrigen, String cuentaDestino, double monto){
+        //rebajar saldo    
+        Cuenta cuentaBaseOrigen = CuentaDAO.obtenerCuenta(cuentaOrigen);
+        Cuenta cuentaBaseDestino = CuentaDAO.obtenerCuenta(cuentaDestino);
+        double comision;
+        double nuevoMonto;
+        boolean aplicaCom = false;
+        comision = 0.00;
+        String strSaldoViejo = cuentaBaseOrigen.getSaldo();
+        double saldoViejo = Double.parseDouble(strSaldoViejo);
+        double nuevoSaldo = saldoViejo - monto;
+        String strNuevoSaldo = Double.toString(nuevoSaldo);
+        cuentaBaseOrigen.setSaldo(strNuevoSaldo);
+        CuentaDAO.actualizarSaldo(cuentaOrigen, strNuevoSaldo);
+        insertarOperacion("transferencia", false , comision, cuentaOrigen);
+
+        //hacer transferencia
+
+        String strSaldoViejoDestino = cuentaBaseDestino.getSaldo();
+        double saldoViejoDestino = Double.parseDouble(strSaldoViejoDestino);
+        double nuevoSaldoDestino = saldoViejoDestino + monto;
+        String strNuevoSaldoDestino = Double.toString(nuevoSaldoDestino);
+        cuentaBaseDestino.setSaldo(strNuevoSaldoDestino);
+        CuentaDAO.actualizarSaldo(cuentaDestino, strNuevoSaldoDestino);
+    }
+    
+    public static Double consultarCambioDolar(String opcion){
+      Double resultado= 0.0;
+      ConsultaMoneda consulta = new ConsultaMoneda();
+      if (opcion == "compra"){
+          resultado = consulta.consultaCambioCompra();
+      }
+      else if (opcion == "venta"){
+          resultado = consulta.consultaCambioVenta();
+      }
+    return resultado;
+    }
+    
+    public static String enviarMensaje(String numCuenta)
+    {
+      int id = CuentaDAO.obtenerPersonaCuenta(numCuenta);
+      Persona persona = PersonaDAO.obtenerPersona(id);
+      int numero = persona.getNumero();
+      String mensaje = Mensaje.crearPalabra();
+      Mensaje.enviarMensaje(numero, mensaje);
+      return mensaje;
+    }
+    
+    public static void insertarOperacion(String pTipo, boolean pEsComision, double pMontoComision, String pNumCuenta)
+    {
+      int id = OperacionDAO.cantOperacionesBD();
+      LocalDate fecha = Cuenta.setFechaCreacion();
+      Operacion operacion = new Operacion(id, fecha, pTipo, pEsComision, pMontoComision);
+      OperacionDAO.insertarOperacion(operacion,fecha);
+      OperacionDAO.asignarOperacionCuenta(operacion, pNumCuenta);
+    }
+    
+    public static double consultarGananciaCuentaBanco(String numCuenta){
+        ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(numCuenta);
+        double comisionTotal = 0.00;
+        for(Operacion operacion: operaciones){
+            comisionTotal += operacion.getMontoComision();
+        }
+        return comisionTotal;
+    }
+    
+    public static double consultarGananciaBancoTotal(){
+        ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesBD();
+        double comisionTotal = 0.00;
+        for(Operacion operacion: operaciones){
+            comisionTotal += operacion.getMontoComision();
+        }
+        return comisionTotal;
+    }
 //-------------------------------------METODOS ACCESORES--------------------------------------------------
     public int getId() {
         return id;

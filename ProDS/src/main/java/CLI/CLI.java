@@ -6,7 +6,6 @@ package CLI;
 import webService.*;
 import controlador.ControladorUsuario;
 import static controlador.ControladorUsuario.imprimirResultadoConsultaSaldo;
-import static controlador.ControladorUsuario.inactivarCuenta;
 import static controlador.ControladorUsuario.recuperarUsuario;
 import java.util.Scanner;
 import validacion.ExpresionesRegulares;
@@ -58,16 +57,7 @@ public class CLI {
             seleccionarMonedaEstado(opcion);
             consultarStatus(opcion);
             ConsultaGananciaBanco(opcion);
-            salirPrograma(opcion);
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            salirPrograma(opcion);  
         }
         else
         {
@@ -84,7 +74,6 @@ public class CLI {
       if ("5".equals(opcion))
       {
         String numCuenta = pedirNumCuenta();
-        //String pinActual = esPinCuenta(numCuenta);
         
         String numero; 
         boolean insertar;
@@ -141,17 +130,8 @@ public class CLI {
           String strMonto = pedirMonto();
           double monto = Double.parseDouble(strMonto);
           double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
-          double comision;
-          double nuevoMonto;
-          comision = Cuenta.aplicaComision(pNumCuenta, montoCorrecto);
-          nuevoMonto = montoCorrecto + comision;
-          String strSaldoViejo = cuenta.getSaldo();
-          double saldoViejo = Double.parseDouble(strSaldoViejo);
-          double nuevoSaldo = saldoViejo + nuevoMonto;
-          String strNuevoSaldo = Double.toString(nuevoSaldo);
-          cuenta.setSaldo(strNuevoSaldo);
-          CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-          ControladorUsuario.insertarOperacion("deposito", (comision>0.00) , comision, pNumCuenta);
+          double comision = Cuenta.aplicaComision(pNumCuenta, montoCorrecto);
+          Operacion.realizarDeposito(montoCorrecto, moneda, pNumCuenta);
           resultado = ControladorUsuario.imprimirResultadoDeposito(moneda, comision, montoCorrecto,pNumCuenta);
           System.out.println(resultado);
           volverMenu();
@@ -163,50 +143,6 @@ public class CLI {
         volverMenu();
       }
     }
-    
-    public static void ConsultarSaldoActual(String opcion)
-    //public static void main(String[] args)
-    {
-      if("13".equals(opcion))
-      {
-        consultaSaldo("colones");
-      }
-      if("14".equals(opcion))
-      {
-        consultaSaldo("dolares");
-      }
-    }
-    
-    public static void ConsultarTipoCambioOpcion(String opcion)
-    //public static void main(String[] args)
-    {
-      if("11".equals(opcion))
-      {
-        ConsultaCambioResultado("compra");
-      }
-      if("12".equals(opcion))
-      {
-        ConsultaCambioResultado("venta");
-      }
-    }
-    
-    public static void ConsultaCambioResultado(String opcion){
-      Double cambio = 0.0;
-      if("compra".equals(opcion))
-      {
-        cambio = ControladorUsuario.consultarCambioDolar("compra");
-      }
-      if("venta".equals(opcion))
-      {
-        cambio = ControladorUsuario.consultarCambioDolar("venta");
-      }
-      
-      String resultado = "El tipo de cambio de dolar en" + opcion + " es de: " + cambio + "";
-      System.out.println(resultado);
-    }
-    
-        
-        
     
     public static void consultaSaldo(String moneda)
     {
@@ -316,7 +252,7 @@ public class CLI {
             }
             else
             {
-                mensaje = ControladorUsuario.enviarMensaje(pNumCuenta);
+                mensaje = Operacion.enviarMensaje(pNumCuenta);
                 System.out.println("Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
                         + " y procesa a digitar la palabra enviada");
                 mensaje2 = pedirPalabra(mensaje, pNumCuenta);
@@ -331,17 +267,8 @@ public class CLI {
                     String strMonto = pedirMonto();
                     double monto = Double.parseDouble(strMonto);
                     double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
-                    double comision;
-                    double nuevoMonto;
-                    comision = Cuenta.aplicaComisionRetiro(pNumCuenta, montoCorrecto);
-                    nuevoMonto = montoCorrecto + comision;
-                    String strSaldoViejo = cuenta.getSaldo();
-                    double saldoViejo = Double.parseDouble(strSaldoViejo);
-                    double nuevoSaldo = saldoViejo - nuevoMonto;
-                    String strNuevoSaldo = Double.toString(nuevoSaldo);
-                    cuenta.setSaldo(strNuevoSaldo);
-                    CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-                    ControladorUsuario.insertarOperacion("retiro", (comision>0.00) , comision, pNumCuenta);
+                    Operacion.realizarRetiro(montoCorrecto, moneda, pNumCuenta);
+                    double comision = Cuenta.aplicaComisionRetiro(pNumCuenta, montoCorrecto);
                     resultado = ControladorUsuario.imprimirResultado(moneda, comision, montoCorrecto);
                     System.out.println(resultado);
                     volverMenu();
@@ -378,7 +305,7 @@ public class CLI {
             }
             else
             {
-                mensaje = ControladorUsuario.enviarMensaje(pNumCuenta);
+                mensaje = Operacion.enviarMensaje(pNumCuenta);
                 System.out.println("Estimado usuario se ha enviado una palabra por mensaje de texto, por favor revise sus mensajes"
                         + " y procesa a digitar la palabra enviada");
                 mensaje2 = pedirPalabra(mensaje, pNumCuenta);
@@ -401,27 +328,7 @@ public class CLI {
                     String pNumCuentaDestino = pedirNumCuenta();
                     Cuenta cuentadestino = CuentaDAO.obtenerCuenta(pNumCuentaDestino);
                     
-                    //rebajar saldo                    
-                    double comision;
-                    double nuevoMonto;
-                    boolean aplicaCom = false;
-                    comision = 0.00;
-                    String strSaldoViejo = cuenta.getSaldo();
-                    double saldoViejo = Double.parseDouble(strSaldoViejo);
-                    double nuevoSaldo = saldoViejo - montoCorrecto;
-                    String strNuevoSaldo = Double.toString(nuevoSaldo);
-                    cuenta.setSaldo(strNuevoSaldo);
-                    CuentaDAO.actualizarSaldo(pNumCuenta, strNuevoSaldo);
-                    ControladorUsuario.insertarOperacion("transferencia", false , comision, pNumCuenta);
-                    
-                    //hacer transferencia
-                    
-                    String strSaldoViejoDestino = cuentadestino.getSaldo();
-                    double saldoViejoDestino = Double.parseDouble(strSaldoViejoDestino);
-                    double nuevoSaldoDestino = saldoViejoDestino + montoCorrecto;
-                    String strNuevoSaldoDestino = Double.toString(nuevoSaldoDestino);
-                    cuentadestino.setSaldo(strNuevoSaldoDestino);
-                    CuentaDAO.actualizarSaldo(pNumCuentaDestino, strNuevoSaldoDestino);
+                    Operacion.realizarTransferencia(pNumCuenta, pNumCuentaDestino, monto);
                     resultado = ControladorUsuario.imprimirResultadoTransf(montoCorrecto);
                     System.out.println(resultado);
                     volverMenu();
@@ -461,46 +368,7 @@ public class CLI {
             }
             else
             {
-                Cuenta cuentaBase = CuentaDAO.obtenerCuenta(pNumCuenta);
-                int idDueno = CuentaDAO.obtenerPersonaCuenta(pNumCuenta);
-                Persona persona = PersonaDAO.obtenerPersona(idDueno);
-                String nombreDueno = persona.getNombre() + " " + persona.getPrimerApellido() + " " + persona.getSegundoApellido();
-                ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(pNumCuenta);
-                for(Operacion operacion: operaciones)
-                {
-                   if("colones".equals(moneda))
-                   {
-                        strSaldo = cuentaBase.getSaldo();
-                        strPin = cuentaBase.getPin();
-                        double saldo = Double.parseDouble(strSaldo);
-                        double monto = (operacion.getMontoComision()/0.02);
-                        LocalDate fecha = operacion.getFechaOperacion();
-                        String tipo = operacion.getTipo();
-                        double montoComision = operacion.getMontoComision();
-                        contador++;
-                        oper += "Operacion #" + contador + "\nFecha: " + fecha + "\nTipo: " + tipo + "\nMonto: " + monto + "\nComisión: " + montoComision + "\n\n";
-                   }
-                   else
-                   {
-                        double venta = consulta.consultaCambioVenta();
-                        String strSaldoColones = cuentaBase.getSaldo();
-                        double saldoColones = Double.parseDouble(strSaldoColones);
-                        double saldoDolares = saldoColones/venta;
-                        strSaldo = Double.toString(saldoDolares);
-                        strPin = cuentaBase.getPin();
-                        double monto = (operacion.getMontoComision()/0.02);
-                        double comisionDolares = (operacion.getMontoComision()/venta);
-                        double montoDolares = monto/venta;
-                        LocalDate fecha = operacion.getFechaOperacion();
-                        String tipo = operacion.getTipo();
-                        contador++;
-                        oper += "Operacion #" + contador + "\nFecha: " + fecha + "\nTipo: " + tipo + "\nMonto: " + montoDolares + "\nComisión: " + comisionDolares + "\n\n";
-                   }
-                }
-                
-                resultado += "Información de la cuenta\n\n" + "Número de cuenta: " + pNumCuenta + "\nPin encriptado de la cuenta: " + strPin
-                        + "\nNombre del dueño: " + nombreDueno + "\nIdentificación del dueño: " + idDueno + "\nSaldo de la cuenta: " 
-                        + strSaldo + "\n\n\nOperaciones de la cuenta: " + "\n\n" + oper;
+                resultado = Persona.consultarEstadoCuenta(pNumCuenta, moneda);
                 System.out.println(resultado);
                 volverMenu();
             }
@@ -523,7 +391,7 @@ public class CLI {
             int id = pedirId();
             String pin = pedirPin();
             String monto = pedirMonto();
-            String numero = ControladorUsuario.insertarCuenta(pin, monto, id);
+            String numero = Cuenta.insertarCuenta(pin, monto, id);
 
             String texto4 = "Se ha creado una nueva cuenta en el sistema, los datos de la cuenta son: ";
             System.out.println(texto4);
@@ -560,7 +428,7 @@ public class CLI {
                 String correo = pedirCorreo();
 
 
-                Persona numero = ControladorUsuario.insertarCliente(apellido1,apellido2,nombre,id,localDate,telefono,correo);
+                Persona numero = Persona.insertarCliente(apellido1,apellido2,nombre,id,localDate,telefono,correo);
 
                 String texto4 = "Se ha creado un nuevo cliente en el sistema, los datos del cliente son: ";
                 System.out.println(texto4);
@@ -596,7 +464,6 @@ public class CLI {
 
     
     public static void  listarPersonas(String opcion)
-    //public static void main(String[] args)
     {
         Scanner sc = new Scanner (System.in);
         if("3".equals(opcion))
@@ -608,8 +475,48 @@ public class CLI {
         }   
     }
     
+    //Opciones de menú ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    public static void ConsultarSaldoActual(String opcion)
+    {
+      if("13".equals(opcion))
+      {
+        consultaSaldo("colones");
+      }
+      if("14".equals(opcion))
+      {
+        consultaSaldo("dolares");
+      }
+    }
+    
+    public static void ConsultarTipoCambioOpcion(String opcion)
+    {
+      if("11".equals(opcion))
+      {
+        ConsultaCambioResultado("compra");
+      }
+      if("12".equals(opcion))
+      {
+        ConsultaCambioResultado("venta");
+      }
+    }
+    
+    public static void ConsultaCambioResultado(String opcion){
+      Double cambio = 0.0;
+      if("compra".equals(opcion))
+      {
+        cambio = Operacion.consultarCambioDolar("compra");
+      }
+      if("venta".equals(opcion))
+      {
+        cambio = Operacion.consultarCambioDolar("venta");
+      }
+      
+      String resultado = "El tipo de cambio de dolar en" + opcion + " es de: " + cambio + "";
+      System.out.println(resultado);
+    }
+    
     public static void  MenulistarCuentas(String opcion)
-    //public static void main(String[] args)
     {
         Scanner sc = new Scanner (System.in);
         if("4".equals(opcion))
@@ -790,7 +697,7 @@ public class CLI {
             cont++;
             if(cont >= 2)
             {
-                ControladorUsuario.inactivarCuenta(pNumCuenta);
+                Cuenta.inactivarCuenta(pNumCuenta);
                 return ("Se ha desactivado la cuenta");
             }
             String texto3 = "Digite el pin de la cuenta: ";
@@ -1001,12 +908,12 @@ public class CLI {
             cont++;
             if(cont >= 2)
             {
-                ControladorUsuario.inactivarCuenta(pNumCuenta);
+                Cuenta.inactivarCuenta(pNumCuenta);
                 return ("Se ha desactivado la cuenta");
             }
             else
             {
-                pPalabra = ControladorUsuario.enviarMensaje(pNumCuenta);
+                pPalabra = Operacion.enviarMensaje(pNumCuenta);
                 System.out.println("Estimado usuario se ha enviado una nueva palabra por mensaje de texto, por favor revise sus mensajes"
                         + " y procesa a digitar correctamente la palabra enviada");
             }

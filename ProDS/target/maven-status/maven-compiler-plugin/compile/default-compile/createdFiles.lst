@@ -30,6 +30,7 @@ GUI\ListarCuentas.class
 GUI\ConsultarCambioDolar$3.class
 GUI\CambiarPIN$4.class
 GUI\ConsultarSaldo$2.class
+util\CorreoElectronico.class
 GUI\CrearCuenta$4.class
 GUI\CambiarPIN$3.class
 GUI\ConsultarSaldo.class

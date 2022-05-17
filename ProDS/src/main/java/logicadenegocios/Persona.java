@@ -3,10 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package logicadenegocios;
+import dao.CuentaDAO;
+import dao.OperacionDAO;
 import dao.PersonaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import util.Encriptacion;
+import webService.ConsultaMoneda;
 
 /**
  *
@@ -75,48 +78,78 @@ public class Persona{
         this.misCuentas.add(pCuenta);
     }
    
-    public static int contarClientes(){
-      ArrayList<Persona> listaClientes = PersonaDAO.getPersonasBD();
-       int contadorClientes = listaClientes.size();
-       return contadorClientes;
+    
+    public static Persona insertarCliente(String apellido1,String apellido2, String nombre,
+            int idCliente, LocalDate fechaNacimiento,int telefonoCliente, String correo)
+    {
+      int codigo = PersonaDAO.contadorPersonasBD();
+      String strCodigo = Integer.toString(codigo);
+      Persona cliente = new Persona("CIF_" + strCodigo, apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo, "usuario");
+      PersonaDAO.insertarCliente(cliente);
+      return cliente;
     }
     
-    public boolean menorQue(Comparable objeto){
-      System.out.println(objeto);
-      return (getPrimerApellido().compareTo(((Persona)objeto).getPrimerApellido())<0);
+    public static String consultarSaldo(String pNumCenta)
+    {
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
+      String saldo = cuenta.getSaldo();
+      return saldo;
     }
     
-    public String consultarSaldoColones(String pNumCuenta, String pPinAcceso){
-      Cuenta cuenta = new Cuenta();
-      
-      String pCuentaDesencriptada = Encriptacion.desencriptar(pNumCuenta); 
-      String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAcceso);
-      
-      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada))){
-        if (validacion.ExpresionesRegulares.validarPin(pPinAccesoDesencriptada)){
-          return cuenta.getSaldo();//retorna el saldo de la cuenta.
-        }else{
-          return "1";//Pin incorrecto.
+    public static String consultarStatus(String pNumCenta)
+    {
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
+      String status = cuenta.getEstatus();
+      return status;
+    }
+    
+    public static String consultarEstadoCuenta(String pNumCuenta, String moneda){
+        ConsultaMoneda consulta = new ConsultaMoneda();
+        String strSaldo = "";
+        String strPin = "";
+        String resultado = "";
+        int contador = 0;
+        String oper = "";
+        Cuenta cuentaBase = CuentaDAO.obtenerCuenta(pNumCuenta);
+        int idDueno = CuentaDAO.obtenerPersonaCuenta(pNumCuenta);
+        Persona persona = PersonaDAO.obtenerPersona(idDueno);
+        String nombreDueno = persona.getNombre() + " " + persona.getPrimerApellido() + " " + persona.getSegundoApellido();
+        ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(pNumCuenta);
+        for(Operacion operacion: operaciones)
+        {
+            if("colones".equals(moneda))
+            {
+                strSaldo = cuentaBase.getSaldo();
+                strPin = cuentaBase.getPin();
+                double saldo = Double.parseDouble(strSaldo);
+                double monto = (operacion.getMontoComision()/0.02);
+                LocalDate fecha = operacion.getFechaOperacion();
+                String tipo = operacion.getTipo();
+                double montoComision = operacion.getMontoComision();
+                contador++;
+                oper += "Operacion #" + contador + "\nFecha: " + fecha + "\nTipo: " + tipo + "\nComisión: " + montoComision + "\n\n";
+            }
+            else
+            {
+                double venta = consulta.consultaCambioVenta();
+                String strSaldoColones = cuentaBase.getSaldo();
+                double saldoColones = Double.parseDouble(strSaldoColones);
+                double saldoDolares = saldoColones/venta;
+                strSaldo = Double.toString(saldoDolares);
+                strPin = cuentaBase.getPin();
+                double monto = (operacion.getMontoComision()/0.02);
+                double comisionDolares = (operacion.getMontoComision()/venta);
+                double montoDolares = monto/venta;
+                LocalDate fecha = operacion.getFechaOperacion();
+                String tipo = operacion.getTipo();
+                contador++;
+                oper += "Operacion #" + contador + "\nFecha: " + fecha + "\nTipo: " + tipo + "\nComisión: " + comisionDolares + "\n\n";
+            }
         }
-      }
-      return "0"; //La cuenta no existe.
-    }
-    
-    public String consultarSaldoDolares(String pNumCuenta, String pPinAcceso){
-      Cuenta cuenta = new Cuenta();
-      String saldoEnDolares;
-      String pCuentaDesencriptada = Encriptacion.desencriptar(pNumCuenta); 
-      String pPinAccesoDesencriptada = Encriptacion.desencriptar(pPinAcceso);
-      
-      if (validacion.ExpresionesRegulares.validarCuenta(Integer.parseInt(pCuentaDesencriptada))){
-        if (validacion.ExpresionesRegulares.validarPin(pPinAccesoDesencriptada)){
-          saldoEnDolares = cuenta.getSaldo();//retorna el saldo de la cuenta.
-          
-        }else{
-          return "1";//Pin incorrecto.
-        }
-      }
-      return "0"; //La cuenta no existe.
+        resultado += "Información de la cuenta\n\n" + "Número de cuenta: " + pNumCuenta + "\nPin encriptado de la cuenta: " + strPin
+                        + "\nNombre del dueño: " + nombreDueno + "\nIdentificación del dueño: " + idDueno + "\nSaldo de la cuenta: " 
+                        + strSaldo + "\n\n\nOperaciones de la cuenta: " + "\n\n" + oper;
+        return resultado;
     }
     
 //-----------------------------------------METODOS ACCESORES--------------------------------------------    

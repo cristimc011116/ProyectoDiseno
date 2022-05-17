@@ -80,6 +80,7 @@ public class RealizarRetiro extends javax.swing.JFrame {
         jLabel4.setText("Realizar retiro");
 
         btnEnviarPalabra.setText("Enviar palabra clave");
+        btnEnviarPalabra.setActionCommand("Enviar palabra retiro");
         btnEnviarPalabra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEnviarPalabraActionPerformed(evt);

@@ -209,6 +209,7 @@
     <Component class="javax.swing.JButton" name="btnEnviarPalabra">
       <Properties>
         <Property name="text" type="java.lang.String" value="Enviar palabra clave"/>
+        <Property name="actionCommand" type="java.lang.String" value="Enviar palabra retiro"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarPalabraActionPerformed"/>

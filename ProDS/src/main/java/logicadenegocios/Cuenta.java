@@ -4,12 +4,14 @@
  */
 package logicadenegocios;
 import dao.CuentaDAO;
+import dao.PersonaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 import java.time.format.DateTimeFormatter;
 import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
+import util.CorreoElectronico;
 import util.Encriptacion;
 /**
  *
@@ -52,7 +54,27 @@ public class Cuenta implements Comparable<Cuenta>{
     }
     
     //--------------------------------------METODOS DE CLASE--------------------------------------
+    public static String insertarCuenta(String pPin, String pMonto, int pId)
+    {
+      String numero = Cuenta.generarNumCuenta();
+      LocalDate fecha = Cuenta.setFechaCreacion();
+      Cuenta cuenta = new Cuenta(numero, pPin, fecha, pMonto, "activo");
+      CuentaDAO.insertarCuenta(cuenta,fecha);
+      CuentaDAO.asignarCuentaCliente(cuenta, pId);
+
+      return numero;
+    }
     
+    public static void inactivarCuenta(String pNumCuenta)
+    {
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+      int id = CuentaDAO.obtenerPersonaCuenta(pNumCuenta);
+      Persona persona = PersonaDAO.obtenerPersona(id);
+      String correo = persona.getCorreo();
+      cuenta.setEstatus("inactiva");
+      CorreoElectronico.enviarCorreo(correo, "Inactivación de cuenta: " + pNumCuenta, "Hola, se ha desactivado la cuenta por motivo del ingreso incorrecto del pin o la palabra clave");
+      CuentaDAO.inactivarCuentaBase(pNumCuenta);
+    }
     
     public static String generarNumCuenta()
     {
