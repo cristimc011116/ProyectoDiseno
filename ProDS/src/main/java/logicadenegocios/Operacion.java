@@ -162,31 +162,6 @@ public class Operacion {
         this.setCuenta(cuenta);
     }
 
-    public static double sumarComisionesRetiros(String pnumCuenta)
-    {
-      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesBD();
-      for(Operacion operacion: operaciones)
-      {
-        if(operacion.getTipo().equals("retiro") && operacion.getCuenta().equals(pnumCuenta))
-        {
-          return operacion.getMontoComision();
-        }
-      }
-      return 0;
-    }
-    
-    public static double sumarComisionesdepositos(String pnumCuenta)
-    {
-      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesBD();
-      for(Operacion operacion: operaciones)
-      {
-        if(operacion.getTipo().equals("deposito"))
-        {
-          return operacion.getMontoComision();
-        }
-      }
-      return 0;
-    }
     
 //-------------------------------------METODOS ACCESORES--------------------------------------------------
     

@@ -866,8 +866,6 @@ public class ControladorUsuario implements ActionListener{
     
     public void consultarGananciaBancoCuenta()
     {
-      double sumaRetiros =0;
-      double sumaDepositos =0;
       String cuentaText = this.vista9.txtNumCuenta.getText();
       Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuentaText);
       int contador = 0;
@@ -876,10 +874,6 @@ public class ControladorUsuario implements ActionListener{
         if (contador == 0)
         {
           LlenarTablaConsultaBancoPorCuenta(cuentaText);
-          sumaRetiros = Operacion.sumarComisionesRetiros(cuentaText);
-          sumaDepositos = Operacion.sumarComisionesdepositos(cuentaText);
-          this.vista9.txtGananciaBancoRetiros.setText(String.valueOf(sumaRetiros));
-          this.vista9.txtGananciaBancoDeposito.setText(String.valueOf(sumaDepositos));
         }
         else
         {
@@ -906,36 +900,25 @@ public class ControladorUsuario implements ActionListener{
       this.vista9.tblGananciaBancoComicionesCuenta.setModel(this.vista9.modelo);
       for(Operacion operacion: operaciones)
       {
-        if (operacion.getTipo().equals("retiro") && operacion.getTipo().equals("deposito"))
-        {
-          double monto = (operacion.getMontoComision()/0.02);
+        double monto = (operacion.getMontoComision()/0.02);
         Object[] info = {operacion.getTipo(),operacion.getFechaOperacion(), monto, operacion.getMontoComision()};
         sumaComisiones = sumaComisiones + operacion.getMontoComision();
         this.vista9.modelo.addRow(info);
         this.vista9.txtGananciasBanco.setText(String.valueOf(sumaComisiones));
-        }
       }
     }
     
     public void consultarGananciaBancoTotalizado()
     {
       double sumaComisiones = 0;
-      double sumaRetiros =0;
-      double sumaDepositos =0;
       ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
       Cuenta cuenta=new Cuenta();
       for(int i=0;i<listaCuentas.size();i++){
         cuenta = listaCuentas.get(i);
-        sumaRetiros = Operacion.sumarComisionesRetiros(cuenta.getNumero());
-        sumaDepositos = Operacion.sumarComisionesdepositos(cuenta.getNumero());
         sumaComisiones = sumaComisiones + LlenarTablaConsultaBancoTotalizado();
       }
-      this.vista10.txtComisionPorRetiros.setText(String.valueOf(sumaRetiros));
-      this.vista10.txtGananciaPorDepositos.setText(String.valueOf(sumaDepositos));
       this.vista10.txtGananciaTotal.setText(String.valueOf(sumaComisiones));
     }
-    
-    
     
     public double LlenarTablaConsultaBancoTotalizado()
     {
@@ -951,13 +934,10 @@ public class ControladorUsuario implements ActionListener{
       this.vista10.tblGananciasBancoTotalizado.setModel(this.vista10.modelo);
       for(Operacion operacion: operaciones)
       {
-        if (operacion.getTipo().equals("retiro") && operacion.getTipo().equals("deposito"))
-        {
-          double monto = (operacion.getMontoComision()/0.02);
-          Object[] info = {cuenta, operacion.getTipo(),operacion.getFechaOperacion(), monto, operacion.getMontoComision()};
-          this.vista10.modelo.addRow(info);
-          sumaComi=sumaComi+operacion.getMontoComision();
-        }
+        double monto = (operacion.getMontoComision()/0.02);
+        Object[] info = {cuenta, operacion.getTipo(),operacion.getFechaOperacion(), monto, operacion.getMontoComision()};
+        this.vista10.modelo.addRow(info);
+        sumaComi=sumaComi+operacion.getMontoComision();
       }
       this.vista10.txtGananciaTotal.setText(String.valueOf(sumaComi));
       return sumaComi;
