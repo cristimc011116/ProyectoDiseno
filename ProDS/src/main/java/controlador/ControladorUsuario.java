@@ -1651,7 +1651,8 @@ public class ControladorUsuario implements ActionListener{
     public static double aplicaComision(String numCuenta, double monto)
    {
        int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
-       if (contador > 3)
+       System.out.println(contador);
+       if (contador > 31)
        {
            return (monto*0.02);
        }
