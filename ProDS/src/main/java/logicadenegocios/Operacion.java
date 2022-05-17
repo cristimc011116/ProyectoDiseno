@@ -52,7 +52,7 @@ public class Operacion {
         double nuevoMonto;
         Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
         monto = montoCorrecto(monto, moneda);
-        comision = Cuenta.aplicaComision(cuenta, monto);
+        comision = ControladorUsuario.aplicaComision(cuenta, monto);
         nuevoMonto = monto + comision;
         String strSaldoViejo = cuentaBase.getSaldo();
         double saldoViejo = Double.parseDouble(strSaldoViejo);
@@ -68,7 +68,7 @@ public class Operacion {
         double nuevoMonto;
         Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
         monto = montoCorrecto(monto, moneda);
-        comision = Cuenta.aplicaComisionRetiro(cuenta, monto);
+        comision = ControladorUsuario.aplicaComisionRetiro(cuenta, monto);
         nuevoMonto = monto + comision;
         String strSaldoViejo = cuentaBase.getSaldo();
         double saldoViejo = Double.parseDouble(strSaldoViejo);
@@ -153,7 +153,26 @@ public class Operacion {
         }
         return comisionTotal;
     }
+    
+    public void consultarOperacionesRealizadas(String pNumCuenta){
+        OperacionDAO.getOperacionesCuenta(pNumCuenta);
+    }
+    
+    public void asignarOperacionACuenta(Cuenta cuenta){
+        this.setCuenta(cuenta);
+    }
+
+    
 //-------------------------------------METODOS ACCESORES--------------------------------------------------
+    
+    public Cuenta getCuenta() {
+        return cuenta;
+    }
+
+    public void setCuenta(Cuenta cuenta) {
+        this.cuenta = cuenta;
+    }
+    
     public int getId() {
         return id;
     }

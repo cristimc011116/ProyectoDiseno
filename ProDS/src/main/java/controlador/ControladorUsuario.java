@@ -375,7 +375,7 @@ public class ControladorUsuario implements ActionListener{
           if (insertar == 0)
           {
             Operacion.realizarDeposito(monto, moneda, cuenta);  
-            double comision = Cuenta.aplicaComision(cuenta, monto);
+            double comision = ControladorUsuario.aplicaComision(cuenta, monto);
             resultado = imprimirResultadoDeposito( moneda,comision,monto,cuenta);
             JOptionPane.showMessageDialog(null, resultado);
             this.vista7.txtMontoDeposito.setText("");
@@ -397,9 +397,6 @@ public class ControladorUsuario implements ActionListener{
         JOptionPane.showMessageDialog(null, "Su cuenta se encuentra desactivada");
       }   
     }
-    
-    
-    
     
     public void consultarSaldoCuenta()   
     {
@@ -539,7 +536,6 @@ public class ControladorUsuario implements ActionListener{
       }
     }   
     
-    
     public void retirar()   
     {
       String cuenta = this.vista3.txtCuenta.getText();
@@ -568,7 +564,7 @@ public class ControladorUsuario implements ActionListener{
           insertar += validarPalabra(palabraClave, cuenta);
           if (insertar == 0)
           {
-            double comision = Cuenta.aplicaComisionRetiro(cuenta, monto);
+            double comision = ControladorUsuario.aplicaComisionRetiro(cuenta, monto);
             Operacion.realizarRetiro(monto, moneda, cuenta);
             resultado = imprimirResultado(moneda, comision, monto);
             JOptionPane.showMessageDialog(null, resultado);
@@ -596,7 +592,6 @@ public class ControladorUsuario implements ActionListener{
       }   
     }
     
-
     public void transferir()   
     {
       String cuentaDestino = this.vista13.txtCuentaDestino .getText();
@@ -693,17 +688,8 @@ public class ControladorUsuario implements ActionListener{
       }
     }
     
-    public LocalDate obtenerFecha(){
-        Date date = this.vista11.tfFecha.getDate();
-        long dateTime = date.getTime();
-        java.sql.Date fecha = new java.sql.Date(dateTime);
-        LocalDate fechaLocal = fecha.toLocalDate();
-        
-        return fechaLocal; 
-    }
     
-    
-public void crearCliente()
+    public void crearCliente()
     {
       int insertar = 0;
       int contador = 0;
@@ -751,9 +737,6 @@ public void crearCliente()
         JOptionPane.showMessageDialog(null, "Complete todos sus datos");
       }
     }
-
-    
-    
 
     public void listarPersonas(){
       this.latabla = new ListarPersonas();
@@ -981,7 +964,7 @@ public void crearCliente()
     
     
     
-    //VALIDACIONES-------------------------------------------------------------------------------------------------------------------------------------
+    //VALIDACIONES ENTRADAS DE TEXTO-------------------------------------------------------------------------------------------------------------------------------------
    
     public int validarIngreso(String pEntrada, String opcion)
     {
@@ -1297,6 +1280,13 @@ public void crearCliente()
         if(num==false){
             JOptionPane.showMessageDialog(null, "Número de id inválido, revise nuevamente");
             return 1;
+        }
+        else{
+            int ident = Integer.parseInt(id);
+            if(ExpresionesRegulares.validarIdExiste(ident)){
+                JOptionPane.showMessageDialog(null, "Número de id inválido, ya está registrado");
+                return 1;
+            }
         }
         return 0;
     }
@@ -1649,7 +1639,40 @@ public void crearCliente()
       return total;
     }
     
+    public LocalDate obtenerFecha(){
+        Date date = this.vista11.tfFecha.getDate();
+        long dateTime = date.getTime();
+        java.sql.Date fecha = new java.sql.Date(dateTime);
+        LocalDate fechaLocal = fecha.toLocalDate();
+        
+        return fechaLocal; 
+    }
     
+    public static double aplicaComision(String numCuenta, double monto)
+   {
+       int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
+       if (contador > 3)
+       {
+           return (monto*0.02);
+       }
+       else
+       {
+           return 0.00;
+       }
+   }   
+   
+   public static double aplicaComisionRetiro(String numCuenta, double monto)
+   {
+       int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
+       if (contador >= 10)
+       {
+           return (monto*0.02);
+       }
+       else
+       {
+           return 0.00;
+       }
+   } 
     
     public static String imprimirCuenta(String pNum){
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNum);

@@ -130,7 +130,7 @@ public class CLI {
           String strMonto = pedirMonto();
           double monto = Double.parseDouble(strMonto);
           double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
-          double comision = Cuenta.aplicaComision(pNumCuenta, montoCorrecto);
+          double comision = ControladorUsuario.aplicaComision(pNumCuenta, montoCorrecto);
           Operacion.realizarDeposito(montoCorrecto, moneda, pNumCuenta);
           resultado = ControladorUsuario.imprimirResultadoDeposito(moneda, comision, montoCorrecto,pNumCuenta);
           System.out.println(resultado);
@@ -268,7 +268,7 @@ public class CLI {
                     double monto = Double.parseDouble(strMonto);
                     double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
                     Operacion.realizarRetiro(montoCorrecto, moneda, pNumCuenta);
-                    double comision = Cuenta.aplicaComisionRetiro(pNumCuenta, montoCorrecto);
+                    double comision = ControladorUsuario.aplicaComisionRetiro(pNumCuenta, montoCorrecto);
                     resultado = ControladorUsuario.imprimirResultado(moneda, comision, montoCorrecto);
                     System.out.println(resultado);
                     volverMenu();
@@ -347,16 +347,9 @@ public class CLI {
     
     public static String consultarEstado(String moneda)
     {
-        ConsultaMoneda consulta = new ConsultaMoneda();
         String pNumCuenta = pedirNumCuenta();
         Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
-        String mensaje;
-        String mensaje2;
         String resultado="";
-        String strSaldo = "";
-        int contador = 0;
-        String oper = "";
-        String strPin = "";
         if(!"inactiva".equals(cuenta.getEstatus()))
         {
             String pin = esPinCuenta(pNumCuenta);
@@ -526,7 +519,6 @@ public class CLI {
         }   
     }
     
-    
     public static void seleccionarPersona()
     {
         Scanner sc = new Scanner (System.in);
@@ -619,7 +611,7 @@ public class CLI {
         }
     }
     
-    //VALIDACIONES-------------------------------------------------------------------------------------------------------------------------------------
+    //VALIDACIONES DE ENTRADAS DE TEXTO -------------------------------------------------------------------------------------------------------------------------------------
     public static boolean validarOpcion(String opcion, int numMenor, int numMayor)
     {
         if(ExpresionesRegulares.esNumero(opcion))
@@ -633,14 +625,7 @@ public class CLI {
         }
     }
     
-    public static boolean validarIdExiste(int id){
-        Persona persona = PersonaDAO.obtenerPersona(id);
-        String nombre = persona.getNombre();
-        if(nombre!=null){
-            return true;
-        }
-        return false;
-    }
+    
     
     public static int validarId()
     {
@@ -658,7 +643,7 @@ public class CLI {
             esCorrecto = ExpresionesRegulares.esNumero(strid);
         }
         int id = Integer.parseInt(strid);
-        if(validarIdExiste(id)){
+        if(ExpresionesRegulares.validarIdExiste(id)){
             validarId();
         }
         else{
@@ -751,16 +736,6 @@ public class CLI {
         String mensaje = consultarCliente(usuario);
         System.out.println(mensaje);
     }
-    //COMENTE ESTO A VER SI NO SE CAE
-   /* 
-        public static void pedirInfoCuenta()
-    {
-        Scanner sc = new Scanner (System.in);
-        System.out.println("Digite el numero de cuenta que desea consultar");
-        String cuenta = sc.next();
-        String mensaje = consultarCuenta(cuenta);
-        System.out.println(mensaje);
-    }*/
     
     public static int pedirId()
     {
@@ -780,8 +755,6 @@ public class CLI {
         int id = Integer.parseInt(strid);
         return id;
     }
-    
-    
     
         public static int pedirTelefono()
     {
@@ -820,8 +793,6 @@ public class CLI {
         return strCorreo;
     }    
     
-        
-        
     public static String pedirPin()
     {
         Scanner sc = new Scanner (System.in);
@@ -998,9 +969,7 @@ public class CLI {
     {
         if("18".equals(opcion)){
             String pNumCuenta = pedirNumCuenta();
-            String cuenta = consultarCuenta(pNumCuenta);
-            String total = "La cuenta número " + pNumCuenta+  " contiene la siguiente informacion  "
-                    +cuenta;
+            String total = Persona.consultarEstadoCuenta(pNumCuenta, "colones");
             System.out.println(total);
         }
     }

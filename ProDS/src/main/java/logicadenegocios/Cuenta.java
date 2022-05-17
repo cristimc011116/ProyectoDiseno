@@ -65,6 +65,14 @@ public class Cuenta implements Comparable<Cuenta>{
       return numero;
     }
     
+    public void asignarDueno(Persona persona){
+        this.setDueno(persona);
+    }
+    
+    public void asignarCuenta(Operacion pOperacion){
+        this.operaciones.add(pOperacion);
+    }
+    
     public static void inactivarCuenta(String pNumCuenta)
     {
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
@@ -91,16 +99,6 @@ public class Cuenta implements Comparable<Cuenta>{
         return numCuenta;
     }
     
-    public double aDecimal(int pMonto)
-    {
-        String strNum = Integer.toString(pMonto);
-        DecimalFormat df = new DecimalFormat("0.00");
-        String resultado = df.format(Double.parseDouble(strNum));
-        resultado = resultado.replace(',','.');
-        double numDec = Double.parseDouble(resultado);
-        return numDec;
-    }
-    
     @Override
     public int compareTo(Cuenta e){
         String strSaldoEncrip1 = e.getSaldo();
@@ -122,39 +120,7 @@ public class Cuenta implements Comparable<Cuenta>{
         }
     }
 
-
-    
-    public static Double convertirSaldo(Cuenta pCuenta){
-        String saldoS = Encriptacion.desencriptar(pCuenta.getSaldo());
-        Double saldoDouble = Double.parseDouble(saldoS);
-        return saldoDouble;   
-    }
-    
-   public static double aplicaComision(String numCuenta, double monto)
-   {
-       int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
-       if (contador > 3)
-       {
-           return (monto*0.02);
-       }
-       else
-       {
-           return 0.00;
-       }
-   }   
    
-   public static double aplicaComisionRetiro(String numCuenta, double monto)
-   {
-       int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
-       if (contador >= 10)
-       {
-           return (monto*0.02);
-       }
-       else
-       {
-           return 0.00;
-       }
-   } 
 //-------------------------------------METODOS ACCESORES------------------------------------------
     public String getNumero() {
         return numero;
@@ -192,6 +158,14 @@ public class Cuenta implements Comparable<Cuenta>{
         this.estatus = pEstatus.toLowerCase();
     }
     
+    public Persona getDueno() {
+        return dueno;
+    }
+
+    public void setDueno(Persona dueno) {
+        this.dueno = dueno;
+    }
+    
     public String toString()
     {
         String mensaje = "";
@@ -208,10 +182,6 @@ public class Cuenta implements Comparable<Cuenta>{
         mensaje = "Número de cuenta= " + this.numero + "\n" + "Estatus de la cuenta= " 
             + this.estatus + "\n" + "Saldo actual= " + this.saldo + "\n";
         return mensaje;
-    }
-    
-    public void setFechaCreacion2(LocalDate pFechaCreacion) {
-        this.fechaCreacion = pFechaCreacion;
     }
 
     public static LocalDate setFechaCreacion()

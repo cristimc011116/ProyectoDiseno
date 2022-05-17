@@ -77,7 +77,6 @@ public class Persona{
     public void asignarCuenta(Cuenta pCuenta){
         this.misCuentas.add(pCuenta);
     }
-   
     
     public static Persona insertarCliente(String apellido1,String apellido2, String nombre,
             int idCliente, LocalDate fechaNacimiento,int telefonoCliente, String correo)
@@ -94,6 +93,17 @@ public class Persona{
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
       String saldo = cuenta.getSaldo();
       return saldo;
+    }
+    
+    public static double consultarSaldoDolares(String pNumCenta)
+    {
+      ConsultaMoneda consulta = new ConsultaMoneda();
+      double cambio = consulta.consultaCambioVenta();
+      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
+      String strSaldo = cuenta.getSaldo();
+      double saldo = Double.parseDouble(strSaldo);
+      double dolares = saldo/cambio;
+      return dolares;
     }
     
     public static String consultarStatus(String pNumCenta)

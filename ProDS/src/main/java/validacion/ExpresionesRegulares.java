@@ -5,10 +5,12 @@
 package validacion;
 
 import dao.CuentaDAO;
+import dao.PersonaDAO;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import logicadenegocios.Cuenta;
+import logicadenegocios.Persona;
 
 /**
  *
@@ -92,4 +94,13 @@ public class ExpresionesRegulares {
       }
       return false;
     } 
+    
+    public static boolean validarIdExiste(int id){
+        Persona persona = PersonaDAO.obtenerPersona(id);
+        String nombre = persona.getNombre();
+        if(nombre!=null){
+            return true;
+        }
+        return false;
+    }
 }
