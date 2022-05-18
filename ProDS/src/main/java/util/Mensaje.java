@@ -12,6 +12,7 @@ import java.util.Random;
  * @author Cristi Martínez
  */
 public class Mensaje {
+    
 
 
     public static String crearPalabra()

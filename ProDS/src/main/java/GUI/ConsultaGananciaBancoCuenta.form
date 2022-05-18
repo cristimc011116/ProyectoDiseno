@@ -188,6 +188,7 @@
     <Component class="javax.swing.JButton" name="btnConsultar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Consultar"/>
+        <Property name="actionCommand" type="java.lang.String" value="ConsultarGananciaCuenta"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>

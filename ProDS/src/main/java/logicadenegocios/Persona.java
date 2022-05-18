@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package logicadenegocios;
+import static controlador.ControladorUsuario.montoCorrecto;
+import static controlador.ControladorUsuario.montoMoneda;
 import dao.CuentaDAO;
 import dao.OperacionDAO;
 import dao.PersonaDAO;
@@ -122,6 +124,10 @@ public class Persona{
         String oper = "";
         Cuenta cuentaBase = CuentaDAO.obtenerCuenta(pNumCuenta);
         int idDueno = CuentaDAO.obtenerPersonaCuenta(pNumCuenta);
+        String strSaldoColones = cuentaBase.getSaldo();
+        double saldoColones = Double.parseDouble(strSaldoColones);
+        double montoCorrec = montoMoneda(saldoColones, moneda);
+        strSaldo = Double.toString(montoCorrec);
         Persona persona = PersonaDAO.obtenerPersona(idDueno);
         String nombreDueno = persona.getNombre() + " " + persona.getPrimerApellido() + " " + persona.getSegundoApellido();
         ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(pNumCuenta);
@@ -129,10 +135,7 @@ public class Persona{
         {
             if("colones".equals(moneda))
             {
-                strSaldo = cuentaBase.getSaldo();
                 strPin = cuentaBase.getPin();
-                double saldo = Double.parseDouble(strSaldo);
-                double monto = (operacion.getMontoComision()/0.02);
                 LocalDate fecha = operacion.getFechaOperacion();
                 String tipo = operacion.getTipo();
                 double montoComision = operacion.getMontoComision();
@@ -142,14 +145,8 @@ public class Persona{
             else
             {
                 double venta = consulta.consultaCambioVenta();
-                String strSaldoColones = cuentaBase.getSaldo();
-                double saldoColones = Double.parseDouble(strSaldoColones);
-                double saldoDolares = saldoColones/venta;
-                strSaldo = Double.toString(saldoDolares);
                 strPin = cuentaBase.getPin();
-                double monto = (operacion.getMontoComision()/0.02);
                 double comisionDolares = (operacion.getMontoComision()/venta);
-                double montoDolares = monto/venta;
                 LocalDate fecha = operacion.getFechaOperacion();
                 String tipo = operacion.getTipo();
                 contador++;

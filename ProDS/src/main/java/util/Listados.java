@@ -19,13 +19,15 @@ import logicadenegocios.Persona;
  */
 public class Listados {
     
-    public void ordenarClientes(){
+    public static ArrayList<Persona> ordenarClientes(){
       ArrayList<Persona> personasSistema = PersonaDAO.getPersonasBD();
       personasSistema.sort(Comparator.comparing(Persona::getPrimerApellido));
+      return personasSistema;
     }
     
-    public void ordenarCuentas(){
+    public static ArrayList<Cuenta> ordenarCuentas(){
         ArrayList<Cuenta> cuentasSistema = CuentaDAO.getCuentasBD();
         Collections.sort(cuentasSistema);
+        return cuentasSistema;
     }
 }

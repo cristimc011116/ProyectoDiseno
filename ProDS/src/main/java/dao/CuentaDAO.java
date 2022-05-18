@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import util.ConexionBase;
 import logicadenegocios.Cuenta;
+import logicadenegocios.Operacion;
 import util.Encriptacion;
 
 /**
@@ -191,7 +192,6 @@ public class CuentaDAO {
     }
     
     public static int contadorOperacionesCuenta(String numCuenta){
-        cuentas = new ArrayList<>();
         String numEncrip = Encriptacion.encriptar(numCuenta);
         int contador = 1;
         ConexionBase con = new ConexionBase();
@@ -200,9 +200,10 @@ public class CuentaDAO {
         try{
             while(buscar.next()){
                 String idOperacion = buscar.getString("idOperacion");
-                ResultSet buscar2 = con.consultas("SELECT * FROM Operacion WHERE id = " + idOperacion + " AND tipo = 'deposito' OR tipo = 'retiro'");
+                ResultSet buscar2 = con.consultas("SELECT * FROM Operacion WHERE id = " + idOperacion + " AND (tipo = 'deposito' OR tipo = 'retiro')");
                 try{
                     while(buscar2.next()){
+                        String tipo = buscar2.getString("tipo");
                         contador++;
                     }
                 }catch(SQLException e){
@@ -213,7 +214,60 @@ public class CuentaDAO {
             JOptionPane.showMessageDialog(null, "Error: " + e.toString());
         }
         return contador;
-      }
+    }
+    
+    
+    public static double comisionesPorDeposito(String numCuenta){
+        String numEncrip = Encriptacion.encriptar(numCuenta);
+        double contador = 0.00;
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE cuenta = " +"'"+ numEncrip+"'");
+        try{
+            while(buscar.next()){
+                String idOperacion = buscar.getString("idOperacion");
+                ResultSet buscar2 = con.consultas("SELECT * FROM Operacion WHERE id = " + idOperacion + " AND tipo = 'deposito'");
+                try{
+                    while(buscar2.next()){
+                        String strComision = buscar2.getString("montoComision");
+                        double montoComision = Double.parseDouble(strComision);
+                        contador+=montoComision;
+                    }
+                }catch(SQLException e){
+                    JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+                }
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+        }
+        return contador;
+    }
+    
+    public static double comisionesPorRetiro(String numCuenta){
+        String numEncrip = Encriptacion.encriptar(numCuenta);
+        double contador = 0.00;
+        ConexionBase con = new ConexionBase();
+        con.obtenerConexion();
+        ResultSet buscar = con.consultas("SELECT * FROM CuentaOperacion WHERE cuenta = " +"'"+ numEncrip+"'");
+        try{
+            while(buscar.next()){
+                String idOperacion = buscar.getString("idOperacion");
+                ResultSet buscar2 = con.consultas("SELECT * FROM Operacion WHERE id = " + idOperacion + " AND tipo = 'retiro'");
+                try{
+                    while(buscar2.next()){
+                        String strComision = buscar2.getString("montoComision");
+                        double montoComision = Double.parseDouble(strComision);
+                        contador+=montoComision;
+                    }
+                }catch(SQLException e){
+                    JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+                }
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: " + e.toString());
+        }
+        return contador;
+    }
 }
     
 

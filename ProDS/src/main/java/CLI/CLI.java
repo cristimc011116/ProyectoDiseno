@@ -119,23 +119,16 @@ public class CLI {
       String resultado="";
       if(!"inactiva".equals(cuenta.getEstatus()))
       {
-        String pin = esPinCuenta(pNumCuenta);
-        if("Se ha desactivado la cuenta".equals(pin))
-        {
-            System.out.println("La cuenta ha sido desactivada por el ingreso del pin incorrecto");
-            volverMenu();
-        }
-        else
-        {
-          String strMonto = pedirMonto();
-          double monto = Double.parseDouble(strMonto);
-          double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
-          double comision = ControladorUsuario.aplicaComision(pNumCuenta, montoCorrecto);
-          Operacion.realizarDeposito(montoCorrecto, moneda, pNumCuenta);
-          resultado = ControladorUsuario.imprimirResultadoDeposito(moneda, comision, montoCorrecto,pNumCuenta);
-          System.out.println(resultado);
-          volverMenu();
-        }
+        
+        String strMonto = pedirMonto();
+        double monto = Double.parseDouble(strMonto);
+        double montoCorrecto = montoValidoDeposito(monto, pNumCuenta, moneda);
+        double comision = ControladorUsuario.aplicaComision(pNumCuenta, montoCorrecto);
+        Operacion.realizarDeposito(monto, moneda, pNumCuenta);
+        resultado = ControladorUsuario.imprimirResultadoDeposito(moneda, comision, montoCorrecto,pNumCuenta);
+        System.out.println(resultado);
+        volverMenu();
+        
       }
       else
       {
@@ -183,19 +176,22 @@ public class CLI {
         ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
         Cuenta cuenta=new Cuenta();
         System.out.println("------------------------------------------------------------------------------------");
-        System.out.println("|  Cuenta   |-|  Detalle de la operación|-|Fecha de la operación|-|   Monto  |-| Comisión del Banco|");
+        System.out.println("|  Cuenta   |-|  Detalle de la operación|-|Fecha de la operación|-| Comisión del Banco|");
         for(int i=0;i<listaCuentas.size();i++){
           cuenta = listaCuentas.get(i);
           sumaRetiros = Operacion.sumarComisionesRetiros(cuenta.getNumero());
           sumaDepositos = Operacion.sumarComisionesdepositos(cuenta.getNumero());
           sumaComisiones = sumaComisiones + LlenarTablaConsultaBancoTotalizado(cuenta.getNumero());
         }
+        double sumaR = Operacion.sumarComisionesTotalesRetiros();
+        double sumaD = Operacion.sumarComisionesTotalesdepositos();
+        double sumaT = sumaR + sumaD;
         System.out.println("------------------------------------------------------------------------------------");
-        System.out.println("LA SUMA DE LA GANANCIA DEL BANCO POR DEPOSITOS ES DE:"+ sumaDepositos);
+        System.out.println("LA SUMA DE LA GANANCIA DEL BANCO POR DEPOSITOS ES DE:"+ sumaD);
         System.out.println("------------------------------------------------------------------------------------");
-        System.out.println("LA SUMA DE LA GANANCIA DEL BANCO POR RETIROS ES DE:"+ sumaRetiros);
+        System.out.println("LA SUMA DE LA GANANCIA DEL BANCO POR RETIROS ES DE:"+ sumaR);
         System.out.println("------------------------------------------------------------------------------------");
-        System.out.println("LA SUMA TOTAL DE LA GANANCIA DEL BANCO ES DE:"+ sumaComisiones);
+        System.out.println("LA SUMA TOTAL DE LA GANANCIA DEL BANCO ES DE:"+ sumaT);
         System.out.println("------------------------------------------------------------------------------------");
         volverMenu();
       }
@@ -226,11 +222,10 @@ public class CLI {
       ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuentaDesencrip);
       for(Operacion operacion: operaciones)
       {
-        if (operacion.getTipo().equals("retiro") && operacion.getTipo().equals("deposito"))
+        if (operacion.getTipo().equals("retiro") || operacion.getTipo().equals("deposito"))
         {
-          double monto = (operacion.getMontoComision()/0.02);
           System.out.println("------------------------------------------------------------------------------------");
-          System.out.println("|"+cuentaDesencrip+"|-|"+operacion.getTipo()+"|-|"+operacion.getFechaOperacion()+"|-|"+ monto+"|-|"+operacion.getMontoComision()+"|");
+          System.out.println("|"+cuentaDesencrip+"|-|"+operacion.getTipo()+"|-|"+operacion.getFechaOperacion()+"|-|"+operacion.getMontoComision()+"|");
           sumaComisiones = sumaComisiones + operacion.getMontoComision();
         }
       }
@@ -242,11 +237,11 @@ public class CLI {
     {
       double sumaComisiones = 0;
       System.out.println("------------------------------------------------------------------------------------");
-      System.out.println("|Detalle de la operación|-|Fecha de la operación|-|   Monto  |-| Comisión del Banco|");
+      System.out.println("|Detalle de la operación |-| Fecha de la operación |-| Comisión del Banco|");
       ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuenta);
       for(Operacion operacion: operaciones)
       {
-        if (operacion.getTipo().equals("retiro") && operacion.getTipo().equals("deposito"))
+        if (operacion.getTipo().equals("retiro") || operacion.getTipo().equals("deposito"))
         {
           double monto = (operacion.getMontoComision()/0.02);
           System.out.println("------------------------------------------------------------------------------------");
@@ -290,8 +285,8 @@ public class CLI {
                     String strMonto = pedirMonto();
                     double monto = Double.parseDouble(strMonto);
                     double montoCorrecto = montoValido(monto, pNumCuenta, moneda);
-                    Operacion.realizarRetiro(montoCorrecto, moneda, pNumCuenta);
-                    double comision = ControladorUsuario.aplicaComisionRetiro(pNumCuenta, montoCorrecto);
+                    Operacion.realizarRetiro(monto, moneda, pNumCuenta);
+                    double comision = ControladorUsuario.aplicaComisionRetiro(pNumCuenta, montoCorrecto, 4);
                     resultado = ControladorUsuario.imprimirResultado(moneda, comision, montoCorrecto);
                     System.out.println(resultado);
                     volverMenu();
@@ -745,6 +740,25 @@ public class CLI {
                 String strSaldo = pedirMonto();
                 pMonto = Double.parseDouble(strSaldo);
             }
+        }
+        
+        return pMonto;
+    }
+    
+    public static double montoValidoDeposito(double pMonto, String pNumCuenta, String moneda)
+    {
+        ConsultaMoneda consulta = new ConsultaMoneda();
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        String montoEncrip = cuenta.getSaldo();
+        //String strMonto = Cuenta.desencriptar(montoEncrip);
+        //String strMonto1 = strMonto.replace("+-","");
+        double monto = Double.parseDouble(montoEncrip);
+        double venta = consulta.consultaCambioVenta();
+        double pMontoDolares = pMonto * venta;
+        if("dolares".equals(moneda))
+        {
+            pMontoDolares = pMonto * venta;
+            pMonto = pMontoDolares;
         }
         
         return pMonto;

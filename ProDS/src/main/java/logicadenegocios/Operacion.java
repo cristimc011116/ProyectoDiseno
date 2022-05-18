@@ -52,7 +52,7 @@ public class Operacion {
         double nuevoMonto;
         Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
         monto = montoCorrecto(monto, moneda);
-        comision = ControladorUsuario.aplicaComision(cuenta, monto);
+        comision = ControladorUsuario.aplicaComisionRetiro(cuenta, monto, 3);
         nuevoMonto = monto + comision;
         String strSaldoViejo = cuentaBase.getSaldo();
         double saldoViejo = Double.parseDouble(strSaldoViejo);
@@ -68,7 +68,7 @@ public class Operacion {
         double nuevoMonto;
         Cuenta cuentaBase = CuentaDAO.obtenerCuenta(cuenta);
         monto = montoCorrecto(monto, moneda);
-        comision = ControladorUsuario.aplicaComisionRetiro(cuenta, monto);
+        comision = ControladorUsuario.aplicaComisionRetiro(cuenta, monto, 3);
         nuevoMonto = monto + comision;
         String strSaldoViejo = cuentaBase.getSaldo();
         double saldoViejo = Double.parseDouble(strSaldoViejo);
@@ -164,28 +164,36 @@ public class Operacion {
 
     public static double sumarComisionesRetiros(String pnumCuenta)
     {
-      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesBD();
-      for(Operacion operacion: operaciones)
-      {
-        if(operacion.getTipo().equals("retiro") && operacion.getCuenta().equals(pnumCuenta))
-        {
-          return operacion.getMontoComision();
-        }
-      }
-      return 0;
+      double suma = CuentaDAO.comisionesPorRetiro(pnumCuenta);
+      return suma;
     }
     
     public static double sumarComisionesdepositos(String pnumCuenta)
     {
-      ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesBD();
-      for(Operacion operacion: operaciones)
-      {
-        if(operacion.getTipo().equals("deposito"))
-        {
-          return operacion.getMontoComision();
-        }
+      double suma = CuentaDAO.comisionesPorDeposito(pnumCuenta);
+      return suma;
+    }
+    
+    public static double sumarComisionesTotalesRetiros()
+    {
+      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+      double sumaRetiros = 0.00;
+      for(Cuenta cuenta: listaCuentas){
+          String numCuenta = Encriptacion.desencriptar(cuenta.getNumero());
+          sumaRetiros += sumarComisionesRetiros(numCuenta);
       }
-      return 0;
+      return sumaRetiros;
+    }
+    
+    public static double sumarComisionesTotalesdepositos()
+    {
+      ArrayList<Cuenta> listaCuentas = CuentaDAO.getCuentasBD();
+      double sumaDepositos = 0.00;
+      for(Cuenta cuenta: listaCuentas){
+          String numCuenta = Encriptacion.desencriptar(cuenta.getNumero());
+          sumaDepositos += sumarComisionesdepositos(numCuenta);
+      }
+      return sumaDepositos;
     }
     
 //-------------------------------------METODOS ACCESORES--------------------------------------------------

@@ -4,6 +4,8 @@
  */
 package controlador;
 
+import CLI.CLI;
+import static CLI.CLI.montoValidoDeposito;
 import GUI.CambiarPIN;
 import GUI.ConsultaGananciaBancoCuenta;
 import GUI.ConsultaGananciaBancoTotal;
@@ -47,6 +49,7 @@ import logicadenegocios.Persona;
 import logicadenegocios.Operacion;
 import util.CorreoElectronico;
 import util.Encriptacion;
+import util.Listados;
 import util.Mensaje;
 //import util.Mensaje;
 import validacion.ExpresionesRegulares;
@@ -103,10 +106,10 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnGananciaBancoTotalizado.addActionListener(this);
         this.menu.btnConsultaStatus.addActionListener(this);
         this.menu.btnListarCuentas.addActionListener(this);
-        cargarDatosPersonas();
-        ordenarClientes();
-        cargarDatosCuentas();
-        ordenarCuentas();
+        //cargarDatosPersonas();
+        personasSistema = Listados.ordenarClientes();
+        //cargarDatosCuentas();
+        cuentasSistema = Listados.ordenarCuentas();
     }
     
     public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -183,6 +186,9 @@ public class ControladorUsuario implements ActionListener{
                 consultarStatus();
                 break;
             case "ConsultarComCuenta":
+                consultarGananciaBancoCuenta();
+                break;
+            case "ConsultarGananciaCuenta":
                 consultarGananciaBancoCuenta();
                 break;
             case "Consultar status":
@@ -344,10 +350,6 @@ public class ControladorUsuario implements ActionListener{
             JOptionPane.showMessageDialog(null, "Verifique sus datos");
           }
         }
-        else
-        {
-          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
-        }
       }
       else
       {
@@ -375,21 +377,14 @@ public class ControladorUsuario implements ActionListener{
           if (insertar == 0)
           {
             Operacion.realizarDeposito(monto, moneda, cuenta);  
-            double comision = ControladorUsuario.aplicaComision(cuenta, monto);
-            resultado = imprimirResultadoDeposito( moneda,comision,monto,cuenta);
+            double montoCorrecto = montoValidoDeposito(monto, cuenta, moneda);
+            double comision = ControladorUsuario.aplicaComisionRetiro(cuenta, montoCorrecto, 4);
+            resultado = imprimirResultadoDeposito( moneda,comision,montoCorrecto,cuenta);
             JOptionPane.showMessageDialog(null, resultado);
             this.vista7.txtMontoDeposito.setText("");
             this.vista7.txtNumCuenta.setText("");
             this.vista7.cmbTipoMoneda.setSelectedIndex(0);
           }
-          else
-          {
-            JOptionPane.showMessageDialog(null, "Verifique los datos");
-          }
-        }
-        else
-        {
-          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
         }
       }
       else
@@ -428,10 +423,6 @@ public class ControladorUsuario implements ActionListener{
             JOptionPane.showMessageDialog(null, "Verifique sus datos");
           }
         }
-        else
-        {
-          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
-        }
       }
       else
       {
@@ -457,15 +448,7 @@ public class ControladorUsuario implements ActionListener{
           JOptionPane.showMessageDialog(null, resultado);
           this.vista14.txtNumCuenta.setText("");
         }
-        else
-        {
-          JOptionPane.showMessageDialog(null, "Verifique sus datos");
-        }
-      }
-      else
-      {
-        JOptionPane.showMessageDialog(null, "Complete todos sus datos");
-      }   
+      } 
     }
     
     public void enviarPalabra()
@@ -495,10 +478,6 @@ public class ControladorUsuario implements ActionListener{
         {
           JOptionPane.showMessageDialog(null, "La cuenta o el pin esta incorrecto");
         }
-      }
-      else
-      {
-        JOptionPane.showMessageDialog(null, "Complete todos sus datos");
       }
     }   
     
@@ -530,10 +509,6 @@ public class ControladorUsuario implements ActionListener{
           JOptionPane.showMessageDialog(null, "La cuenta o el pin está incorrecto");
         }
       }
-      else
-      {
-        JOptionPane.showMessageDialog(null, "Complete todos sus datos");
-      }
     }   
     
     public void retirar()   
@@ -564,9 +539,11 @@ public class ControladorUsuario implements ActionListener{
           insertar += validarPalabra(palabraClave, cuenta);
           if (insertar == 0)
           {
-            double comision = ControladorUsuario.aplicaComisionRetiro(cuenta, monto);
+            
+            double montoCorrecto = CLI.montoValido(monto, cuenta, moneda);
             Operacion.realizarRetiro(monto, moneda, cuenta);
-            resultado = imprimirResultado(moneda, comision, monto);
+            double comision = ControladorUsuario.aplicaComisionRetiro(cuenta, montoCorrecto, 4);
+            resultado = imprimirResultado(moneda, comision, montoCorrecto);
             JOptionPane.showMessageDialog(null, resultado);
             this.vista3.txtCuenta.setText("");
             this.vista3.txtPin.setText("");
@@ -580,10 +557,6 @@ public class ControladorUsuario implements ActionListener{
           {
             JOptionPane.showMessageDialog(null, "Verifique sus datos");
           }
-        }
-        else
-        {
-          JOptionPane.showMessageDialog(null, "Complete todos sus datos");
         }
       }
       else
@@ -825,6 +798,11 @@ public class ControladorUsuario implements ActionListener{
       int idDueno = CuentaDAO.obtenerPersonaCuenta(cuenta);
       String strIdDueno = Integer.toString(idDueno);
       this.vista5.lbIdDueno.setText(strIdDueno);
+      String strSaldoColones = cuentaBase.getSaldo();
+      double saldoColones = Double.parseDouble(strSaldoColones);
+      double montoCorrec = montoMoneda(saldoColones, moneda);
+      String strMontoCorrec = Double.toString(montoCorrec);
+      this.vista5.lbSaldo.setText(strMontoCorrec);
       Persona persona = PersonaDAO.obtenerPersona(idDueno);
       String nombreDueno = persona.getNombre() + " " + persona.getPrimerApellido() + " " + persona.getSegundoApellido();
       this.vista5.lbNombreDueno.setText(nombreDueno);
@@ -832,7 +810,6 @@ public class ControladorUsuario implements ActionListener{
       String[] titulos = {
         "Fecha",
         "Tipo",
-        "Monto",
         "Comisión"};
       this.vista5.modelo = new DefaultTableModel(null, titulos);
       this.vista5.tablaEstado.setModel(this.vista5.modelo);
@@ -840,23 +817,15 @@ public class ControladorUsuario implements ActionListener{
       {
         if("colones".equals(moneda))
         {
-          this.vista5.lbSaldo.setText(cuentaBase.getSaldo());
-          double monto = (operacion.getMontoComision()/0.02);
-          Object[] info = {operacion.getFechaOperacion(), operacion.getTipo(), monto, operacion.getMontoComision()};
+          
+          Object[] info = {operacion.getFechaOperacion(), operacion.getTipo(), operacion.getMontoComision()};
           this.vista5.modelo.addRow(info);
         }
         else
         {
           double venta = consulta.consultaCambioVenta();
-          String strSaldoColones = cuentaBase.getSaldo();
-          double saldoColones = Double.parseDouble(strSaldoColones);
-          double saldoDolares = saldoColones/venta;
-          String strSaldoDolares = Double.toString(saldoDolares);
-          this.vista5.lbSaldo.setText(strSaldoDolares);
-          double monto = (operacion.getMontoComision()/0.02);
           double comisionDolares = (operacion.getMontoComision()/venta);
-          double montoDolares = monto/venta;
-          Object[] info = {operacion.getFechaOperacion(), operacion.getTipo(), montoDolares, comisionDolares};
+          Object[] info = {operacion.getFechaOperacion(), operacion.getTipo(), comisionDolares};
           this.vista5.modelo.addRow(info);
         }
       }
@@ -899,17 +868,15 @@ public class ControladorUsuario implements ActionListener{
       String[] titulos = {
       "Detalle de la operación",
       "Fecha de la operación",
-      "Monto",
       "Comisión del Banco"};
       ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(cuenta);
       this.vista9.modelo = new DefaultTableModel(null, titulos);
       this.vista9.tblGananciaBancoComicionesCuenta.setModel(this.vista9.modelo);
       for(Operacion operacion: operaciones)
       {
-        if (operacion.getTipo().equals("retiro") && operacion.getTipo().equals("deposito"))
+        if (operacion.getTipo().equals("retiro") || operacion.getTipo().equals("deposito"))
         {
-          double monto = (operacion.getMontoComision()/0.02);
-        Object[] info = {operacion.getTipo(),operacion.getFechaOperacion(), monto, operacion.getMontoComision()};
+        Object[] info = {operacion.getTipo(),operacion.getFechaOperacion(), operacion.getMontoComision()};
         sumaComisiones = sumaComisiones + operacion.getMontoComision();
         this.vista9.modelo.addRow(info);
         this.vista9.txtGananciasBanco.setText(String.valueOf(sumaComisiones));
@@ -926,12 +893,12 @@ public class ControladorUsuario implements ActionListener{
       Cuenta cuenta=new Cuenta();
       for(int i=0;i<listaCuentas.size();i++){
         cuenta = listaCuentas.get(i);
-        sumaRetiros = Operacion.sumarComisionesRetiros(cuenta.getNumero());
-        sumaDepositos = Operacion.sumarComisionesdepositos(cuenta.getNumero());
+        String numCuenta = Encriptacion.desencriptar(cuenta.getNumero());
+        sumaRetiros += Operacion.sumarComisionesRetiros(numCuenta);
+        sumaDepositos += Operacion.sumarComisionesdepositos(numCuenta);
         sumaComisiones = sumaComisiones + LlenarTablaConsultaBancoTotalizado();
       }
-      this.vista10.txtComisionPorRetiros.setText(String.valueOf(sumaRetiros));
-      this.vista10.txtGananciaPorDepositos.setText(String.valueOf(sumaDepositos));
+      
       this.vista10.txtGananciaTotal.setText(String.valueOf(sumaComisiones));
     }
     
@@ -941,24 +908,25 @@ public class ControladorUsuario implements ActionListener{
     {
       double sumaComi=0;
       String[] titulos = {
-      "Cuenta",
       "Detalle de la operación",
       "Fecha de la operación",
-      "Monto",
       "Comisión del Banco"};
       ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesBD();
       this.vista10.modelo = new DefaultTableModel(null, titulos);
       this.vista10.tblGananciasBancoTotalizado.setModel(this.vista10.modelo);
       for(Operacion operacion: operaciones)
       {
-        if (operacion.getTipo().equals("retiro") && operacion.getTipo().equals("deposito"))
+        if (operacion.getTipo().equals("retiro") || operacion.getTipo().equals("deposito"))
         {
-          double monto = (operacion.getMontoComision()/0.02);
-          Object[] info = {cuenta, operacion.getTipo(),operacion.getFechaOperacion(), monto, operacion.getMontoComision()};
+          Object[] info = {operacion.getTipo(),operacion.getFechaOperacion(), operacion.getMontoComision()};
           this.vista10.modelo.addRow(info);
           sumaComi=sumaComi+operacion.getMontoComision();
         }
       }
+      double sumaR = Operacion.sumarComisionesTotalesRetiros();
+      double sumaD = Operacion.sumarComisionesTotalesdepositos();
+      this.vista10.txtComisionPorRetiros.setText(String.valueOf(sumaR));
+      this.vista10.txtGananciaPorDepositos.setText(String.valueOf(sumaD));
       this.vista10.txtGananciaTotal.setText(String.valueOf(sumaComi));
       return sumaComi;
     }
@@ -990,7 +958,7 @@ public class ControladorUsuario implements ActionListener{
     {
       if(pEntrada.length() == 0)
       {
-        JOptionPane.showMessageDialog(null, "Error en dato: " + opcion);
+        JOptionPane.showMessageDialog(null, "Complete el dato: " + opcion);
         return 1;
       }
       return 0;
@@ -1205,6 +1173,18 @@ public class ControladorUsuario implements ActionListener{
       return monto;
     }
     
+    public static double montoMoneda(double pMonto, String moneda)
+    {
+      ConsultaMoneda consulta = new ConsultaMoneda();
+      double venta = consulta.consultaCambioVenta();
+      double monto = pMonto;
+      if("dolares".equals(moneda))
+      {
+        monto = pMonto / venta;
+      }
+      return monto;
+    }
+    
     public int validarPin(String pNumCuenta, String pPin)
     {
       if(esPinCuenta(pNumCuenta, pPin))
@@ -1346,6 +1326,7 @@ public class ControladorUsuario implements ActionListener{
            return 0;
         }
       }
+      JOptionPane.showMessageDialog(null, "Verifique la cuenta o el pin digitado");
       return 1;
     }
     
@@ -1671,8 +1652,7 @@ public class ControladorUsuario implements ActionListener{
     public static double aplicaComision(String numCuenta, double monto)
    {
        int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
-       System.out.println(contador);
-       if (contador > 31)
+       if (contador > 4)
        {
            return (monto*0.02);
        }
@@ -1682,10 +1662,10 @@ public class ControladorUsuario implements ActionListener{
        }
    }   
    
-   public static double aplicaComisionRetiro(String numCuenta, double monto)
+   public static double aplicaComisionRetiro(String numCuenta, double monto, int numero)
    {
        int contador = CuentaDAO.contadorOperacionesCuenta(numCuenta);
-       if (contador >= 10)
+       if (contador > numero)
        {
            return (monto*0.02);
        }
