@@ -199,17 +199,26 @@ public class CLI {
       if ("19".equals(opcion))
       {
         String pNumCuenta = pedirNumCuenta();
-        sumaComisiones = LlenarTablaConsultaBancoPorCuenta(pNumCuenta);
-        sumaRetiros = Operacion.sumarComisionesRetiros(pNumCuenta);
-        sumaDepositos = Operacion.sumarComisionesdepositos(pNumCuenta);
-        System.out.println("------------------------------------------------------------------------------------");
-        System.out.println("LA SUMA DE LA GANANCIA DEL BANCO POR DEPOSITOS ES DE:"+ sumaDepositos);
-        System.out.println("------------------------------------------------------------------------------------");
-        System.out.println("LA SUMA DE LA GANANCIA DEL BANCO POR RETIROS ES DE:"+ sumaRetiros);
-        System.out.println("------------------------------------------------------------------------------------");
-        System.out.println("LA SUMA TOTAL DE LA GANANCIA DEL BANCO ES DE:"+ sumaComisiones);
-        System.out.println("------------------------------------------------------------------------------------");
-        volverMenu();
+        Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCuenta);
+        if(!"inactiva".equals(cuenta.getEstatus()))
+        {
+            sumaComisiones = LlenarTablaConsultaBancoPorCuenta(pNumCuenta);
+            sumaRetiros = Operacion.sumarComisionesRetiros(pNumCuenta);
+            sumaDepositos = Operacion.sumarComisionesdepositos(pNumCuenta);
+            System.out.println("------------------------------------------------------------------------------------");
+            System.out.println("LA SUMA DE LA GANANCIA DEL BANCO POR DEPOSITOS ES DE:"+ sumaDepositos);
+            System.out.println("------------------------------------------------------------------------------------");
+            System.out.println("LA SUMA DE LA GANANCIA DEL BANCO POR RETIROS ES DE:"+ sumaRetiros);
+            System.out.println("------------------------------------------------------------------------------------");
+            System.out.println("LA SUMA TOTAL DE LA GANANCIA DEL BANCO ES DE:"+ sumaComisiones);
+            System.out.println("------------------------------------------------------------------------------------");
+            volverMenu();
+        }
+        else
+        {
+          System.out.println("Su cuenta se encuentra desactivada");
+          volverMenu();
+        }
       }
         
     }

@@ -696,7 +696,7 @@ public class ControladorUsuario implements ActionListener{
           int telefonoCliente = Integer.parseInt(telefono);
           Persona NuevoCliente = Persona.insertarCliente(apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo);
 
-          String mensaje = "Se ha creado un nuevo cliente en el sistema, los datos del cliente son: ";
+          String mensaje = "Se ha creado un nuevo cliente en el sistema, los datos del cliente son: \n";
           mensaje += NuevoCliente.toStringCompleto();
           JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -747,7 +747,7 @@ public class ControladorUsuario implements ActionListener{
         String saldo = Encriptacion.desencriptar(cuenta.getSaldo());
         int infoId = CuentaDAO.obtenerPersonaCuenta(numero);
         consulta = PersonaDAO.obtenerPersona(infoId);
-        String mensaje = consulta.getNombre() + consulta.getPrimerApellido() + consulta.getSegundoApellido();
+        String mensaje = consulta.getNombre() + " " + consulta.getPrimerApellido() + " " + consulta.getSegundoApellido();
         Object[] info = {numero, cuenta.getEstatus(), saldo, consulta.getId(), mensaje};
         this.latabla2.modelo.addRow(info);
       }
@@ -936,7 +936,7 @@ public class ControladorUsuario implements ActionListener{
       Double cambioCompra = 0.0;
       Double cambioVenta = 0.0;
       cambioCompra = Operacion.consultarCambioDolar("compra");
-      cambioVenta = Operacion.consultarCambioDolar("compra");
+      cambioVenta = Operacion.consultarCambioDolar("venta");
   
       
       this.vista12.txtCompra.setText(String.valueOf(cambioCompra));
@@ -1499,10 +1499,11 @@ public class ControladorUsuario implements ActionListener{
     public static String imprimirResultado(String moneda, double comision, double monto)
     {
       String resultado = "";
+      DecimalFormat df = new DecimalFormat("#.00");
       if("colones".equals(moneda))
       {
-        resultado += "Estimado usuario, el monto de este retiro es: " + monto;
-        resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
+        resultado += "Estimado usuario, el monto de este retiro es: " + (df.format(monto));
+        resultado += "\n[El monto cobrado por concepto de comisión fue de " + (df.format(comision)) + " colones, que fueron rebajados "
             + "automáticamente de su saldo actual]";
       }
       else
@@ -1510,10 +1511,10 @@ public class ControladorUsuario implements ActionListener{
         ConsultaMoneda consulta = new ConsultaMoneda();
         double ventaDolar = consulta.consultaCambioVenta();
         double montoDolares = monto/ventaDolar;
-        resultado += "Estimado usuario, el monto de este retiro es: " + montoDolares + " dólares";
-        resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + ventaDolar +"]";
-        resultado += "\n[El monto equivalente de su retiro es: " + monto + "colones]";
-        resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
+        resultado += "Estimado usuario, el monto de este retiro es: " + (df.format(montoDolares)) + " dólares";
+        resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + (df.format(ventaDolar)) +"]";
+        resultado += "\n[El monto equivalente de su retiro es: " + (df.format(monto)) + "colones]";
+        resultado += "\n[El monto cobrado por concepto de comisión fue de " + (df.format(comision)) + " colones, que fueron rebajados "
             + "automáticamente de su saldo actual]";
       }
       return resultado;
@@ -1521,8 +1522,9 @@ public class ControladorUsuario implements ActionListener{
     
     public static String imprimirResultadoTransf(double monto)
     {
+      DecimalFormat df = new DecimalFormat("#.00");
       String resultado = "";
-      resultado += "Estimado usuario, la transferencia de fondos se ejecutó satisfactoriamente.\nEl monto retirado de la cuenta origen y depositado en la cuenta destino es " + monto + "0";
+      resultado += "Estimado usuario, la transferencia de fondos se ejecutó satisfactoriamente.\nEl monto retirado de la cuenta origen y depositado en la cuenta destino es " + (df.format(monto)) + "0";
       resultado += "\n[El monto cobrado por concepto de comisión a la cuenta origen fue de 0.00 colones, que fueron rebajados automáticamente de su saldo actual]";
      
       return resultado;
@@ -1549,11 +1551,11 @@ public class ControladorUsuario implements ActionListener{
         double montoDolares = monto/ventaDolar;
         depositoReal=monto-comision;
         //operacion.depositar(cuenta,String.valueOf(depositoReal));
-        resultado += "Estimado usuario, se han recibido correctamente: " + montoDolares + " dólares";
-        resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + ventaDolar +"]";
-        resultado += "\n[El monto equivalente de su deposito es: " + monto + " colones]";
-        resultado += "\n[El monto real depositado a su cuenta " + cuenta + " es de "+depositoReal+" colones]";
-        resultado += "\n[El monto cobrado por concepto de comisión fue de " + comision + " colones, que fueron rebajados "
+        resultado += "Estimado usuario, se han recibido correctamente: " + (df.format(montoDolares)) + " dólares";
+        resultado += "\n\n[Según el BCCR, el tipo de cambio de venta del dólar hoy es: " + (df.format(ventaDolar)) +"]";
+        resultado += "\n[El monto equivalente de su deposito es: " + (df.format(monto)) + " colones]";
+        resultado += "\n[El monto real depositado a su cuenta " + cuenta + " es de "+(df.format(depositoReal))+" colones]";
+        resultado += "\n[El monto cobrado por concepto de comisión fue de " + (df.format(comision)) + " colones, que fueron rebajados "
             + "automáticamente de su saldo actual]";
       }
       return resultado;
@@ -1573,11 +1575,11 @@ public class ControladorUsuario implements ActionListener{
       else
       {
         ConsultaMoneda consulta = new ConsultaMoneda();
-        double compraDolar = consulta.consultaCambioCompra();
-        double montoDolares = saldoFinal/compraDolar;
+        double ventaDolar = consulta.consultaCambioVenta();
+        double montoDolares = saldoFinal/ventaDolar;
         resultado += "Estimado usuario el saldo actual de su cuenta es: " + (df.format(montoDolares))+" dólares";
         resultado += "\n\nPara esta conversión se utilizó el tipo de cambio del dólar, precio de compra.";
-        resultado += "\n[Según el BCCR, el tipo de cambio de compra del dólar hoy es: " + compraDolar +"]";
+        resultado += "\n[Según el BCCR, el tipo de cambio de compra del dólar hoy es: " + (df.format(ventaDolar)) +"]";
 
       }
       return resultado;
@@ -1677,7 +1679,10 @@ public class ControladorUsuario implements ActionListener{
     
     public static String imprimirCuenta(String pNum){
       Cuenta cuenta = CuentaDAO.obtenerCuenta(pNum);
-      String mensaje = "Número de cuenta: " + pNum + "\nEstatus de la cuenta: " + cuenta.getEstatus() + "\nSaldo actual: " + cuenta.getSaldo();
+      DecimalFormat df = new DecimalFormat("#.00");
+      String strSaldo = cuenta.getSaldo();
+      double saldo = Double.parseDouble(strSaldo);
+      String mensaje = "Número de cuenta: " + pNum + "\nEstatus de la cuenta: " + cuenta.getEstatus() + "\nSaldo actual: " + (df.format(saldo));
       return mensaje;
     }
     
@@ -1685,7 +1690,7 @@ public class ControladorUsuario implements ActionListener{
       Persona persona = PersonaDAO.obtenerPersona(id);
       String mensaje = "Nombre del dueño de la cuenta: " + persona.getNombre() + " " + persona.getPrimerApellido() + " " + 
           persona.getSegundoApellido() + "\nNúmero de teléfono 'asociado' a la cuenta: " + 
-          persona.getNumero() + "\nDirección de correo elctrónico 'asociada' a la cuenta: " + persona.getCorreo();
+          persona.getNumero() + "\nDirección de correo electrónico 'asociada' a la cuenta: " + persona.getCorreo();
       return mensaje;
     } 
 }

@@ -69,7 +69,7 @@ public class Cuenta implements Comparable<Cuenta>{
         this.setDueno(persona);
     }
     
-    public void asignarCuenta(Operacion pOperacion){
+    public void asignarOperacion(Operacion pOperacion){
         this.operaciones.add(pOperacion);
     }
     

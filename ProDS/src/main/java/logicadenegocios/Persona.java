@@ -85,7 +85,7 @@ public class Persona{
     {
       int codigo = PersonaDAO.contadorPersonasBD();
       String strCodigo = Integer.toString(codigo);
-      Persona cliente = new Persona("CIF_" + strCodigo, apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo, "usuario");
+      Persona cliente = new Persona("CIF_" + strCodigo, apellido1,apellido2,nombre,idCliente,fechaNacimiento,telefonoCliente,correo, "cliente");
       PersonaDAO.insertarCliente(cliente);
       return cliente;
     }

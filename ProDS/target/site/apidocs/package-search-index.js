@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"CLI"},{"l":"controlador"},{"l":"dao"},{"l":"GUI"},{"l":"logicadenegocios"},{"l":"util"},{"l":"validacion"},{"l":"webService"}];updateSearchResults();
