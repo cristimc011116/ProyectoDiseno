@@ -664,7 +664,7 @@ public class CLI {
         
         while (esCorrecto == false)
         {
-            String texto1 = "Digite su identificacion: ";
+            String texto1 = "Digite su identificacion válida: ";
             System.out.println(texto1);
             strid = sc.next();
             esCorrecto = ExpresionesRegulares.esNumero(strid);
@@ -688,7 +688,7 @@ public class CLI {
         
         while (strNombre=="")
         {
-            String texto1 = "Digite su " + palabra + ": ";
+            String texto1 = "Digite su " + palabra + " correctamente: ";
             System.out.println(texto1);
             strNombre = sc.next();
         }
@@ -712,7 +712,7 @@ public class CLI {
                 Cuenta.inactivarCuenta(pNumCuenta);
                 return ("Se ha desactivado la cuenta");
             }
-            String texto3 = "Digite el pin de la cuenta: ";
+            String texto3 = "Digite el pin de la cuenta de manera válida: ";
             System.out.println(texto3);
             pin = sc.next();
             
@@ -793,7 +793,7 @@ public class CLI {
         
         while (esCorrecto == false)
         {
-            String texto1 = "Digite su identificacion: ";
+            String texto1 = "Digite su identificacion válida: ";
             System.out.println(texto1);
             strid = sc.next();
             esCorrecto = ControladorUsuario.auxIdP1(strid);
@@ -812,7 +812,7 @@ public class CLI {
         
         while (esCorrecto == false)
         {
-            String texto1 = "Digite su número telefonico costarricense: ";
+            String texto1 = "Digite un número telefonico costarricense válido: ";
             System.out.println(texto1);
             strTelefono = sc.next();
             esCorrecto = ExpresionesRegulares.validarTelefono(strTelefono);
@@ -831,7 +831,7 @@ public class CLI {
         
         while (esCorrecto == false)
         {
-            String texto1 = "Digite su correo electrónico: ";
+            String texto1 = "Digite un correo electrónico válido: ";
             System.out.println(texto1);
             strCorreo = sc.next();
             esCorrecto = ExpresionesRegulares.validarEmail(strCorreo);
@@ -849,7 +849,7 @@ public class CLI {
         
         while (esPin == false)
         {
-            String texto3 = "Digite el pin de la cuenta: ";
+            String texto3 = "Digite el pin correcto de la cuenta: ";
             System.out.println(texto3);
             pin = sc.next();
             esPin = ExpresionesRegulares.validarPin(pin);
@@ -885,7 +885,7 @@ public class CLI {
         
         while (esNum == false)
         {
-            String texto4 = "Digite un monto valido: ";
+            String texto4 = "Digite un monto válido: ";
             System.out.println(texto4);
             strmonto = sc.next();
             esNum = ExpresionesRegulares.esNumero(strmonto);
@@ -934,7 +934,7 @@ public class CLI {
                 System.out.println("Estimado usuario se ha enviado una nueva palabra por mensaje de texto, por favor revise sus mensajes"
                         + " y procesa a digitar correctamente la palabra enviada");
             }
-            String texto3 = "Digite la palabra clave: ";
+            String texto3 = "Digite la palabra clave correcta: ";
             System.out.println(texto3);
             palabra = sc.next();
             

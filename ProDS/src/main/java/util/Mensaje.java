@@ -12,7 +12,23 @@ import java.util.Random;
  * @author Cristi Martínez
  */
 public class Mensaje {
-    
+    public static final String ACCOUNT_SID = "AC99990d2f368c631048e2be792a0653cd";
+    public static final String AUTH_TOKEN = "78f447d8f45f460527cf474d42203d58";
+    /**
+     * @param args the command line arguments
+     */
+    public static void enviarMensaje(int pNumero, String pMensaje) {
+        // TODO code application logic here
+        String strNumero = "+506" + Integer.toString(pNumero);
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+
+        Message message = Message.creator(new PhoneNumber(strNumero),
+            new PhoneNumber("+17473026735"), 
+            pMensaje).create();
+
+        //System.out.println(message.getSid());
+    }
+
 
 
 

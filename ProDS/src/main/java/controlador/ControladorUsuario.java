@@ -417,10 +417,6 @@ public class ControladorUsuario implements ActionListener{
             this.vista8.txtNumCuenta.setText("");
             this.vista8.cmbTipoMoneda.setSelectedIndex(0);
           }
-          else
-          {
-            JOptionPane.showMessageDialog(null, "Verifique sus datos");
-          }
         }
       }
       else
@@ -552,10 +548,6 @@ public class ControladorUsuario implements ActionListener{
             this.vista3.txtMonto.setEnabled(false);
             this.vista3.btnRetirar.setEnabled(false);
           }
-          else
-          {
-            JOptionPane.showMessageDialog(null, "Verifique sus datos");
-          }
         }
       }
       else
@@ -606,10 +598,6 @@ public class ControladorUsuario implements ActionListener{
             this.vista13.txtMonto.setEnabled(false);
             this.vista13.btnTransferir.setEnabled(false);
           }
-          else
-          {
-            JOptionPane.showMessageDialog(null, "Verifique sus datos");
-          }
         }
         else
         {
@@ -648,10 +636,6 @@ public class ControladorUsuario implements ActionListener{
           mensaje += "\n---\n";
           mensaje += ControladorUsuario.imprimirPersona(id);
           JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else
-        {
-          JOptionPane.showMessageDialog(null, "Verifique sus datos");
         }
       }
       else
@@ -698,10 +682,6 @@ public class ControladorUsuario implements ActionListener{
           String mensaje = "Se ha creado un nuevo cliente en el sistema, los datos del cliente son: \n";
           mensaje += NuevoCliente.toStringCompleto();
           JOptionPane.showMessageDialog(null, mensaje, "Consulta de usuario", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else
-        {
-          JOptionPane.showMessageDialog(null, "Verifique sus datos");
         }
       }
       else
@@ -851,7 +831,7 @@ public class ControladorUsuario implements ActionListener{
         }
         else
         {
-          JOptionPane.showMessageDialog(null, "Verifique los datos");
+          JOptionPane.showMessageDialog(null, "Complete los datos requeridos");
         }
       }
       else
@@ -969,6 +949,9 @@ public class ControladorUsuario implements ActionListener{
       {
         return 0;
       }
+      else{
+          JOptionPane.showMessageDialog(null, "Verifique la palabra clave digitada");
+      }
       return 1;
     }
     
@@ -977,6 +960,8 @@ public class ControladorUsuario implements ActionListener{
       if(pedirPalabraTransferencia(pPalabra, pNumCuenta))
       {
         return 0;
+      }else{
+          JOptionPane.showMessageDialog(null, "Verifique la palabra clave digitada");
       }
       return 1;
     }
@@ -986,6 +971,9 @@ public class ControladorUsuario implements ActionListener{
       if(montoValido(pMonto, pNumCuenta, moneda))
       {
         return 0;
+      }
+      else{
+          JOptionPane.showMessageDialog(null, "Verifique el monto");
       }
       return 1;
     }
@@ -1226,6 +1214,9 @@ public class ControladorUsuario implements ActionListener{
       {
         return 0;
       }
+      else{
+          JOptionPane.showMessageDialog(null, "Verifique el pin");
+      }
       return 1;
     }
     
@@ -1340,6 +1331,9 @@ public class ControladorUsuario implements ActionListener{
         {
            return 0;
         }
+      }
+      else{
+          JOptionPane.showMessageDialog(null, "Verifique la cuenta o el pin digitado");
       }
       return 1;
     }
