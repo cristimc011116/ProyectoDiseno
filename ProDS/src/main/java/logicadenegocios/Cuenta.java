@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.time.format.DateTimeFormatter;
 import java.text.DecimalFormat;
+import java.util.Collections;
 import javax.swing.JOptionPane;
 import util.CorreoElectronico;
 import util.Encriptacion;
@@ -71,6 +72,12 @@ public class Cuenta implements Comparable<Cuenta>{
     
     public void asignarOperacion(Operacion pOperacion){
         this.operaciones.add(pOperacion);
+    }
+    
+    public static ArrayList<Cuenta> ordenarCuentas(){
+        ArrayList<Cuenta> cuentasSistema = CuentaDAO.getCuentasBD();
+        Collections.sort(cuentasSistema);
+        return cuentasSistema;
     }
     
     public static void inactivarCuenta(String pNumCuenta)

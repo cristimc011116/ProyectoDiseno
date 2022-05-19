@@ -10,6 +10,7 @@ import dao.OperacionDAO;
 import dao.PersonaDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import util.Encriptacion;
 import webService.ConsultaMoneda;
 
@@ -90,73 +91,10 @@ public class Persona{
       return cliente;
     }
     
-    public static String consultarSaldo(String pNumCenta)
-    {
-      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
-      String saldo = cuenta.getSaldo();
-      return saldo;
-    }
-    
-    public static double consultarSaldoDolares(String pNumCenta)
-    {
-      ConsultaMoneda consulta = new ConsultaMoneda();
-      double cambio = consulta.consultaCambioVenta();
-      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
-      String strSaldo = cuenta.getSaldo();
-      double saldo = Double.parseDouble(strSaldo);
-      double dolares = saldo/cambio;
-      return dolares;
-    }
-    
-    public static String consultarStatus(String pNumCenta)
-    {
-      Cuenta cuenta = CuentaDAO.obtenerCuenta(pNumCenta);
-      String status = cuenta.getEstatus();
-      return status;
-    }
-    
-    public static String consultarEstadoCuenta(String pNumCuenta, String moneda){
-        ConsultaMoneda consulta = new ConsultaMoneda();
-        String strSaldo = "";
-        String strPin = "";
-        String resultado = "";
-        int contador = 0;
-        String oper = "";
-        Cuenta cuentaBase = CuentaDAO.obtenerCuenta(pNumCuenta);
-        int idDueno = CuentaDAO.obtenerPersonaCuenta(pNumCuenta);
-        String strSaldoColones = cuentaBase.getSaldo();
-        double saldoColones = Double.parseDouble(strSaldoColones);
-        double montoCorrec = montoMoneda(saldoColones, moneda);
-        strSaldo = Double.toString(montoCorrec);
-        Persona persona = PersonaDAO.obtenerPersona(idDueno);
-        String nombreDueno = persona.getNombre() + " " + persona.getPrimerApellido() + " " + persona.getSegundoApellido();
-        ArrayList<Operacion> operaciones = OperacionDAO.getOperacionesCuenta(pNumCuenta);
-        for(Operacion operacion: operaciones)
-        {
-            if("colones".equals(moneda))
-            {
-                strPin = cuentaBase.getPin();
-                LocalDate fecha = operacion.getFechaOperacion();
-                String tipo = operacion.getTipo();
-                double montoComision = operacion.getMontoComision();
-                contador++;
-                oper += "Operacion #" + contador + "\nFecha: " + fecha + "\nTipo: " + tipo + "\nComisión: " + montoComision + "\n\n";
-            }
-            else
-            {
-                double venta = consulta.consultaCambioVenta();
-                strPin = cuentaBase.getPin();
-                double comisionDolares = (operacion.getMontoComision()/venta);
-                LocalDate fecha = operacion.getFechaOperacion();
-                String tipo = operacion.getTipo();
-                contador++;
-                oper += "Operacion #" + contador + "\nFecha: " + fecha + "\nTipo: " + tipo + "\nComisión: " + comisionDolares + "\n\n";
-            }
-        }
-        resultado += "Información de la cuenta\n\n" + "Número de cuenta: " + pNumCuenta + "\nPin encriptado de la cuenta: " + strPin
-                        + "\nNombre del dueño: " + nombreDueno + "\nIdentificación del dueño: " + idDueno + "\nSaldo de la cuenta: " 
-                        + strSaldo + "\n\n\nOperaciones de la cuenta: " + "\n\n" + oper;
-        return resultado;
+    public static ArrayList<Persona> ordenarClientes(){
+      ArrayList<Persona> personasSistema = PersonaDAO.getPersonasBD();
+      personasSistema.sort(Comparator.comparing(Persona::getPrimerApellido));
+      return personasSistema;
     }
     
 //-----------------------------------------METODOS ACCESORES--------------------------------------------    

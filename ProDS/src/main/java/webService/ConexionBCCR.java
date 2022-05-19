@@ -11,12 +11,12 @@ import java.net.URL;
 
 /**
  *
- * @author ranbe
+ * @author Paola López
  */
 public class ConexionBCCR {
-        protected static String getHTML(String urlToRead) throws Exception {
+        protected static String obtenerHTML(String pUrl) throws Exception {
         StringBuilder sincronizar = new StringBuilder();
-        URL url = new URL(urlToRead);
+        URL url = new URL(pUrl);
         HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
         conexion.setRequestMethod("GET");
         BufferedReader datos = new BufferedReader(new InputStreamReader(conexion.getInputStream()));

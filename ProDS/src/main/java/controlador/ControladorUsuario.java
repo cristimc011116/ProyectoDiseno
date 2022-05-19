@@ -49,7 +49,6 @@ import logicadenegocios.Persona;
 import logicadenegocios.Operacion;
 import util.CorreoElectronico;
 import util.Encriptacion;
-import util.Listados;
 import util.Mensaje;
 //import util.Mensaje;
 import validacion.ExpresionesRegulares;
@@ -107,9 +106,9 @@ public class ControladorUsuario implements ActionListener{
         this.menu.btnConsultaStatus.addActionListener(this);
         this.menu.btnListarCuentas.addActionListener(this);
         //cargarDatosPersonas();
-        personasSistema = Listados.ordenarClientes();
+        personasSistema = Persona.ordenarClientes();
         //cargarDatosCuentas();
-        cuentasSistema = Listados.ordenarCuentas();
+        cuentasSistema = Cuenta.ordenarCuentas();
     }
     
     public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -410,7 +409,7 @@ public class ControladorUsuario implements ActionListener{
           insertar += validarCuentaPinSaldo(cuenta, pin);
           if (insertar == 0)
           {
-            String saldo = Persona.consultarSaldo(cuenta);
+            String saldo = Operacion.consultarSaldo(cuenta);
             resultado = imprimirResultadoConsultaSaldo(moneda, saldo);
             
             JOptionPane.showMessageDialog(null, resultado);
@@ -443,7 +442,7 @@ public class ControladorUsuario implements ActionListener{
         insertar += validarEntrCuenta(cuenta);
         if (insertar == 0)
         {
-          String status = Persona.consultarStatus(cuenta);
+          String status = Operacion.consultarStatus(cuenta);
           resultado = imprimirResultadoConsultaStatus(status);
           JOptionPane.showMessageDialog(null, resultado);
           this.vista14.txtNumCuenta.setText("");

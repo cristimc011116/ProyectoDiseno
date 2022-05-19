@@ -18,26 +18,26 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author ranbe
+ * @author Paola López
  */
 public class ExtraerXML {
   private String xml;
-  private Element rootElement;
+  private Element raizElement;
   
-  public ExtraerXML(String data) throws SAXException, IOException, ParserConfigurationException{
+  public ExtraerXML(String pDatos) throws SAXException, IOException, ParserConfigurationException{
       
-    data =  cambiarCaracteres(data);
-    this.xml = data;
+    pDatos =  reemplazarCaracteres(pDatos);
+    this.xml = pDatos;
     
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     Document document = builder.parse(new InputSource(new StringReader(this.xml)));
-    this.rootElement = document.getDocumentElement();
+    this.raizElement = document.getDocumentElement();
   }
   
   public String getValores(String tag){
     try {
-      NodeList listaElementos = this.rootElement.getElementsByTagName(tag);
+      NodeList listaElementos = this.raizElement.getElementsByTagName(tag);
       if (listaElementos != null && listaElementos.getLength() > 0) {
           NodeList subLista = listaElementos.item(0).getChildNodes();
           if (subLista != null && subLista.getLength() > 0) {
@@ -50,7 +50,7 @@ public class ExtraerXML {
     return "0";
   }
   
-  private String cambiarCaracteres(String cadena){
+  private String reemplazarCaracteres(String cadena){
     cadena = cadena.replace("&lt;", "<");
     cadena = cadena.replace("&gt;", ">");
     return cadena;

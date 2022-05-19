@@ -388,7 +388,7 @@ public class CLI {
             }
             else
             {
-                resultado = Persona.consultarEstadoCuenta(pNumCuenta, moneda);
+                resultado = Operacion.consultarEstadoCuenta(pNumCuenta, moneda);
                 System.out.println(resultado);
                 volverMenu();
             }
@@ -1015,7 +1015,7 @@ public class CLI {
     {
         if("18".equals(opcion)){
             String pNumCuenta = pedirNumCuenta();
-            String total = Persona.consultarEstadoCuenta(pNumCuenta, "colones");
+            String total = Operacion.consultarEstadoCuenta(pNumCuenta, "colones");
             System.out.println(total);
         }
     }

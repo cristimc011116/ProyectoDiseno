@@ -10,27 +10,27 @@ import webService.ConexionBCCR;
 
 /**
  *
- * @author ranbe
+ * @author Paola López
  */
 public class ConsultaMoneda {
     private String fechaActual;
-    private int indicadorRequerido = 0;
-    private final String nombre = "proyectoDS";
+    private int indicadorConsulta = 0;
+    private final String nombreProyecto = "proyectoDS";
     private final String subNiveles = "N";
     private final String HOST = "https://gee.bccr.fi.cr/Indicadores/Suscripciones/WS/wsindicadoreseconomicos.asmx/ObtenerIndicadoresEconomicosXML";
     private String url;
-    private final String VALUE_TAG = "NUM_VALOR";
+    private final String valorTag = "NUM_VALOR";
 
     public ConsultaMoneda(){
       setFecha();
     }
     
     private void setCompra(){
-        this.indicadorRequerido = 317;
+        this.indicadorConsulta = 317;
     }
 
     private void setVenta(){
-        this.indicadorRequerido = 318;
+        this.indicadorConsulta = 318;
     }
     
     public double consultaCambioCompra(){
@@ -52,11 +52,11 @@ public class ConsultaMoneda {
           setUrl(); //Set del Url con los Parámetros
 
           //Obtiene y Parsea el XML
-          String data = ConexionBCCR.getHTML(url);
+          String data = ConexionBCCR.obtenerHTML(url);
           ExtraerXML xml = new ExtraerXML(data);
 
           //Retorna el valor del tag
-          return xml.getValores(VALUE_TAG);
+          return xml.getValores(valorTag);
         } 
         catch (Exception e) {
           System.out.println("ERROR, EL VALOR DE CAMBIO NO SE PUDO OBTENER.");
@@ -65,7 +65,7 @@ public class ConsultaMoneda {
     }
 
     private void setUrl(){
-        String params = "Indicador="+indicadorRequerido+"&FechaInicio="+fechaActual+"&FechaFinal="+fechaActual+"&Nombre="+nombre+"&SubNiveles="+subNiveles+"&CorreoElectronico="+"cristimc011116@gmail.com"+"&Token="+"CP6151SC2E";
+        String params = "Indicador="+indicadorConsulta+"&FechaInicio="+fechaActual+"&FechaFinal="+fechaActual+"&Nombre="+nombreProyecto+"&SubNiveles="+subNiveles+"&CorreoElectronico="+"cristimc011116@gmail.com"+"&Token="+"CP6151SC2E";
         this.url = HOST+"?"+params;
     }
 

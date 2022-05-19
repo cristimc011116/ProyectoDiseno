@@ -7,8 +7,10 @@ C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\webService\ExtraerXML.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\RealizarRetiro.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\webService\ConexionBCCR.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\util\Listados.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\RealizarTransferencia.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\dao\OperacionDAO.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\controladorWeb\servlet2.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\validacion\ExpresionesRegulares.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\dao\PersonaDAO.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\Menu.java
@@ -24,7 +26,6 @@ C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\CambiarPIN.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarStatus.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarCambioDolar.java
-C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\util\ComparatorSaldo.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ConsultarSaldo.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\dao\CuentaDAO.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\ListarCuentas.java
@@ -33,4 +34,5 @@ C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\logicadenegocios\Operacion.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\util\CorreoElectronico.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\CrearCuenta.java
+C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\controladorWeb\servlet.java
 C:\Aplicaciones\Google Drive\Escritorio\ProyectoDiseño\ProyectoDiseno\ProDS\src\main\java\GUI\CrearCliente.java
